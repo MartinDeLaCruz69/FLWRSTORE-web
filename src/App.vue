@@ -1,7 +1,10 @@
 <template>
-  <Navbar /> 
-  
-  <router-view /> 
+  <header>
+    <Navbar />
+  </header>
+
+  <main class="pt-20"> <router-view />
+  </main>
 </template>
 
 <script setup>
