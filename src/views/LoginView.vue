@@ -195,10 +195,10 @@ const petalStyle = (i) => ({
 
 /* ── Layout split ──────────────────────────────────────────── */
 .login-page {
-  min-height: 100vh;
+  min-height: 10vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: 70px;
+  padding-top: 20px;
 }
 
 /* ── Lado decorativo ───────────────────────────────────────── */
