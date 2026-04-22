@@ -288,10 +288,24 @@ onUnmounted(() => observer?.disconnect())
 
 // ── Redes sociales ──────────────────────────────────────────
 const socials = [
-  { name: 'Instagram', handle: '@flwrstore', emoji: '📸', gradient: 'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', url: 'https://instagram.com', desc: 'Fotos de productos, unboxings y más', delay: '0s' },
-  { name: 'TikTok', handle: '@flwrstore', emoji: '🎵', gradient: 'linear-gradient(135deg,#010101,#69C9D0)', url: 'https://tiktok.com', desc: 'Reels, drops y hauls en video', delay: '0.1s' },
-  { name: 'WhatsApp', handle: '+52 449 XXX XXXX', emoji: '💬', gradient: 'linear-gradient(135deg,#25D366,#128C7E)', url: 'https://wa.me/', desc: 'Pedidos directos y atención personalizada', delay: '0.2s' },
-  { name: 'Facebook', handle: 'FLWRSTORE Oficial', emoji: '👍', gradient: 'linear-gradient(135deg,#1877F2,#0a4fa8)', url: 'https://facebook.com', desc: 'Comunidad y anuncios oficiales', delay: '0.3s' },
+  {
+    name: 'Instagram',
+    handle: '@its.flwr_store',
+    emoji: '📸',
+    gradient: 'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)',
+    url: 'https://www.instagram.com/its.flwr_store?igsh=MThrMDR5cmZ2ZGxyMg==',
+    desc: 'Fotos de productos, unboxings y novedades',
+    delay: '0s'
+  },
+  {
+    name: 'WhatsApp',
+    handle: 'Canal oficial de ventas',
+    emoji: '💬',
+    gradient: 'linear-gradient(135deg,#25D366,#128C7E)',
+    url: 'https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t',
+    desc: 'Únete para ver el stock y hacer pedidos',
+    delay: '0.1s'
+  },
 ]
 
 // ── Testimonios ─────────────────────────────────────────────
@@ -316,16 +330,15 @@ onUnmounted(() => clearInterval(testimonialTimer))
 
 // ── Zonas de entrega ────────────────────────────────────────
 const deliveryZones = [
-  { icon: '🏙️', zone: 'Aguascalientes ciudad', desc: 'Entrega en mano el mismo día o al día siguiente' },
-  { icon: '🌮', zone: 'Municipios cercanos', desc: 'Entrega coordinada, 1-2 días hábiles' },
-  { icon: '📦', zone: 'República Mexicana', desc: 'Envío por paquetería, 3-7 días hábiles' },
-  { icon: '💸', zone: 'Envío gratis', desc: 'En compras mayores a $500 MXN en Aguascalientes' },
+  { icon: '📍', zone: 'Entrega personal', desc: 'Frente al Templo de San José, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes' },
+  { icon: '🛵', zone: 'Envío local', desc: 'Por Uber o DiDi dentro de Aguascalientes' },
+  { icon: '📮', zone: 'Envío nacional', desc: 'Correos de México o Estafeta vía Lolapay a toda la república' },
+  { icon: '💸', zone: 'Envío gratis', desc: 'En compras mayores a $550 MXN dentro de Aguascalientes' },
 ]
 
 // ── Mapa ─────────────────────────────────────────────────────
 // Embed de Google Maps centrado en Aguascalientes (sin API key, embed público)
-const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119270.00000000000!2d-102.29!3d21.88!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429efa1a60bd253%3A0x3abe5c3c9a0c8b3a!2sAguascalientes%2C+Mexico!5e0!3m2!1ses!2smx!4v1620000000000'
-</script>
+const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.5!2d-102.29614!3d21.88237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef9c5d7b9fcb%3A0x0!2sLic.+Francisco+Primo+Verdad+205%2C+Zona+Centro%2C+Aguascalientes!5e0!3m2!1ses!2smx!4v1'</script>
 
 <style scoped>
 /* ─── Base ─────────────────────────────────────────────────── */
