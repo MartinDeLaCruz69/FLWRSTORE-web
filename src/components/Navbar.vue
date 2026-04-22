@@ -28,6 +28,7 @@
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
+        <span :class="{ open: menuOpen }"></span>
       </button>
     </div>
 
