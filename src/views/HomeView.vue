@@ -9,12 +9,11 @@
         <div class="blob blob--3"></div>
       </div>
       <div class="hero__petals">
-        <span v-for="i in 12" :key="i" class="floating-petal" :style="petalStyle(i)">🌸</span>
+        <span v-for="i in 100" :key="i" class="floating-petal" :style="petalStyle(i)">🌸</span>
       </div>
       <div class="hero__content fade-up" :class="{ visible: heroVisible }">
-        <span class="hero__badge">✨ Tu tienda K-Pop de confianza</span>
         <h1 class="hero__title">
-          Bienvenida a<br>
+          Bienvenida(o) a<br>
           <span class="hero__brand">FLWR<span class="hero__brand-icon">🌸</span>STORE</span>
         </h1>
         <p class="hero__sub">Albums, photocards, peluches y mucho más.<br>Todo con amor, desde Aguascalientes para ti.</p>
@@ -23,26 +22,26 @@
           <a href="#quienes-somos" class="btn-ghost btn-lg">Conocernos más ↓</a>
         </div>
         <div class="hero__stats">
-          <div class="stat"><strong>+200</strong><span>Pedidos entregados</span></div>
+          <div class="stat"><strong>+500</strong><span>Pedidos entregados</span></div>
           <div class="stat-divider"></div>
-          <div class="stat"><strong>100%</strong><span>Clientes felices</span></div>
+          <div class="stat"><strong>99%</strong><span>Clientes felices y satisfechos</span></div>
           <div class="stat-divider"></div>
-          <div class="stat"><strong>K-Pop</strong><span>Especialistas</span></div>
+          <div class="stat"><strong>+2 años</strong><span>Siendo especialistas en el mercado</span></div>
         </div>
       </div>
       <div class="hero__visual fade-right" :class="{ visible: heroVisible }">
         <div class="hero__card-stack">
-          <div class="card-float card-float--back">
+          <div class="card-float card-float--front">
             <div class="card-img-placeholder">🎵</div>
-            <span>Album - TWICE</span>
+            <span>Albums</span>
           </div>
           <div class="card-float card-float--mid">
             <div class="card-img-placeholder">📸</div>
-            <span>Photocard - BTS</span>
+            <span>Photocards</span>
           </div>
-          <div class="card-float card-float--front">
+          <div class="card-float card-float--back">
             <div class="card-img-placeholder">🧸</div>
-            <span>Peluche - STRAY KIDS</span>
+            <span>Peluches</span>
           </div>
         </div>
       </div>
@@ -56,12 +55,12 @@
         <div class="about__grid">
           <div class="about__text fade-left" :class="{ visible: quienesVisible }">
             <p>Somos <strong>FLWRSTORE</strong>, una tienda de K-Pop nacida del amor por la música y la cultura coreana. Comenzamos compartiendo álbumes y photocards entre amigos, y poco a poco crecimos hasta convertirnos en un espacio de confianza para fans de toda la república.</p>
-            <p>Cada producto que ofrecemos ha sido cuidadosamente seleccionado. Nos aseguramos de que llegue en perfectas condiciones, con el mismo amor con el que fue elegido.</p>
+            <p>Cada producto que ofrecemos ha sido cuidadosamente seleccionado por tí. Nos aseguramos de entregarte tu pedido en buenas condiciones, con el mismo amor con el que fue elegido.</p>
             <p>Más que una tienda, somos una comunidad 🌸</p>
             <div class="about__values">
               <div class="value-pill">🎁 Empaque seguro</div>
               <div class="value-pill">💌 Atención personalizada</div>
-              <div class="value-pill">⚡ Entregas rápidas</div>
+              <div class="value-pill">⚡ Entregas personales y en linea</div>
               <div class="value-pill">🌟 Productos originales</div>
             </div>
           </div>
@@ -627,16 +626,16 @@ const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119270.000
 .delivery__grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center; margin-top: 40px; }
 .delivery__item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border-radius: 16px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); margin-bottom: 12px; }
 .delivery__icon { font-size: 2rem; flex-shrink: 0; }
-.delivery__item strong { display: block; color: #fff; font-size: 0.95rem; margin-bottom: 4px; }
-.delivery__item span   { font-size: 0.85rem; color: rgba(255,255,255,.6); }
+.delivery__item strong { display: block; color: #000000; font-size: 0.95rem; margin-bottom: 4px; }
+.delivery__item span   { font-size: 0.85rem; color: rgba(0, 0, 0, 0.6); }
 .delivery__map { display: flex; flex-direction: column; gap: 12px; }
 .map__wrapper { height: 380px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
-.map__note { text-align: center; color: rgba(255,255,255,.6); font-size: 0.85rem; }
+.map__note { text-align: center; color: rgba(0, 0, 0, 0.6); font-size: 0.85rem; }
 
 /* ─── CTA FINAL ─────────────────────────────────────────────── */
 .cta__inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.cta__inner h2 { font-size: clamp(2rem, 4vw, 3rem); color: #fff; }
-.cta__inner p  { color: rgba(255,255,255,.85); font-size: 1.1rem; max-width: 500px; text-align: center; }
+.cta__inner h2 { font-size: clamp(2rem, 4vw, 3rem); color: #000000; }
+.cta__inner p  { color: rgba(0, 0, 0, 0.85); font-size: 1.1rem; max-width: 500px; text-align: center; }
 .big-emoji-cta { font-size: 4rem; animation: bounce 2s infinite; display: block; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
 
