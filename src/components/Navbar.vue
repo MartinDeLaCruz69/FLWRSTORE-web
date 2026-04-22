@@ -167,7 +167,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 .btn-primary {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
   border: none;
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 8px 20px;
   border-radius: 50px;
   font-family: 'DM Sans', sans-serif;

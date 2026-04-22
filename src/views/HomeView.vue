@@ -91,26 +91,26 @@
             <div class="org__card org__card--main">
               <div class="org__avatar">👑</div>
               <strong>Fundadora</strong>
-              <span>Dirección general, compras y logística</span>
+              <span>Andrea Esqueda Rosario</span>
             </div>
           </div>
           <div class="org__connector"></div>
           <!-- Nivel 2 -->
           <div class="org__level org__level--two fade-up delay-2" :class="{ visible: equipoVisible }">
             <div class="org__card">
-              <div class="org__avatar">📦</div>
-              <strong>Inventario</strong>
-              <span>Control de stock y catálogo</span>
+              <div class="org__avatar">👤</div>
+              <strong>Administrador</strong>
+              <span>BLA BLA BLA BLA</span>
             </div>
             <div class="org__card">
-              <div class="org__avatar">💬</div>
-              <strong>Atención al cliente</strong>
-              <span>Soporte y seguimiento de pedidos</span>
+              <div class="org__avatar">👤</div>
+              <strong>Administrador</strong>
+              <span>BLA BLA BLA BLA</span>
             </div>
             <div class="org__card">
-              <div class="org__avatar">🚚</div>
-              <strong>Envíos</strong>
-              <span>Empaque y coordinación de entregas</span>
+              <div class="org__avatar">💻</div>
+              <strong>Desarrollador Front/Back</strong>
+              <span>Ing. Juan Martin Esparza de la Cruz</span>
             </div>
           </div>
           <div class="org__connector"></div>
@@ -195,7 +195,7 @@
     <!-- ============ ENTREGAS / MAPA ============ -->
     <section class="section section--dark" ref="mapaRef">
       <div class="section__inner">
-        <div class="section__tag section__tag--light fade-up" :class="{ visible: mapaVisible }">🚚 Cobertura</div>
+        <div class="section__tag section__tag--light fade-up" :class="{ visible: mapaVisible }">🚚 Entregas</div>
         <h2 class="section__title section__title--light fade-up delay-1" :class="{ visible: mapaVisible }">¿Dónde entregamos?</h2>
         <p class="section__desc section__desc--light fade-up delay-2" :class="{ visible: mapaVisible }">
           Entregamos en Aguascalientes y enviamos a toda la república vía paquetería.
@@ -222,7 +222,7 @@
                 referrerpolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
-            <p class="map__note">📍 Aguascalientes, México</p>
+            <p class="map__note">📍 Aguascalientes, Aguascalientes, México</p>
           </div>
         </div>
       </div>
@@ -363,9 +363,9 @@ const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119270.000
 }
 .section__tag--light { color: var(--pink-mid); background: rgba(244,143,177,.15); }
 .section__title { font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: 16px; color: var(--text); }
-.section__title--light { color: #fff; }
+.section__title--light { color: #000000; }
 .section__desc { font-size: 1.05rem; color: var(--text-light); max-width: 600px; line-height: 1.7; }
-.section__desc--light { color: rgba(255,255,255,.75); }
+.section__desc--light { color: rgba(0, 0, 0, 0.75); }
 
 /* ─── HERO ─────────────────────────────────────────────────── */
 .hero {
@@ -479,7 +479,7 @@ const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119270.000
 /* ─── Botones globales ─────────────────────────────────────── */
 .btn-primary {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #fff; border: none; padding: 14px 28px; border-radius: 50px;
+  color: #000000; border: none; padding: 14px 28px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
   cursor: pointer; text-decoration: none; display: inline-block;
   box-shadow: 0 8px 25px rgba(233,30,140,.3);
