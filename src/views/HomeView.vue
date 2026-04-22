@@ -19,7 +19,7 @@
         <p class="hero__sub">Albums, photocards, peluches y mucho más.<br>Todo con amor, desde Aguascalientes para ti.</p>
         <div class="hero__ctas">
           <router-link to="/stock" class="btn-primary btn-lg">Ver Stock disponible</router-link>
-          <a href="#quienes-somos" class="btn-ghost btn-lg">Conocernos más ↓</a>
+          <a href="#quienes-somos" class="btn-ghost btn-lg">¡CONOCENOS! ↓</a>
         </div>
         <div class="hero__stats">
           <div class="stat"><strong>+500</strong><span>Pedidos entregados</span></div>
@@ -96,21 +96,17 @@
           </div>
           <div class="org__connector"></div>
           <!-- Nivel 2 -->
+          
           <div class="org__level org__level--two fade-up delay-2" :class="{ visible: equipoVisible }">
             <div class="org__card">
-              <div class="org__avatar">👤</div>
-              <strong>Administrador</strong>
-              <span>BLA BLA BLA BLA</span>
-            </div>
-            <div class="org__card">
-              <div class="org__avatar">👤</div>
-              <strong>Administrador</strong>
-              <span>BLA BLA BLA BLA</span>
+              <div class="org__avatar">🌸</div>
+              <strong>Administradora de apoyo</strong>
+              <span>Melissa Esparza</span>
             </div>
             <div class="org__card">
               <div class="org__avatar">💻</div>
-              <strong>Desarrollador Front/Back</strong>
-              <span>Ing. Juan Martin Esparza de la Cruz</span>
+              <strong>Desarrollo Front/Back</strong>
+              <span>Ing. Juan Martín Esparza de la Cruz</span>
             </div>
           </div>
           <div class="org__connector"></div>
