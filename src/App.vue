@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import SplashScreen from './components/SplashScreen.vue'
-import Navbar from './components/Navbar.vue'
+  import SplashScreen from './components/SplashScreen.vue'
+  import Navbar from './components/Navbar.vue'
 </script>
 
 <style>

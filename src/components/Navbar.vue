@@ -3,7 +3,7 @@
     <div class="navbar__inner">
 
       <!-- Logo -->
-      <router-link to="/" class="navbar__logo">
+      <router-link to="/home" class="navbar__logo">
         <span>FLWR</span>
         <span class="navbar__logo-icon">🌸</span>
         <span>STORE</span>
@@ -11,7 +11,7 @@
 
       <!-- Links desktop -->
       <ul class="navbar__links">
-        <li><router-link to="/">Inicio</router-link></li>
+        <li><router-link to="/home">Inicio</router-link></li>
         <li><router-link to="/stock">Stock</router-link></li>
         <li><router-link to="/pagos">Formas de pago</router-link></li>
         <li><router-link to="/legal">Aviso legal</router-link></li>
@@ -19,13 +19,12 @@
 
       <!-- Acciones -->
       <div class="navbar__actions">
-        <button class="btn-ghost">Iniciar sesión</button>
-        <button class="btn-primary">Registrarse</button>
+        <router-link to="/login"  class="btn-ghost">Iniciar sesión</router-link>
+        <router-link to="/signup" class="btn-primary">Registrarse</router-link>
       </div>
 
       <!-- Hamburger mobile -->
       <button class="navbar__burger" @click="menuOpen = !menuOpen">
-        <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
@@ -35,13 +34,13 @@
     <!-- Mobile menu -->
     <Transition name="mobile-menu">
       <div v-if="menuOpen" class="navbar__mobile">
-        <router-link to="/" @click="menuOpen = false">Inicio</router-link>
+        <router-link to="/home" @click="menuOpen = false">Inicio</router-link>
         <router-link to="/stock" @click="menuOpen = false">Stock</router-link>
         <router-link to="/pagos" @click="menuOpen = false">Formas de pago</router-link>
         <router-link to="/legal" @click="menuOpen = false">Aviso legal</router-link>
         <div class="navbar__mobile-actions">
-          <button class="btn-ghost">Iniciar sesión</button>
-          <button class="btn-primary">Registrarse</button>
+          <router-link to="/login"  class="btn-ghost"  @click="menuOpen = false">Iniciar sesión</router-link>
+          <router-link to="/signup" class="btn-primary" @click="menuOpen = false">Registrarse</router-link>
         </div>
       </div>
     </Transition>
@@ -70,7 +69,10 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   padding: 0 24px;
   transition: all 0.3s ease;
   border-bottom: 1px solid transparent;
-}
+  .navbar__actions a,
+  .navbar__mobile-actions a {
+  text-decoration: none;
+}}
 
 .navbar--scrolled {
   background: rgba(255, 248, 245, 0.85);
