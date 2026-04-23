@@ -360,6 +360,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { usuarioActual } from '../composables/useAuth'
 
 // ── Floating petals ─────────────────────────────────────────
 const petalStyle = (i) => ({
@@ -377,6 +378,10 @@ const redesRef = ref(null), redesVisible = ref(false)
 const clientesRef = ref(null), clientesVisible = ref(false)
 const mapaRef = ref(null), mapaVisible = ref(false)
 const ctaRef = ref(null), ctaVisible = ref(false)
+const comentariosRef     = ref(null)
+const comentariosVisible = ref(false)
+const showScrollTop = ref(false)
+
 
 const sections = [
   [heroRef, heroVisible],
@@ -386,6 +391,7 @@ const sections = [
   [clientesRef, clientesVisible],
   [mapaRef, mapaVisible],
   [ctaRef, ctaVisible],
+  [comentariosRef, comentariosVisible],
 ]
 
 let observer
@@ -434,7 +440,36 @@ const testimonials = [
   { name: 'Sofía M.', location: 'Aguascalientes', emoji: '💗', text: 'Entrega el mismo día en Aguascalientes, ¡no lo podía creer! Todo perfecto como siempre.', product: 'Album - BLACKPINK', stars: 5 },
 ]
 
-const clientEmojis = ['🌸','💗','✨','🎀','💖','🌷']
+const catEmoji = {
+  'Álbumes': '🎵', 'Photocards': '📸',
+  'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
+}
+
+const comentarios = ref([
+  { emoji: '🌸', nombre: 'Valeria R.', ciudad: 'Guadalajara', texto: '¡Todo llegó perfectamente empaquetado! Súper rápido y Andrea es muy amable. Ya hice mi segunda compra 💖', producto: 'Ready to Be — TWICE', categoria: 'Álbumes', fecha: 'Abril 2025' },
+  { emoji: '🎀', nombre: 'Camila T.', ciudad: 'CDMX', texto: 'Las photocards llegaron en perfecto estado, con fundas protectoras. El packaging es muy bonito. 100% recomendada.', producto: 'Photocard set — BTS', categoria: 'Photocards', fecha: 'Marzo 2025' },
+  { emoji: '✨', nombre: 'Fernanda L.', ciudad: 'Monterrey', texto: 'Me atendieron súper bien por WhatsApp, resolvieron todas mis dudas. ¡Ya soy cliente fija! El peluche llegó intacto.', producto: 'Skzoo Ryan — Stray Kids', categoria: 'Peluches', fecha: 'Marzo 2025' },
+  { emoji: '💗', nombre: 'Sofía M.', ciudad: 'Aguascalientes', texto: 'Entrega el mismo día en Ags, ¡no lo podía creer! Todo perfecto, el álbum sellado y con todas las inclusiones.', producto: 'Born Pink — BLACKPINK', categoria: 'Álbumes', fecha: 'Febrero 2025' },
+  { emoji: '🌷', nombre: 'Daniela F.', ciudad: 'León', texto: 'El envío llegó en 3 días y muy bien protegido. Precios muy accesibles comparado con otras tiendas. ¡Volveré pronto!', producto: 'Lightstick — ATEEZ', categoria: 'Lightsticks', fecha: 'Enero 2025' },
+  { emoji: '💖', nombre: 'Karen V.', ciudad: 'Querétaro', texto: 'Primera compra y quedé encantada. La comunicación fue excelente y el producto llegó exactamente como se describía.', producto: 'PC Karina — aespa', categoria: 'Photocards', fecha: 'Enero 2025' },
+])
+
+const nuevoComentario = ref({ texto: '' })
+
+const enviarComentario = () => {
+  if (!nuevoComentario.value.texto.trim()) return
+  comentarios.value.unshift({
+    emoji:     '🌸',
+    nombre:    usuarioActual.value?.displayName || usuarioActual.value?.email?.split('@')[0] || 'Cliente',
+    ciudad:    'México',
+    texto:     nuevoComentario.value.texto.trim(),
+    producto:  'Compra verificada',
+    categoria: 'Álbumes',
+    fecha:     new Date().toLocaleDateString('es-MX', { month: 'long', year: 'numeric' }),
+  })
+  nuevoComentario.value.texto = ''
+  mostrarToast('¡Gracias por tu reseña! 🌸', 'success')
+}
 
 // Auto-avanzar testimonios
 let testimonialTimer
@@ -456,6 +491,22 @@ const deliveryZones = [
 // ── Mapa ─────────────────────────────────────────────────────
 // Embed de Google Maps centrado en Aguascalientes (sin API key, embed público)
 const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.5!2d-102.29614!3d21.88237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef9c5d7b9fcb%3A0x0!2sLic.+Francisco+Primo+Verdad+205%2C+Zona+Centro%2C+Aguascalientes!5e0!3m2!1ses!2smx!4v1'</script>
+
+// ── Scroll top ────────────────────────────────────────────────
+const handleScrollTop = () => {
+  showScrollTop.value = window.scrollY > 400
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScrollTop)
+})
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScrollTop)
+})
 
 <style scoped>
 /* ─── Base ─────────────────────────────────────────────────── */
