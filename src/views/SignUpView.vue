@@ -311,13 +311,13 @@ const petalStyle = (i) => ({
 .steps-indicator { display: flex; align-items: center; gap: 0; position: relative; }
 .step-dot {
   width: 32px; height: 32px; border-radius: 50%;
-  background: #fff; border: 2px solid rgba(233,30,140,.2);
+  background: #ffffff; border: 2px solid rgba(233,30,140,.2);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.82rem; font-weight: 700; color: var(--text-light);
   z-index: 1; transition: all 0.35s;
 }
-.step-dot.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(233,30,140,.3); }
-.step-dot.done   { background: #22c55e; border-color: transparent; color: #fff; }
+.step-dot.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); border-color: transparent; color: #000000; box-shadow: 0 4px 14px rgba(233,30,140,.3); }
+.step-dot.done   { background: #22c55e; border-color: transparent; color: #ffffff; }
 .steps-line { flex: 1; height: 2px; background: rgba(233,30,140,.15); margin: 0 8px; transition: background 0.5s; }
 .steps-line.filled { background: linear-gradient(90deg, var(--pink-mid), var(--pink-accent)); }
 .step-label { font-size: 0.78rem; color: var(--text-light); font-weight: 500; letter-spacing: 0.5px; margin-top: -8px; }
@@ -361,7 +361,7 @@ const petalStyle = (i) => ({
 .step2-actions { display: flex; gap: 10px; }
 .btn-back-step { background: #fff; border: 1.5px solid rgba(233,30,140,.2); color: var(--text-light); padding: 14px 20px; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
 .btn-back-step:hover { border-color: var(--pink-mid); color: var(--text); }
-.btn-submit { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #fff; border: none; padding: 15px; border-radius: 14px; width: 100%; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 28px rgba(233,30,140,.3); display: flex; align-items: center; justify-content: center; min-height: 52px; }
+.btn-submit { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; border: none; padding: 15px; border-radius: 14px; width: 100%; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 28px rgba(233,30,140,.3); display: flex; align-items: center; justify-content: center; min-height: 52px; }
 .btn-submit--flex { flex: 1; width: auto; }
 .btn-submit:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(233,30,140,.4); }
 .btn-submit:disabled { opacity: 0.75; cursor: not-allowed; }
