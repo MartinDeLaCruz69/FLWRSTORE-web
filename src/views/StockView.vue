@@ -157,7 +157,9 @@
           <button class="modal-close" @click="modalProd = null">✕</button>
 
           <div class="modal-card__img">
-            <span>{{ catEmoji[modalProd.categoria] || '🎵' }}</span>
+            <img v-if="modalProd.imagenUrl" :src="modalProd.imagenUrl"
+              :alt="modalProd.nombre" class="modal-photo" />
+            <span v-else>{{ catEmoji[modalProd.categoria] || '🎵' }}</span>
             <span class="badge badge--estado" :class="'badge--' + modalProd.estado">
               {{ estadoLabel[modalProd.estado] }}
             </span>
