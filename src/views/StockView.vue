@@ -326,20 +326,17 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { rolActual } from '../composables/useAuth'
 
-// ── Rol simulado (después vendrá de Firebase Auth) ───────────
-const esAdmin = ref(true) // ← cambia a false para ver vista cliente
+// ── Rol ──────────────────────────────────────────────────────
+const esAdmin = computed(() => rolActual.value === 'admin' || rolActual.value === 'subadmin')
 
 // ── Catálogos ────────────────────────────────────────────────
 const categorias = ['Álbumes', 'Photocards', 'Peluches', 'Lightsticks', 'Revistas']
 
 const catEmoji = {
-  'Todos': '🌸',
-  'Álbumes': '🎵',
-  'Photocards': '📸',
-  'Peluches': '🧸',
-  'Lightsticks': '✨',
-  'Revistas': '📖',
+  'Todos': '🌸', 'Álbumes': '🎵', 'Photocards': '📸',
+  'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
 }
 
 const estadoLabel = {
@@ -354,7 +351,7 @@ const estados = [
   { val: 'vendido',    label: 'Vendidos'     },
 ]
 
-// ── Productos de ejemplo (después vendrán de Firestore) ──────
+// ── Productos ────────────────────────────────────────────────
 const productos = ref([
   { id: 1, nombre: 'Ready to Be', grupo: 'TWICE', categoria: 'Álbumes', precio: 420, estado: 'disponible', condicion: 'nuevo', inclusiones: ['Photobook', 'Photocard aleatoria', 'Póster'], apartadoPor: null },
   { id: 2, nombre: 'Proof', grupo: 'BTS', categoria: 'Álbumes', precio: 580, estado: 'apartado', condicion: 'nuevo', inclusiones: ['Photobook', '3 Photocards', 'Mini-libro'], apartadoPor: 'Valeria R.' },
@@ -383,13 +380,13 @@ const productosFiltrados = computed(() => {
 })
 
 const resetFiltros = () => {
-  busqueda.value = ''
+  busqueda.value        = ''
   categoriaActiva.value = 'Todos'
-  estadoFiltro.value = 'todos'
+  estadoFiltro.value    = 'todos'
 }
 
 // ── Modal detalle ────────────────────────────────────────────
-const modalProd = ref(null)
+const modalProd  = ref(null)
 const abrirModal = (prod) => { modalProd.value = prod }
 
 // ── Modal apartar ────────────────────────────────────────────
@@ -398,8 +395,8 @@ const nombreCliente = ref('')
 const errorNombre   = ref('')
 
 const abrirApartar = (prod) => {
-  apartarProd.value = prod
-  modalProd.value   = null
+  apartarProd.value   = prod
+  modalProd.value     = null
   nombreCliente.value = ''
   errorNombre.value   = ''
 }
@@ -409,7 +406,7 @@ const confirmarApartado = () => {
     errorNombre.value = 'Por favor escribe tu nombre completo.'
     return
   }
-  const prod = apartarProd.value
+  const prod       = apartarProd.value
   prod.estado      = 'apartado'
   prod.apartadoPor = nombreCliente.value.trim()
   apartarProd.value = null
@@ -422,13 +419,13 @@ let toastTimer
 const mostrarToast = (msg, type = 'success') => {
   clearTimeout(toastTimer)
   toast.value = { show: true, msg, type }
-  toastTimer = setTimeout(() => { toast.value.show = false }, 3500)
+  toastTimer  = setTimeout(() => { toast.value.show = false }, 3500)
 }
 
 // ── Panel admin ──────────────────────────────────────────────
-const adminPanelOpen   = ref(false)
-const inclusionesRaw   = ref('')
-const nuevoProducto    = ref({
+const adminPanelOpen = ref(false)
+const inclusionesRaw = ref('')
+const nuevoProducto  = ref({
   nombre: '', grupo: '', categoria: 'Álbumes',
   precio: 0, condicion: 'nuevo', estado: 'disponible'
 })
@@ -446,7 +443,7 @@ const agregarProducto = () => {
     id: Date.now(), nombre, grupo, categoria,
     precio, condicion, estado, inclusiones, apartadoPor: null
   })
-  nuevoProducto.value = { nombre: '', grupo: '', categoria: 'Álbumes', precio: 0, condicion: 'nuevo', estado: 'disponible' }
+  nuevoProducto.value  = { nombre: '', grupo: '', categoria: 'Álbumes', precio: 0, condicion: 'nuevo', estado: 'disponible' }
   inclusionesRaw.value = ''
   mostrarToast(`🌸 ${nombre} agregado al stock!`, 'success')
 }

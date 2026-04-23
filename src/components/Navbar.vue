@@ -56,22 +56,20 @@
 </template>
 
 <script setup>
-import { usuarioActual, rolActual, logout } from '../composables/useAuth'
-import { useRouter } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { usuarioActual, logout } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
 
-const router = useRouter()
+const router   = useRouter()
+const scrolled = ref(false)
+const menuOpen = ref(false)
 
 const cerrarSesion = async () => {
   await logout()
   router.push('/')
 }
 
-const scrolled = ref(false)
-const menuOpen = ref(false)
-
 const handleScroll = () => { scrolled.value = window.scrollY > 30 }
-
 onMounted(() => window.addEventListener('scroll', handleScroll))
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
@@ -86,10 +84,12 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   padding: 0 24px;
   transition: all 0.3s ease;
   border-bottom: 1px solid transparent;
+}
+
   .navbar__actions a,
   .navbar__mobile-actions a {
   text-decoration: none;
-}}
+}
 
 .navbar--scrolled {
   background: rgba(255, 248, 245, 0.85);
