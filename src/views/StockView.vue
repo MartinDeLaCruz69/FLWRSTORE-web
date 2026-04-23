@@ -1128,4 +1128,128 @@ const accionRapida = async (accion, prod) => {
   .stock-hero__stats { flex-direction: column; gap: 12px; padding: 16px 24px; }
   .sh-stat-div { width: 60px; height: 1px; }
 }
+
+/* ── Fotos reales ────────────────────────────────────────── */
+.product-card__photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+.product-card:hover .product-card__photo { transform: scale(1.08); }
+
+.modal-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* ── Loading ─────────────────────────────────────────────── */
+.loading-state {
+  text-align: center; padding: 60px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  color: var(--text-light);
+}
+.loading-spinner {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 3px solid rgba(233,30,140,.15);
+  border-top-color: var(--pink-accent);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Admin tabs ──────────────────────────────────────────── */
+.admin-panel__tabs {
+  display: flex; gap: 8px; flex: 1;
+}
+.admin-panel__tabs button {
+  background: none; border: 1.5px solid rgba(233,30,140,.2);
+  color: var(--text-light); padding: 6px 16px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.admin-panel__tabs button.active {
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; border-color: transparent;
+}
+.admin-panel__tabs button:disabled { opacity: 0.4; cursor: not-allowed; }
+.admin-panel__close {
+  background: none; border: none; cursor: pointer;
+  font-size: 1rem; color: var(--text-light);
+  padding: 4px 8px;
+}
+.admin-panel__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px; gap: 12px;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border-bottom: 1px solid rgba(233,30,140,.1);
+}
+
+/* ── Formulario admin ────────────────────────────────────── */
+.admin-form__actions {
+  display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;
+}
+.btn-admin-cancel {
+  background: none; border: 1.5px solid rgba(233,30,140,.2);
+  color: var(--text-light); padding: 10px 20px; border-radius: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-admin-cancel:hover { border-color: var(--pink-mid); color: var(--text); }
+
+/* ── Upload imagen ───────────────────────────────────────── */
+.file-drop {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 2px dashed rgba(233,30,140,.25); border-radius: 14px; padding: 24px;
+  cursor: pointer; transition: all 0.2s; background: rgba(233,30,140,.02);
+}
+.file-drop:hover { border-color: var(--pink-accent); background: rgba(233,30,140,.06); }
+.file-drop span  { font-size: 2rem; }
+.file-drop p     { font-size: 0.85rem; color: var(--text); font-weight: 500; margin: 0; }
+.file-drop small { font-size: 0.75rem; color: var(--text-light); }
+
+.img-preview {
+  position: relative; border-radius: 14px; overflow: hidden;
+  max-height: 160px; background: var(--pink-soft);
+}
+.img-preview img { width: 100%; height: 160px; object-fit: cover; display: block; }
+.img-preview__remove {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(0,0,0,.55); color: #fff;
+  border: none; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.img-preview__change {
+  display: block; text-align: center; padding: 8px;
+  background: rgba(0,0,0,.45); color: #fff;
+  font-size: 0.8rem; cursor: pointer;
+  position: absolute; bottom: 0; left: 0; right: 0;
+}
+
+.upload-progress {
+  display: flex; align-items: center; gap: 10px;
+}
+.upload-progress__bar {
+  flex: 1; height: 4px; border-radius: 10px;
+  background: linear-gradient(90deg, var(--pink-mid), var(--pink-accent));
+  transition: width 0.2s;
+}
+.upload-progress span { font-size: 0.75rem; color: var(--text-light); min-width: 100px; }
+
+/* ── Acciones admin en modal ─────────────────────────────── */
+.modal-admin-actions {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;
+  padding-top: 16px; border-top: 1px solid rgba(233,30,140,.1);
+}
+.btn-admin-action {
+  flex: 1; min-width: 100px; padding: 9px 12px; border-radius: 12px;
+  border: 1.5px solid transparent; font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.btn-edit    { background: rgba(59,130,246,.1);  border-color: rgba(59,130,246,.3);  color: #1d4ed8; }
+.btn-liberar { background: rgba(34,197,94,.1);   border-color: rgba(34,197,94,.3);   color: #15803d; }
+.btn-vendido { background: rgba(233,30,140,.08); border-color: rgba(233,30,140,.2);  color: var(--pink-deep); }
+.btn-delete  { background: rgba(239,68,68,.08);  border-color: rgba(239,68,68,.25);  color: #b91c1c; }
+.btn-admin-action:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
 </style>
