@@ -224,7 +224,7 @@
       </div>
     </section>
 
-    <!-- ============ CTA FINAL ============ -->
+   <!-- ============ CTA FINAL ============ -->
     <section class="section section--gradient" ref="ctaRef">
       <div class="section__inner cta__inner fade-up" :class="{ visible: ctaVisible }">
         <span class="big-emoji-cta">🌸</span>
@@ -359,8 +359,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
 import { usuarioActual } from '../composables/useAuth'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 // ── Floating petals ─────────────────────────────────────────
 const petalStyle = (i) => ({
@@ -378,9 +378,8 @@ const redesRef = ref(null), redesVisible = ref(false)
 const clientesRef = ref(null), clientesVisible = ref(false)
 const mapaRef = ref(null), mapaVisible = ref(false)
 const ctaRef = ref(null), ctaVisible = ref(false)
-const comentariosRef     = ref(null)
+const comentariosRef = ref(null)
 const comentariosVisible = ref(false)
-const showScrollTop = ref(false)
 
 
 const sections = [
@@ -431,20 +430,33 @@ const socials = [
   },
 ]
 
-// ── Testimonios ─────────────────────────────────────────────
-const activeTestimonial = ref(0)
-const testimonials = [
-  { name: 'Valeria R.', location: 'Guadalajara', emoji: '🌸', text: '¡Súper rápido y todo llegó perfectamente empaquetado! Ya hice mi segunda compra 💖', product: 'Album - TWICE', stars: 5 },
-  { name: 'Camila T.', location: 'CDMX', emoji: '🎀', text: 'Las photocards llegaron en perfecto estado y el packaging es muy bonito. 100% recomendada', product: 'Photocard set - BTS', stars: 5 },
-  { name: 'Fernanda L.', location: 'Monterrey', emoji: '✨', text: 'Me atendieron súper bien por WhatsApp y resolvieron todas mis dudas. ¡Ya soy cliente fija!', product: 'Peluche - Stray Kids', stars: 5 },
-  { name: 'Sofía M.', location: 'Aguascalientes', emoji: '💗', text: 'Entrega el mismo día en Aguascalientes, ¡no lo podía creer! Todo perfecto como siempre.', product: 'Album - BLACKPINK', stars: 5 },
+// Auto-avanzar testimonios
+let testimonialTimer
+onMounted(() => {
+  testimonialTimer = setInterval(() => {
+    activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.length
+  }, 4000)
+})
+onUnmounted(() => clearInterval(testimonialTimer))
+
+// ── Zonas de entrega ────────────────────────────────────────
+const deliveryZones = [
+  { icon: '📍', zone: 'Entrega personal', desc: 'Frente al Templo de San José, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes' },
+  { icon: '🛵', zone: 'Envío local', desc: 'Por Uber o DiDi dentro de Aguascalientes' },
+  { icon: '📮', zone: 'Envío nacional', desc: 'Correos de México o Estafeta vía Lolapay a toda la república' },
+  { icon: '💸', zone: 'Envío gratis', desc: 'En compras mayores a $550 MXN dentro de Aguascalientes' },
 ]
+
+// ── Mapa ─────────────────────────────────────────────────────
+// Embed de Google Maps centrado en Aguascalientes (sin API key, embed público)
+const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.5!2d-102.29614!3d21.88237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef9c5d7b9fcb%3A0x0!2sLic.+Francisco+Primo+Verdad+205%2C+Zona+Centro%2C+Aguascalientes!5e0!3m2!1ses!2smx!4v1'
 
 const catEmoji = {
   'Álbumes': '🎵', 'Photocards': '📸',
   'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
 }
 
+// ── Comentarios ──────────────────────────────────────────────
 const comentarios = ref([
   { emoji: '🌸', nombre: 'Valeria R.', ciudad: 'Guadalajara', texto: '¡Todo llegó perfectamente empaquetado! Súper rápido y Andrea es muy amable. Ya hice mi segunda compra 💖', producto: 'Ready to Be — TWICE', categoria: 'Álbumes', fecha: 'Abril 2025' },
   { emoji: '🎀', nombre: 'Camila T.', ciudad: 'CDMX', texto: 'Las photocards llegaron en perfecto estado, con fundas protectoras. El packaging es muy bonito. 100% recomendada.', producto: 'Photocard set — BTS', categoria: 'Photocards', fecha: 'Marzo 2025' },
@@ -471,28 +483,9 @@ const enviarComentario = () => {
   mostrarToast('¡Gracias por tu reseña! 🌸', 'success')
 }
 
-// Auto-avanzar testimonios
-let testimonialTimer
-onMounted(() => {
-  testimonialTimer = setInterval(() => {
-    activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.length
-  }, 4000)
-})
-onUnmounted(() => clearInterval(testimonialTimer))
-
-// ── Zonas de entrega ────────────────────────────────────────
-const deliveryZones = [
-  { icon: '📍', zone: 'Entrega personal', desc: 'Frente al Templo de San José, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes' },
-  { icon: '🛵', zone: 'Envío local', desc: 'Por Uber o DiDi dentro de Aguascalientes' },
-  { icon: '📮', zone: 'Envío nacional', desc: 'Correos de México o Estafeta vía Lolapay a toda la república' },
-  { icon: '💸', zone: 'Envío gratis', desc: 'En compras mayores a $550 MXN dentro de Aguascalientes' },
-]
-
-// ── Mapa ─────────────────────────────────────────────────────
-// Embed de Google Maps centrado en Aguascalientes (sin API key, embed público)
-const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.5!2d-102.29614!3d21.88237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef9c5d7b9fcb%3A0x0!2sLic.+Francisco+Primo+Verdad+205%2C+Zona+Centro%2C+Aguascalientes!5e0!3m2!1ses!2smx!4v1'</script>
-
 // ── Scroll top ────────────────────────────────────────────────
+const showScrollTop = ref(false)
+
 const handleScrollTop = () => {
   showScrollTop.value = window.scrollY > 400
 }
@@ -507,6 +500,8 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScrollTop)
 })
+
+</script>
 
 <style scoped>
 /* ─── Base ─────────────────────────────────────────────────── */
@@ -820,16 +815,6 @@ onUnmounted(() => {
 .big-emoji-cta { font-size: 4rem; animation: bounce 2s infinite; display: block; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
 
-/* ─── Responsive ────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .hero { flex-direction: column; text-align: center; padding-top: 120px; }
-  .hero__ctas { justify-content: center; }
-  .hero__stats { justify-content: center; }
-  .about__grid { grid-template-columns: 1fr; }
-  .delivery__grid { grid-template-columns: 1fr; }
-  .org__level--two { flex-direction: column; align-items: center; }
-}
-
 /* ─── COMENTARIOS ───────────────────────────────────────────── */
 .comments__grid {
   display: grid;
@@ -1041,6 +1026,16 @@ onUnmounted(() => {
   .footer__inner { grid-template-columns: 1fr; gap: 32px; }
   .footer__bottom { flex-direction: column; text-align: center; }
   .comments__grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+  .hero__ctas { justify-content: center; }
+  .hero__stats { justify-content: center; }
+  .about__grid { grid-template-columns: 1fr; }
+  .delivery__grid { grid-template-columns: 1fr; }
+  .org__level--two { flex-direction: column; align-items: center; }
 }
 
 </style>
