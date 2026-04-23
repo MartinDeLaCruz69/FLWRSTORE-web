@@ -7,12 +7,13 @@ import LoginView from './views/LoginView.vue'
 import SignUpView from './views/SignUpView.vue'
 
 const routes = [
+  { path: '/', component: HomeView },
   { path: '/home', component: HomeView },
   { path: '/stock', component: StockView },
   { path: '/pagos', component: PagosView },
   { path: '/legal', component: LegalView },
-  { path: '/login', component: LoginView }, // Carga perezosa
-  { path: '/signup', component: SignUpView } // Carga perezosa
+  { path: '/login', component: LoginView }, 
+  { path: '/signup', component: SignUpView } 
 ]
 
 const router = createRouter({

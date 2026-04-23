@@ -7,6 +7,7 @@ import LoginView   from '../views/LoginView.vue'
 import SignUpView  from '../views/SignUpView.vue' 
 
 const routes = [
+  { path: '/',        component: HomeView   },
   { path: '/home',    component: HomeView   },
   { path: '/stock',   component: StockView  },
   { path: '/legal',   component: LegalView  },
