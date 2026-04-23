@@ -129,59 +129,71 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { login, recuperarPassword } from '../composables/useAuth'
 
-const router   = useRouter()
-const showPass = ref(false)
-const isLoading = ref(false)
+const router      = useRouter()
+const showPass    = ref(false)
+const isLoading   = ref(false)
 const globalError = ref('')
 
-const form = reactive({ email: '', password: '' })
-const errors = reactive({ email: '', password: '' })
+const form    = reactive({ email: '', password: '' })
+const errors  = reactive({ email: '', password: '' })
 const fieldOk = reactive({ email: false, password: false })
 
-// ── Validaciones ─────────────────────────────────────────────
 const validateEmail = () => {
-  errors.email = ''
-  fieldOk.email = false
+  errors.email = ''; fieldOk.email = false
   if (!form.email) { errors.email = 'El correo es obligatorio.'; return }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'Ingresa un correo válido.'; return }
   fieldOk.email = true
 }
 
 const validatePassword = () => {
-  errors.password = ''
-  fieldOk.password = false
+  errors.password = ''; fieldOk.password = false
   if (!form.password) { errors.password = 'La contraseña es obligatoria.'; return }
   if (form.password.length < 6) { errors.password = 'Mínimo 6 caracteres.'; return }
   fieldOk.password = true
 }
 
-// ── Submit ────────────────────────────────────────────────────
 const handleLogin = async () => {
   validateEmail()
   validatePassword()
   if (errors.email || errors.password) return
 
-  isLoading.value = true
+  isLoading.value   = true
   globalError.value = ''
 
   try {
-    // 🔥 Aquí irá: await signInWithEmailAndPassword(auth, form.email, form.password)
-    await new Promise(r => setTimeout(r, 1200)) // simulación
+    await login(form.email, form.password)
     router.push('/')
   } catch (e) {
-    globalError.value = 'Correo o contraseña incorrectos. Intenta de nuevo.'
+    // Mensajes amigables según el código de error de Firebase
+    const mensajes = {
+      'auth/user-not-found':   'No existe una cuenta con ese correo.',
+      'auth/wrong-password':   'Contraseña incorrecta. Intenta de nuevo.',
+      'auth/invalid-email':    'El formato del correo no es válido.',
+      'auth/too-many-requests':'Demasiados intentos. Espera un momento.',
+      'auth/invalid-credential': 'Correo o contraseña incorrectos.',
+    }
+    globalError.value = mensajes[e.code] || 'Ocurrió un error. Intenta de nuevo.'
   } finally {
     isLoading.value = false
   }
 }
 
-const forgotPassword = () => {
-  // 🔥 Aquí irá: await sendPasswordResetEmail(auth, form.email)
-  alert('Funcionalidad de recuperación próximamente 🌸')
+const forgotPassword = async () => {
+  if (!form.email) {
+    errors.email = 'Escribe tu correo primero para recuperar tu contraseña.'
+    return
+  }
+  try {
+    await recuperarPassword(form.email)
+    globalError.value = ''
+    alert('✅ Te enviamos un correo para recuperar tu contraseña 🌸')
+  } catch (e) {
+    globalError.value = 'No encontramos una cuenta con ese correo.'
+  }
 }
 
-// ── Petals ────────────────────────────────────────────────────
 const petalStyle = (i) => ({
   '--x':        `${10 + (i * 9) % 85}%`,
   '--delay':    `${i * 0.7}s`,
