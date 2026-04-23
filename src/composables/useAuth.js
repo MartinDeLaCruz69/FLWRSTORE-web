@@ -1,60 +1,79 @@
-import { ref } from 'vue'
-import { auth, db } from '../firebase'
+// src/composables/useAuth.js
+import { ref, computed } from 'vue'
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
+  getAuth,
   onAuthStateChanged,
-  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '../firebase'
 
-// Estado global reactivo del usuario
-export const usuarioActual = ref(null)
-export const rolActual     = ref(null)
-export const authCargando  = ref(true)
+const auth          = getAuth()
+const usuarioActual = ref(null)   // objeto Firebase User
+const rolActual     = ref(null)   // 'admin' | 'subadmin' | 'cliente' | null
+const cargandoAuth  = ref(true)
 
-// Escucha cambios de sesión en toda la app
+// ── Lista de emails admin (ajusta según necesites) ──────────
+const ADMIN_EMAILS = ['andrea@flwrstore.com', 'admin@flwrstore.com']
+
+// ── Escucha cambios de sesión ────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
+  usuarioActual.value = user
+
   if (user) {
-    usuarioActual.value = user
-    // Obtener rol desde Firestore
-    const snap = await getDoc(doc(db, 'usuarios', user.uid))
-    rolActual.value = snap.exists() ? snap.data().rol : 'cliente'
+    // Intentar leer rol desde Firestore
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', user.uid))
+      if (snap.exists()) {
+        rolActual.value = snap.data().rol || 'cliente'
+      } else {
+        // Crear documento de usuario si no existe
+        const rol = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'cliente'
+        await setDoc(doc(db, 'usuarios', user.uid), {
+          email:    user.email,
+          nombre:   user.displayName || '',
+          rol,
+          creadoEn: serverTimestamp(),
+        })
+        rolActual.value = rol
+      }
+    } catch (e) {
+      console.error('[useAuth] error leyendo rol:', e)
+      // Fallback: si el email está en la lista, es admin
+      rolActual.value = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'cliente'
+    }
   } else {
-    usuarioActual.value = null
-    rolActual.value     = null
+    rolActual.value = null
   }
-  authCargando.value = false
+
+  cargandoAuth.value = false
 })
 
+// ── Login ────────────────────────────────────────────────────
+export const login = (email, password) =>
+  signInWithEmailAndPassword(auth, email, password)
+
 // ── Registro ─────────────────────────────────────────────────
-export const registrar = async (nombre, email, password) => {
-  const { user } = await createUserWithEmailAndPassword(auth, email, password)
-
-  // Guarda el perfil en Firestore con rol 'cliente' por defecto
-  await setDoc(doc(db, 'usuarios', user.uid), {
-    nombre,
-    email,
-    rol: 'cliente',
-    creadoEn: new Date(),
+export const register = async (email, password, nombre) => {
+  const cred = await createUserWithEmailAndPassword(auth, email, password)
+  await updateProfile(cred.user, { displayName: nombre })
+  // Crear doc en Firestore
+  await setDoc(doc(db, 'usuarios', cred.user.uid), {
+    email, nombre, rol: 'cliente', creadoEn: serverTimestamp(),
   })
-
-  return user
+  return cred
 }
 
-// ── Login ─────────────────────────────────────────────────────
-export const login = async (email, password) => {
-  const { user } = await signInWithEmailAndPassword(auth, email, password)
-  return user
-}
+// ── Logout ───────────────────────────────────────────────────
+export const logout = () => signOut(auth)
 
-// ── Logout ────────────────────────────────────────────────────
-export const logout = async () => {
-  await signOut(auth)
-}
+// ── Computed helpers ─────────────────────────────────────────
+export const esAdmin    = computed(() =>
+  rolActual.value === 'admin' || rolActual.value === 'subadmin'
+)
+export const esLogueado = computed(() => !!usuarioActual.value)
 
-// ── Recuperar contraseña ──────────────────────────────────────
-export const recuperarPassword = async (email) => {
-  await sendPasswordResetEmail(auth, email)
-}
+export { usuarioActual, rolActual, cargandoAuth }
