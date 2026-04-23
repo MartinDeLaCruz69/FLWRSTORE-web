@@ -287,6 +287,67 @@
       </div>
     </section>
 
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="footer__inner">
+
+        <div class="footer__brand">
+          <div class="footer__logo">FLWR 🌸 STORE</div>
+          <p>Tu tienda K-Pop de confianza.<br>Hecho con amor desde Aguascalientes 💖</p>
+          <div class="footer__socials">
+            <a href="https://www.instagram.com/its.flwr_store?igsh=MThrMDR5cmZ2ZGxyMg==" target="_blank" class="footer__social">📸</a>
+            <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="footer__social">💬</a>
+          </div>
+        </div>
+
+        <div class="footer__links">
+          <h4>Navegación</h4>
+          <router-link to="/">Inicio</router-link>
+          <router-link to="/stock">Stock disponible</router-link>
+          <router-link to="/pagos">Formas de pago</router-link>
+          <router-link to="/legal">Aviso legal</router-link>
+        </div>
+
+        <div class="footer__contact">
+          <h4>Contacto & Atención</h4>
+          <div class="footer__contact-item">
+            <span>👑</span>
+            <div>
+              <strong>Andrea Esqueda</strong>
+              <p>Fundadora & Administradora</p>
+            </div>
+          </div>
+          <div class="footer__contact-item">
+            <span>💬</span>
+            <div>
+              <strong>WhatsApp</strong>
+              <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank">Canal oficial de ventas</a>
+            </div>
+          </div>
+          <div class="footer__contact-item">
+            <span>🕐</span>
+            <div>
+              <strong>Horario de atención</strong>
+              <p>Lun–Sáb 10:00–20:00 · Dom 11:00–15:00</p>
+            </div>
+          </div>
+          <div class="footer__contact-item">
+            <span>📍</span>
+            <div>
+              <strong>Entregas personales</strong>
+              <p>Templo de San José, Zona Centro, Ags.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p>© {{ new Date().getFullYear() }} FLWR STORE · Andrea Esqueda · Todos los derechos reservados.</p>
+        <p>Diseño y desarrollo web por <strong>Ing. Juan Martín Esparza de la Cruz</strong></p>
+      </div>
+    </footer>
+
   </div>
 </template>
 
