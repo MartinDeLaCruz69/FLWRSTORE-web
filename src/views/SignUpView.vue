@@ -242,8 +242,8 @@ const petalStyle = (i) => ({
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 .signup-page {
-  min-height: 10vh; display: grid;
-  grid-template-columns: 1fr 1fr; padding-top: 20px;
+  min-height: 100vh; display: grid;
+  grid-template-columns: 1fr 1fr; padding-top: 70px;
 }
 
 /* Deco — mismo que login */

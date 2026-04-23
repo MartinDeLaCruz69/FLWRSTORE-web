@@ -207,10 +207,10 @@ const petalStyle = (i) => ({
 
 /* ── Layout split ──────────────────────────────────────────── */
 .login-page {
-  min-height: 10vh;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 /* ── Lado decorativo ───────────────────────────────────────── */
@@ -218,8 +218,9 @@ const petalStyle = (i) => ({
   position: relative;
   background: linear-gradient(160deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  min-height: calc(100vh - 70px);
+  overflow: hidden;  
+  min-height: 100vh;
+  padding-top: 70px;
 }
 
 .deco__blobs { position: absolute; inset: 0; pointer-events: none; }
