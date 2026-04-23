@@ -348,6 +348,13 @@
       </div>
     </footer>
 
+    <!-- ============ BOTÓN SCROLL TOP ============ -->
+    <Transition name="scroll-btn">
+      <button v-if="showScrollTop" class="scroll-top" @click="scrollToTop" title="Volver arriba">
+        🌸
+      </button>
+    </Transition>
+
   </div>
 </template>
 
