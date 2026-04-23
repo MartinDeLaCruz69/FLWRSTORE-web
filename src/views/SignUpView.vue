@@ -144,19 +144,19 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { registrar } from '../composables/useAuth'
 
-const router = useRouter()
-const step   = ref(1)
+const router      = useRouter()
+const step        = ref(1)
 const showPass    = ref(false)
 const showConfirm = ref(false)
 const isLoading   = ref(false)
 const globalError = ref('')
 
-const form = reactive({ nombre: '', email: '', password: '', confirm: '', terms: false })
+const form    = reactive({ nombre: '', email: '', password: '', confirm: '', terms: false })
 const errors  = reactive({ nombre: '', email: '', password: '', confirm: '', terms: '' })
 const fieldOk = reactive({ nombre: false, email: false, password: false, confirm: false })
 
-// Validaciones
 const validateNombre = () => {
   errors.nombre = ''; fieldOk.nombre = false
   if (!form.nombre.trim()) { errors.nombre = 'Tu nombre es obligatorio.'; return }
@@ -182,46 +182,52 @@ const validateConfirm = () => {
   fieldOk.confirm = true
 }
 
-// Fuerza de contraseña
 const passwordStrength = computed(() => {
   const p = form.password
   if (!p) return { level: '', pct: 0, label: '' }
-  if (p.length < 6)  return { level: 'weak',   pct: 25,  label: '🔴 Débil'    }
-  if (p.length < 10) return { level: 'fair',   pct: 55,  label: '🟡 Regular'  }
+  if (p.length < 6)  return { level: 'weak',   pct: 25,  label: '🔴 Débil'   }
+  if (p.length < 10) return { level: 'fair',   pct: 55,  label: '🟡 Regular' }
   if (/[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p))
     return { level: 'strong', pct: 100, label: '🟢 Fuerte' }
-  return { level: 'good',   pct: 80,  label: '🔵 Buena'   }
+  return { level: 'good', pct: 80, label: '🔵 Buena' }
 })
 
 const goStep2 = () => {
-  validateNombre(); validateEmail()
-  if (!errors.nombre && !errors.password && fieldOk.nombre && fieldOk.email) step.value = 2
-  else { validateNombre(); validateEmail() }
+  validateNombre()
+  validateEmail()
+  if (fieldOk.nombre && fieldOk.email) step.value = 2
 }
 
 const handleSubmit = async () => {
-  validatePassword(); validateConfirm()
+  validatePassword()
+  validateConfirm()
   if (!form.terms) { errors.terms = 'Debes aceptar los términos para continuar.'; return }
   if (errors.password || errors.confirm) return
 
-  isLoading.value = true
+  isLoading.value   = true
   globalError.value = ''
+
   try {
-    // 🔥 Aquí irá: await createUserWithEmailAndPassword(auth, form.email, form.password)
-    await new Promise(r => setTimeout(r, 1400))
+    await registrar(form.nombre.trim(), form.email, form.password)
     router.push('/')
   } catch (e) {
-    globalError.value = 'Hubo un error al crear tu cuenta. Intenta de nuevo.'
+    const mensajes = {
+      'auth/email-already-in-use': 'Ya existe una cuenta con ese correo.',
+      'auth/invalid-email':        'El formato del correo no es válido.',
+      'auth/weak-password':        'La contraseña es muy débil. Usa al menos 6 caracteres.',
+    }
+    globalError.value = mensajes[e.code] || 'Ocurrió un error. Intenta de nuevo.'
+    step.value = e.code === 'auth/email-already-in-use' ? 1 : 2
   } finally {
     isLoading.value = false
   }
 }
 
 const perks = [
-  { icon: '🌸', text: 'Aparta productos con tu nombre' },
-  { icon: '📦', text: 'Historial de tus pedidos' },
-  { icon: '💬', text: 'Notificaciones de nuevo stock' },
-  { icon: '💖', text: 'Parte de la comunidad FLWRSTORE' },
+  { icon: '🌸', text: 'Aparta productos con tu nombre'       },
+  { icon: '📦', text: 'Historial de tus pedidos'             },
+  { icon: '💬', text: 'Notificaciones de nuevo stock'        },
+  { icon: '💖', text: 'Parte de la comunidad FLWRSTORE'      },
 ]
 
 const petalStyle = (i) => ({
