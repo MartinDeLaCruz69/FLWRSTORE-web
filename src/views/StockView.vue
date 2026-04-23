@@ -110,12 +110,16 @@
             <!-- Imagen / placeholder -->
             <div class="product-card__img">
               <div class="product-card__img-inner">
-                <span class="product-card__emoji">{{ catEmoji[prod.categoria] || '🎵' }}</span>
-                <div class="product-card__overlay">
-                  <span class="overlay-icon">👁️</span>
-                  <span class="overlay-text">Ver detalle</span>
-                </div>
+                <img v-if="prod.imagenUrl" :src="prod.imagenUrl"
+                    :alt="prod.nombre" class="product-card__photo" />
+                <span v-else class="product-card__emoji">
+                  {{ catEmoji[prod.categoria] || '🎵' }}
+                </span>
+              <div class="product-card__overlay">
+                <span class="overlay-icon">👁️</span>
+                <span class="overlay-text">Ver detalle</span>
               </div>
+            </div>
               <!-- Shimmer si apartado/vendido -->
               <div v-if="prod.estado !== 'disponible'" class="product-card__veil">
                 <span v-if="prod.estado === 'apartado'">⏳ Apartado</span>
