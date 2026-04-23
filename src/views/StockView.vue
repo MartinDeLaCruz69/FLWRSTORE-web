@@ -198,7 +198,28 @@
             </div>
 
             <!-- Acciones -->
-            <div class="modal-actions">
+            <div class="modal-actions"> 
+              <!-- Acciones admin dentro del modal -->
+              <div v-if="esAdmin" class="modal-admin-actions">
+                <button class="btn-admin-action btn-edit"
+                        @click="abrirEditar(modalProd); modalProd = null">
+                  ✏️ Editar
+                </button>
+                <button v-if="modalProd.estado === 'apartado'"
+                        class="btn-admin-action btn-liberar"
+                        @click="accionRapida('liberar', modalProd)">
+                  🔓 Liberar
+                </button>
+                <button v-if="modalProd.estado !== 'vendido'"
+                        class="btn-admin-action btn-vendido"
+                        @click="accionRapida('vendido', modalProd)">
+                  ✅ Marcar vendido
+                </button>
+                <button class="btn-admin-action btn-delete"
+                        @click="confirmarEliminar(modalProd)">
+                  🗑️ Eliminar
+                </button>
+              </div>
               <button
                 v-if="modalProd.estado === 'disponible'"
                 class="btn-apartar btn-apartar--lg"
