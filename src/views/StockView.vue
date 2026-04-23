@@ -29,6 +29,11 @@
             <span>Categorías</span>
           </div>
         </div>
+        <!-- Después de .stock-hero__stats y antes de los filtros -->
+        <div v-if="cargando" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Cargando stock en tiempo real... 🌸</p>
+        </div>
       </div>
     </section>
 
