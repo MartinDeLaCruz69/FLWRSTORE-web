@@ -561,14 +561,6 @@ const enviarComentario = () => {
   })
   nuevoComentario.value.texto = ''
 }
-
-// ── Scroll top ────────────────────────────────────────────────
-const showScrollTop = ref(false)
-const handleScrollTop = () => { showScrollTop.value = window.scrollY > 400 }
-const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
-
-onMounted(() => window.addEventListener('scroll', handleScrollTop))
-onUnmounted(() => window.removeEventListener('scroll', handleScrollTop))
 </script>
 
 <style scoped>
@@ -585,15 +577,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScrollTop))
   --shadow:      0 20px 60px rgba(233,30,140,.15);
   overflow-x: hidden;
 }
-
-/* ─── Animaciones de scroll ─────────────────────────────────── */
-.fade-up    { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.fade-left  { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.fade-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.fade-up.visible, .fade-left.visible, .fade-right.visible { opacity: 1; transform: none; }
-.delay-1 { transition-delay: 0.15s; }
-.delay-2 { transition-delay: 0.30s; }
-.delay-3 { transition-delay: 0.45s; }
 
 /* ─── Sections ──────────────────────────────────────────────── */
 .section { padding: 100px 24px; }
@@ -1214,29 +1197,8 @@ onUnmounted(() => window.removeEventListener('scroll', handleScrollTop))
   color: var(--text-light);
 }
 .comment__login-prompt span { font-size: 1.5rem; }
-.link-pink { color: var(--pink-accent); text-decoration: none; font-weight: 600; }
-
-/* ─── SCROLL TOP ─────────────────────────────────────────────── */
-.scroll-top {
-  position: fixed; bottom: 32px; left: 32px; z-index: 90;
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid rgba(233,30,140,.2);
-  font-size: 1.4rem;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(233,30,140,.2);
-  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
-  display: flex; align-items: center; justify-content: center;
+.link-pink { color: var(--pink-accent); text-decoration: none; font-weight: 600; 
 }
-.scroll-top:hover {
-  transform: scale(1.1) translateY(-4px);
-  box-shadow: 0 14px 32px rgba(233,30,140,.3);
-  border-color: var(--pink-accent);
-}
-.scroll-btn-enter-active { transition: all 0.4s cubic-bezier(.34,1.56,.64,1); }
-.scroll-btn-leave-active { transition: all 0.2s ease; }
-.scroll-btn-enter-from, .scroll-btn-leave-to { opacity: 0; transform: scale(0.5) translateY(20px); }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 900px) {
