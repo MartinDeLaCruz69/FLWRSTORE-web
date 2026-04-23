@@ -207,19 +207,21 @@ const petalStyle = (i) => ({
 
 /* ── Layout split ──────────────────────────────────────────── */
 .login-page {
-  min-height: 100vh;
+  height: calc(100vh - 70px);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: 0px;
+  padding-top: 0;
+  overflow: hidden;
 }
 
 /* ── Lado decorativo ───────────────────────────────────────── */
 .login-deco {
   position: relative;
   background: linear-gradient(160deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;  
-  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   padding-top: 70px;
 }
 
@@ -298,9 +300,12 @@ const petalStyle = (i) => ({
 
 /* ── Formulario ────────────────────────────────────────────── */
 .login-form-side {
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--cream);
-  padding: 40px 24px;
+  padding: 24px;
+  overflow-y: auto;
 }
 
 .login-form-wrap {

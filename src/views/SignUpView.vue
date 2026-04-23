@@ -242,18 +242,21 @@ const petalStyle = (i) => ({
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 .signup-page {
-  min-height: 100vh; display: grid;
-  grid-template-columns: 1fr 1fr; 
-  padding-top: 0px;
+  height: calc(100vh - 70px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 0;
+  overflow: hidden;
 }
 
 /* Deco — mismo que login */
 .signup-deco {
   position: relative;
   background: linear-gradient(160deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; 
-  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   padding-top: 70px;
 }
 .deco__blobs { position: absolute; inset: 0; pointer-events: none; }
@@ -284,7 +287,14 @@ const petalStyle = (i) => ({
 .perk p { font-size: 0.83rem; color: rgba(255,255,255,.95); font-weight: 500; margin: 0; }
 
 /* Formulario */
-.signup-form-side { display: flex; align-items: center; justify-content: center; background: var(--cream); padding: 40px 24px; }
+.signup-form-side { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  padding: 24px;
+  overflow-y: auto;
+}
 .signup-form-wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; animation: formIn 0.6s cubic-bezier(.34,1.56,.64,1) both; }
 @keyframes formIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
 
