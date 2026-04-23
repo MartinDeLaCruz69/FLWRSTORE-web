@@ -19,8 +19,16 @@
 
       <!-- Acciones -->
       <div class="navbar__actions">
-        <router-link to="/login"  class="btn-ghost">Iniciar sesión</router-link>
-        <router-link to="/signup" class="btn-primary">Registrarse</router-link>
+        <!-- Si hay sesión activa -->
+        <template v-if="usuarioActual">
+          <span class="navbar__user">👋 {{ usuarioActual.displayName || usuarioActual.email }}</span>
+          <button class="btn-ghost" @click="cerrarSesion">Cerrar sesión</button>
+        </template>
+        <!-- Si no hay sesión -->
+        <template v-else>
+          <router-link to="/login"  class="btn-ghost">Iniciar sesión</router-link>
+          <router-link to="/signup" class="btn-primary">Registrarse</router-link>
+        </template>
       </div>
 
       <!-- Hamburger mobile -->
@@ -48,7 +56,16 @@
 </template>
 
 <script setup>
+import { usuarioActual, rolActual, logout } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
+
+const router = useRouter()
+
+const cerrarSesion = async () => {
+  await logout()
+  router.push('/')
+}
 
 const scrolled = ref(false)
 const menuOpen = ref(false)
@@ -79,6 +96,12 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   backdrop-filter: blur(16px);
   border-bottom-color: rgba(244, 143, 177, 0.3);
   box-shadow: 0 4px 24px rgba(233, 30, 140, 0.08);
+}
+
+.navbar__user {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 500;
 }
 
 .navbar__inner {
