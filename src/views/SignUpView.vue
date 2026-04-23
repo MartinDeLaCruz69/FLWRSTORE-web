@@ -243,7 +243,8 @@ const petalStyle = (i) => ({
 
 .signup-page {
   min-height: 100vh; display: grid;
-  grid-template-columns: 1fr 1fr; padding-top: 70px;
+  grid-template-columns: 1fr 1fr; 
+  padding-top: 0px;
 }
 
 /* Deco — mismo que login */
@@ -251,7 +252,9 @@ const petalStyle = (i) => ({
   position: relative;
   background: linear-gradient(160deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; min-height: calc(100vh - 70px);
+  overflow: hidden; 
+  min-height: 100vh;
+  padding-top: 70px;
 }
 .deco__blobs { position: absolute; inset: 0; pointer-events: none; }
 .deco-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5; animation: blobDrift 9s ease-in-out infinite alternate; }
