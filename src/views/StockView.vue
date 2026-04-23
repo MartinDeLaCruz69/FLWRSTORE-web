@@ -289,61 +289,188 @@
       </div>
     </Transition>
 
-    <!-- ══ PANEL ADMIN (solo si es admin) ══ -->
+    <!-- ══ PANEL ADMIN ══ -->
     <Transition name="slide-up">
       <div v-if="esAdmin && adminPanelOpen" class="admin-panel">
         <div class="admin-panel__header">
-          <h3>🛠️ Panel Admin</h3>
-          <button @click="adminPanelOpen = false">✕</button>
-        </div>
-        <div class="admin-panel__body">
-          <h4>Agregar producto</h4>
-          <div class="admin-form">
-            <div class="admin-form__row">
-              <div class="admin-field">
-                <label>Nombre del producto</label>
-                <input v-model="nuevoProducto.nombre" type="text" placeholder="Ej: Ready to Be" />
-              </div>
-              <div class="admin-field">
-                <label>Grupo</label>
-                <input v-model="nuevoProducto.grupo" type="text" placeholder="Ej: TWICE" />
-              </div>
-            </div>
-            <div class="admin-form__row">
-              <div class="admin-field">
-                <label>Categoría</label>
-                <select v-model="nuevoProducto.categoria">
-                  <option v-for="cat in categorias" :key="cat" :value="cat">{{ catEmoji[cat] }} {{ cat }}</option>
-                </select>
-              </div>
-              <div class="admin-field">
-                <label>Precio (MXN)</label>
-                <input v-model.number="nuevoProducto.precio" type="number" placeholder="350" />
-              </div>
-            </div>
-            <div class="admin-form__row">
-              <div class="admin-field">
-                <label>Condición</label>
-                <select v-model="nuevoProducto.condicion">
-                  <option value="nuevo">✨ Nuevo (sellado / sin uso)</option>
-                  <option value="segunda">📦 Segunda mano (abierto, buen estado)</option>
-                </select>
-              </div>
-              <div class="admin-field">
-                <label>Estado inicial</label>
-                <select v-model="nuevoProducto.estado">
-                  <option value="disponible">🟢 Disponible</option>
-                  <option value="apartado">🟡 Apartado</option>
-                  <option value="vendido">🔴 Vendido</option>
-                </select>
-              </div>
-            </div>
-            <div class="admin-field admin-field--full">
-              <label>Inclusiones (separadas por coma)</label>
-              <input v-model="inclusionesRaw" type="text" placeholder="Ej: Photobook, Photocard aleatoria, Póster" />
-            </div>
-            <button class="btn-admin-add" @click="agregarProducto">+ Agregar al stock</button>
+          <div class="admin-panel__tabs">
+            <button :class="{ active: adminTab === 'agregar' }" @click="adminTab = 'agregar'">
+              ➕ Agregar
+            </button>
+            <button :class="{ active: adminTab === 'editar' }" @click="adminTab = 'editar'"
+                    :disabled="!prodEditando">
+              ✏️ Editar {{ prodEditando ? `— ${prodEditando.nombre}` : '' }}
+            </button>
           </div>
+          <button class="admin-panel__close" @click="adminPanelOpen = false">✕</button>
+        </div>
+
+        <div class="admin-panel__body">
+
+          <!-- ── TAB AGREGAR ── -->
+          <div v-if="adminTab === 'agregar'">
+            <div class="admin-form">
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Nombre del producto *</label>
+                  <input v-model="formNuevo.nombre" placeholder="Ej: Ready to Be" />
+                </div>
+                <div class="admin-field">
+                  <label>Grupo *</label>
+                  <input v-model="formNuevo.grupo" placeholder="Ej: TWICE" />
+                </div>
+              </div>
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Categoría</label>
+                  <select v-model="formNuevo.categoria">
+                    <option v-for="cat in categorias" :key="cat" :value="cat">
+                      {{ catEmoji[cat] }} {{ cat }}
+                    </option>
+                  </select>
+                </div>
+                <div class="admin-field">
+                  <label>Precio (MXN) *</label>
+                  <input v-model.number="formNuevo.precio" type="number" placeholder="350" />
+                </div>
+              </div>
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Condición</label>
+                  <select v-model="formNuevo.condicion">
+                    <option value="nuevo">✨ Nuevo (sellado)</option>
+                    <option value="segunda">📦 Segunda mano</option>
+                  </select>
+                </div>
+                <div class="admin-field">
+                  <label>Estado inicial</label>
+                  <select v-model="formNuevo.estado">
+                    <option value="disponible">🟢 Disponible</option>
+                    <option value="apartado">🟡 Apartado</option>
+                    <option value="vendido">🔴 Vendido</option>
+                  </select>
+                </div>
+              </div>
+              <div class="admin-field admin-field--full">
+                <label>Inclusiones (separadas por coma)</label>
+                <input v-model="formNuevo.inclusiones" placeholder="Photobook, Photocard, Póster" />
+              </div>
+
+              <!-- Foto -->
+              <div class="admin-field admin-field--full">
+                <label>Foto del producto *</label>
+                <div v-if="imagenPreviewNuevo" class="img-preview">
+                  <img :src="imagenPreviewNuevo" alt="preview" />
+                  <button type="button" class="img-preview__remove" @click="limpiarImagenNuevo">✕</button>
+                </div>
+                <label v-else class="file-drop" for="fileNuevo">
+                  <span>📸</span>
+                  <p>Haz clic para subir una foto</p>
+                  <small>JPG, PNG o WEBP · Máx 5MB</small>
+                </label>
+                <input id="fileNuevo" type="file" accept="image/*"
+                      style="display:none" @change="onImageNuevo" />
+              </div>
+
+              <!-- Progreso de subida -->
+              <div v-if="guardando" class="upload-progress">
+                <div class="upload-progress__bar" :style="{ width: uploadProgress + '%' }"></div>
+                <span>{{ uploadProgress < 100 ? `Subiendo... ${uploadProgress}%` : 'Guardando...' }}</span>
+              </div>
+
+              <div class="admin-form__actions">
+                <button class="btn-admin-cancel" @click="limpiarFormNuevo" :disabled="guardando">
+                  Limpiar
+                </button>
+                <button class="btn-admin-add" @click="submitNuevo" :disabled="guardando">
+                  <span v-if="!guardando">+ Agregar al stock</span>
+                  <span v-else>Guardando... 🌸</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── TAB EDITAR ── -->
+          <div v-if="adminTab === 'editar' && prodEditando">
+            <div class="admin-form">
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Nombre del producto</label>
+                  <input v-model="formEditar.nombre" />
+                </div>
+                <div class="admin-field">
+                  <label>Grupo</label>
+                  <input v-model="formEditar.grupo" />
+                </div>
+              </div>
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Categoría</label>
+                  <select v-model="formEditar.categoria">
+                    <option v-for="cat in categorias" :key="cat" :value="cat">
+                      {{ catEmoji[cat] }} {{ cat }}
+                    </option>
+                  </select>
+                </div>
+                <div class="admin-field">
+                  <label>Precio (MXN)</label>
+                  <input v-model.number="formEditar.precio" type="number" />
+                </div>
+              </div>
+              <div class="admin-form__row">
+                <div class="admin-field">
+                  <label>Condición</label>
+                  <select v-model="formEditar.condicion">
+                    <option value="nuevo">✨ Nuevo (sellado)</option>
+                    <option value="segunda">📦 Segunda mano</option>
+                  </select>
+                </div>
+                <div class="admin-field">
+                  <label>Estado</label>
+                  <select v-model="formEditar.estado">
+                    <option value="disponible">🟢 Disponible</option>
+                    <option value="apartado">🟡 Apartado</option>
+                    <option value="vendido">🔴 Vendido</option>
+                  </select>
+                </div>
+              </div>
+              <div class="admin-field admin-field--full">
+                <label>Inclusiones</label>
+                <input v-model="formEditar.inclusiones" />
+              </div>
+
+              <!-- Foto editar -->
+              <div class="admin-field admin-field--full">
+                <label>Foto del producto</label>
+                <div v-if="imagenPreviewEditar" class="img-preview">
+                  <img :src="imagenPreviewEditar" alt="preview" />
+                  <label for="fileEditar" class="img-preview__change">Cambiar foto</label>
+                </div>
+                <label v-else class="file-drop" for="fileEditar">
+                  <span>📸</span><p>Subir nueva foto</p>
+                </label>
+                <input id="fileEditar" type="file" accept="image/*"
+                      style="display:none" @change="onImageEditar" />
+              </div>
+
+              <div v-if="guardando" class="upload-progress">
+                <div class="upload-progress__bar" :style="{ width: uploadProgress + '%' }"></div>
+                <span>{{ uploadProgress < 100 ? `Subiendo... ${uploadProgress}%` : 'Guardando...' }}</span>
+              </div>
+
+              <div class="admin-form__actions">
+                <button class="btn-admin-cancel"
+                        @click="adminTab = 'agregar'; prodEditando = null">
+                  Cancelar
+                </button>
+                <button class="btn-admin-add" @click="submitEditar" :disabled="guardando">
+                  <span v-if="!guardando">💾 Guardar cambios</span>
+                  <span v-else>Guardando... 🌸</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </Transition>
