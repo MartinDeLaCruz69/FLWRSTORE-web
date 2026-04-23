@@ -234,6 +234,59 @@
       </div>
     </section>
 
+    <!-- ============ COMENTARIOS ============ -->
+    <section class="section section--cream" ref="comentariosRef">
+      <div class="section__inner">
+        <div class="section__tag fade-up" :class="{ visible: comentariosVisible }">💬 Comunidad</div>
+        <h2 class="section__title fade-up delay-1" :class="{ visible: comentariosVisible }">Lo que dicen nuestras clientas</h2>
+        <p class="section__desc fade-up delay-2" :class="{ visible: comentariosVisible }">
+          Reseñas reales de personas que ya compraron en FLWR STORE 🌸
+        </p>
+
+        <div class="comments__grid fade-up delay-2" :class="{ visible: comentariosVisible }">
+          <div v-for="(c, i) in comentarios" :key="i" class="comment__card" :style="{ '--i': i }">
+            <div class="comment__header">
+              <div class="comment__avatar">{{ c.emoji }}</div>
+              <div class="comment__meta">
+                <strong>{{ c.nombre }}</strong>
+                <span>{{ c.ciudad }}</span>
+              </div>
+              <div class="comment__stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <p class="comment__text">"{{ c.texto }}"</p>
+            <div class="comment__product">
+              <span>{{ catEmoji[c.categoria] }}</span>
+              {{ c.producto }}
+            </div>
+            <div class="comment__date">{{ c.fecha }}</div>
+          </div>
+        </div>
+
+        <!-- Formulario de comentario (solo usuarios logueados) -->
+        <div v-if="usuarioActual" class="comment__form fade-up delay-3" :class="{ visible: comentariosVisible }">
+          <h3>¿Ya compraste? Deja tu reseña 💗</h3>
+          <div class="comment__form-inner">
+            <textarea
+              v-model="nuevoComentario.texto"
+              placeholder="Cuéntanos tu experiencia..."
+              maxlength="200"
+            ></textarea>
+            <div class="comment__form-footer">
+              <span class="char-count">{{ nuevoComentario.texto.length }}/200</span>
+              <button class="btn-primary" @click="enviarComentario" :disabled="!nuevoComentario.texto.trim()">
+                Publicar reseña 🌸
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-else class="comment__login-prompt fade-up delay-3" :class="{ visible: comentariosVisible }">
+          <span>🌸</span>
+          <p>¿Ya compraste con nosotros? <router-link to="/login" class="link-pink">Inicia sesión</router-link> para dejar tu reseña.</p>
+        </div>
+
+      </div>
+    </section>
+
   </div>
 </template>
 
