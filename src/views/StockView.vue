@@ -327,9 +327,19 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { rolActual } from '../composables/useAuth'
+import { useProductos } from '../composables/useProductos'
 
 // ── Rol ──────────────────────────────────────────────────────
-const esAdmin = computed(() => rolActual.value === 'admin' || rolActual.value === 'subadmin')
+const esAdmin = computed(() =>
+  rolActual.value === 'admin' || rolActual.value === 'subadmin'
+)
+
+// ── Firestore ────────────────────────────────────────────────
+const {
+  productos, cargando,
+  agregarProducto, editarProducto, eliminarProducto,
+  apartarProducto, liberarProducto, marcarVendido,
+} = useProductos()
 
 // ── Catálogos ────────────────────────────────────────────────
 const categorias = ['Álbumes', 'Photocards', 'Peluches', 'Lightsticks', 'Revistas']
@@ -351,38 +361,24 @@ const estados = [
   { val: 'vendido',    label: 'Vendidos'     },
 ]
 
-// ── Productos ────────────────────────────────────────────────
-const productos = ref([
-  { id: 1, nombre: 'Ready to Be', grupo: 'TWICE', categoria: 'Álbumes', precio: 420, estado: 'disponible', condicion: 'nuevo', inclusiones: ['Photobook', 'Photocard aleatoria', 'Póster'], apartadoPor: null },
-  { id: 2, nombre: 'Proof', grupo: 'BTS', categoria: 'Álbumes', precio: 580, estado: 'apartado', condicion: 'nuevo', inclusiones: ['Photobook', '3 Photocards', 'Mini-libro'], apartadoPor: 'Valeria R.' },
-  { id: 3, nombre: 'PC Karina aespa', grupo: 'aespa', categoria: 'Photocards', precio: 120, estado: 'disponible', condicion: 'segunda', inclusiones: ['Funda protectora'], apartadoPor: null },
-  { id: 4, nombre: 'Skzoo Ryan', grupo: 'Stray Kids', categoria: 'Peluches', precio: 340, estado: 'disponible', condicion: 'nuevo', inclusiones: ['Caja original', 'Tarjeta de certificado'], apartadoPor: null },
-  { id: 5, nombre: 'Orion Light Stick', grupo: 'ATEEZ', categoria: 'Lightsticks', precio: 750, estado: 'vendido', condicion: 'nuevo', inclusiones: ['Caja', 'Correa', 'Manual'], apartadoPor: null },
-  { id: 6, nombre: 'Weverse Magazine Vol.3', grupo: 'BTS', categoria: 'Revistas', precio: 95, estado: 'disponible', condicion: 'segunda', inclusiones: ['Edición especial'], apartadoPor: null },
-  { id: 7, nombre: 'Born Pink', grupo: 'BLACKPINK', categoria: 'Álbumes', precio: 390, estado: 'disponible', condicion: 'nuevo', inclusiones: ['Photobook', 'Photocard', 'Sticker'], apartadoPor: null },
-  { id: 8, nombre: 'PC IVE Wonyoung', grupo: 'IVE', categoria: 'Photocards', precio: 85, estado: 'disponible', condicion: 'segunda', inclusiones: [], apartadoPor: null },
-])
-
 // ── Filtros ──────────────────────────────────────────────────
 const busqueda        = ref('')
 const categoriaActiva = ref('Todos')
 const estadoFiltro    = ref('todos')
 
-const productosFiltrados = computed(() => {
-  return productos.value.filter(p => {
+const productosFiltrados = computed(() =>
+  productos.value.filter(p => {
     const matchCat    = categoriaActiva.value === 'Todos' || p.categoria === categoriaActiva.value
-    const matchEst    = estadoFiltro.value === 'todos' || p.estado === estadoFiltro.value
+    const matchEst    = estadoFiltro.value === 'todos'    || p.estado    === estadoFiltro.value
     const matchSearch = !busqueda.value ||
-      p.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-      p.grupo.toLowerCase().includes(busqueda.value.toLowerCase())
+      p.nombre?.toLowerCase().includes(busqueda.value.toLowerCase()) ||
+      p.grupo?.toLowerCase().includes(busqueda.value.toLowerCase())
     return matchCat && matchEst && matchSearch
   })
-})
+)
 
 const resetFiltros = () => {
-  busqueda.value        = ''
-  categoriaActiva.value = 'Todos'
-  estadoFiltro.value    = 'todos'
+  busqueda.value = ''; categoriaActiva.value = 'Todos'; estadoFiltro.value = 'todos'
 }
 
 // ── Modal detalle ────────────────────────────────────────────
@@ -401,16 +397,18 @@ const abrirApartar = (prod) => {
   errorNombre.value   = ''
 }
 
-const confirmarApartado = () => {
+const confirmarApartado = async () => {
   if (!nombreCliente.value.trim()) {
     errorNombre.value = 'Por favor escribe tu nombre completo.'
     return
   }
-  const prod       = apartarProd.value
-  prod.estado      = 'apartado'
-  prod.apartadoPor = nombreCliente.value.trim()
-  apartarProd.value = null
-  mostrarToast(`✅ ¡${prod.nombre} fue apartado a nombre de ${prod.apartadoPor}!`, 'success')
+  try {
+    await apartarProducto(apartarProd.value.id, nombreCliente.value.trim())
+    mostrarToast(`✅ ¡${apartarProd.value.nombre} apartado a nombre de ${nombreCliente.value.trim()}!`, 'success')
+    apartarProd.value = null
+  } catch {
+    mostrarToast('⚠️ Error al apartar. Intenta de nuevo.', 'error')
+  }
 }
 
 // ── Toast ────────────────────────────────────────────────────
@@ -418,34 +416,141 @@ const toast = ref({ show: false, msg: '', type: 'success' })
 let toastTimer
 const mostrarToast = (msg, type = 'success') => {
   clearTimeout(toastTimer)
-  toast.value = { show: true, msg, type }
-  toastTimer  = setTimeout(() => { toast.value.show = false }, 3500)
+  toast.value  = { show: true, msg, type }
+  toastTimer   = setTimeout(() => { toast.value.show = false }, 3500)
 }
 
-// ── Panel admin ──────────────────────────────────────────────
+// ── Panel admin — estado ─────────────────────────────────────
 const adminPanelOpen = ref(false)
-const inclusionesRaw = ref('')
-const nuevoProducto  = ref({
-  nombre: '', grupo: '', categoria: 'Álbumes',
-  precio: 0, condicion: 'nuevo', estado: 'disponible'
-})
+const adminTab       = ref('agregar') // 'agregar' | 'editar'
+const guardando      = ref(false)
+const uploadProgress = ref(0)
 
-const agregarProducto = () => {
-  const { nombre, grupo, categoria, precio, condicion, estado } = nuevoProducto.value
-  if (!nombre || !grupo || !precio) {
-    mostrarToast('⚠️ Completa todos los campos obligatorios.', 'error')
-    return
+// ── Formulario nuevo producto ────────────────────────────────
+const formNuevo = ref({
+  nombre: '', grupo: '', categoria: 'Álbumes',
+  precio: '', condicion: 'nuevo', estado: 'disponible', inclusiones: '',
+})
+const imagenFileNuevo    = ref(null)
+const imagenPreviewNuevo = ref(null)
+
+const onImageNuevo = (e) => {
+  const f = e.target.files[0]
+  if (!f) return
+  imagenFileNuevo.value    = f
+  imagenPreviewNuevo.value = URL.createObjectURL(f)
+}
+const limpiarImagenNuevo = () => {
+  imagenFileNuevo.value    = null
+  imagenPreviewNuevo.value = null
+}
+const limpiarFormNuevo = () => {
+  formNuevo.value = { nombre: '', grupo: '', categoria: 'Álbumes', precio: '', condicion: 'nuevo', estado: 'disponible', inclusiones: '' }
+  limpiarImagenNuevo()
+  uploadProgress.value = 0
+}
+
+const submitNuevo = async () => {
+  const { nombre, grupo, precio } = formNuevo.value
+  if (!nombre || !grupo || !precio) return mostrarToast('⚠️ Nombre, grupo y precio son obligatorios.', 'error')
+  if (!imagenFileNuevo.value)       return mostrarToast('⚠️ Agrega una foto del producto.', 'error')
+
+  guardando.value = true
+  try {
+    const inclusiones = formNuevo.value.inclusiones
+      ? formNuevo.value.inclusiones.split(',').map(s => s.trim()).filter(Boolean)
+      : []
+    await agregarProducto(
+      { ...formNuevo.value, inclusiones },
+      imagenFileNuevo.value,
+      p => { uploadProgress.value = p }
+    )
+    limpiarFormNuevo()
+    mostrarToast(`🌸 ${nombre} agregado al stock!`, 'success')
+  } catch (e) {
+    console.error(e)
+    mostrarToast('⚠️ Error al guardar. Intenta de nuevo.', 'error')
+  } finally {
+    guardando.value = false
   }
-  const inclusiones = inclusionesRaw.value
-    ? inclusionesRaw.value.split(',').map(s => s.trim()).filter(Boolean)
-    : []
-  productos.value.unshift({
-    id: Date.now(), nombre, grupo, categoria,
-    precio, condicion, estado, inclusiones, apartadoPor: null
-  })
-  nuevoProducto.value  = { nombre: '', grupo: '', categoria: 'Álbumes', precio: 0, condicion: 'nuevo', estado: 'disponible' }
-  inclusionesRaw.value = ''
-  mostrarToast(`🌸 ${nombre} agregado al stock!`, 'success')
+}
+
+// ── Formulario editar producto ───────────────────────────────
+const prodEditando       = ref(null)
+const formEditar         = ref({})
+const imagenFileEditar   = ref(null)
+const imagenPreviewEditar = ref(null)
+
+const abrirEditar = (prod) => {
+  prodEditando.value = prod
+  formEditar.value   = {
+    nombre:     prod.nombre,
+    grupo:      prod.grupo,
+    categoria:  prod.categoria,
+    precio:     prod.precio,
+    condicion:  prod.condicion,
+    estado:     prod.estado,
+    inclusiones: prod.inclusiones?.join(', ') || '',
+  }
+  imagenFileEditar.value    = null
+  imagenPreviewEditar.value = prod.imagenUrl || null
+  adminTab.value = 'editar'
+}
+
+const onImageEditar = (e) => {
+  const f = e.target.files[0]
+  if (!f) return
+  imagenFileEditar.value    = f
+  imagenPreviewEditar.value = URL.createObjectURL(f)
+}
+
+const submitEditar = async () => {
+  if (!prodEditando.value) return
+  guardando.value = true
+  try {
+    const inclusiones = formEditar.value.inclusiones
+      ? formEditar.value.inclusiones.split(',').map(s => s.trim()).filter(Boolean)
+      : []
+    await editarProducto(
+      prodEditando.value.id,
+      { ...formEditar.value, inclusiones },
+      imagenFileEditar.value,
+      prodEditando.value.imagenPath,
+      p => { uploadProgress.value = p }
+    )
+    mostrarToast(`✅ ${formEditar.value.nombre} actualizado!`, 'success')
+    prodEditando.value = null
+    adminTab.value     = 'agregar'
+  } catch (e) {
+    console.error(e)
+    mostrarToast('⚠️ Error al editar.', 'error')
+  } finally {
+    guardando.value = false
+  }
+}
+
+// ── Confirmar eliminación ────────────────────────────────────
+const confirmarEliminar = async (prod) => {
+  if (!confirm(`¿Eliminar "${prod.nombre}" del stock? Esta acción no se puede deshacer.`)) return
+  try {
+    await eliminarProducto(prod.id, prod.imagenPath)
+    mostrarToast(`🗑️ ${prod.nombre} eliminado.`, 'success')
+    if (modalProd.value?.id === prod.id) modalProd.value = null
+  } catch {
+    mostrarToast('⚠️ Error al eliminar.', 'error')
+  }
+}
+
+// ── Acciones rápidas admin desde modal ───────────────────────
+const accionRapida = async (accion, prod) => {
+  try {
+    if (accion === 'liberar')  await liberarProducto(prod.id)
+    if (accion === 'vendido')  await marcarVendido(prod.id)
+    modalProd.value = null
+    mostrarToast(accion === 'liberar' ? '🟢 Producto disponible de nuevo.' : '✅ Marcado como vendido.', 'success')
+  } catch {
+    mostrarToast('⚠️ Error. Intenta de nuevo.', 'error')
+  }
 }
 </script>
 
