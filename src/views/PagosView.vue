@@ -87,7 +87,7 @@
         <p>¿Lista para apartar algo del stock?</p>
         <div class="pagos__cta-btns">
           <router-link to="/stock" class="btn-primary">🛍️ Ver Stock disponible</router-link>
-          <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="btn-ghost">💬 Ir al canal de WhatsApp</a>
+          <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="btn-primary">💬 Ir al canal de WhatsApp</a>
         </div>
       </div>
 
@@ -244,7 +244,7 @@ onUnmounted(() => obs?.disconnect())
   border-radius: 24px;
   display: flex; flex-direction: column; align-items: center; gap: 20px;
 }
-.pagos__cta p { color: rgba(255,255,255,.9); font-size: 1.1rem; font-family: 'Playfair Display', serif; }
+.pagos__cta p { color: rgba(0, 0, 0, 0.9); font-size: 1.1rem; font-family: 'Playfair Display', serif; }
 .pagos__cta-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 .btn-primary {
   background: #fff; color: var(--pink-accent); border: none;
@@ -256,7 +256,7 @@ onUnmounted(() => obs?.disconnect())
 }
 .btn-primary:hover { transform: translateY(-2px); }
 .btn-ghost {
-  background: rgba(255,255,255,.15); color: #fff;
+  background: rgba(255,255,255,.15); color: #000000;
   border: 1.5px solid rgba(255,255,255,.5);
   padding: 12px 28px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
