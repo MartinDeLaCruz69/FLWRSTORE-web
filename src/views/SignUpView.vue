@@ -359,13 +359,13 @@ const petalStyle = (i) => ({
 
 /* Acciones */
 .step2-actions { display: flex; gap: 10px; }
-.btn-back-step { background: #fff; border: 1.5px solid rgba(233,30,140,.2); color: var(--text-light); padding: 14px 20px; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+.btn-back-step { background: #ffffff; border: 1.5px solid rgba(233,30,140,.2); color: var(--text-light); padding: 14px 20px; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
 .btn-back-step:hover { border-color: var(--pink-mid); color: var(--text); }
 .btn-submit { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; border: none; padding: 15px; border-radius: 14px; width: 100%; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 28px rgba(233,30,140,.3); display: flex; align-items: center; justify-content: center; min-height: 52px; }
 .btn-submit--flex { flex: 1; width: auto; }
 .btn-submit:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(233,30,140,.4); }
 .btn-submit:disabled { opacity: 0.75; cursor: not-allowed; }
-.spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+.spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
 
 .global-error { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); color: #b91c1c; border-radius: 12px; padding: 12px 16px; font-size: 0.85rem; }
 

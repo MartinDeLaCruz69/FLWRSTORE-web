@@ -386,7 +386,7 @@ const petalStyle = (i) => ({
 /* ── Botón submit ──────────────────────────────────────────── */
 .btn-submit {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #fff; border: none; padding: 15px;
+  color: #000000; border: none; padding: 15px;
   border-radius: 14px; width: 100%;
   font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
   cursor: pointer; transition: all 0.3s;
