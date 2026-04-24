@@ -1,117 +1,120 @@
-// src/composables/useProductos.js
 import { ref, onUnmounted } from 'vue'
+import { db, storage } from '../firebase'
 import {
-  collection, onSnapshot, addDoc, updateDoc, deleteDoc,
-  doc, serverTimestamp, query, orderBy,
+  collection, onSnapshot, addDoc, updateDoc,
+  deleteDoc, doc, serverTimestamp, query, orderBy
 } from 'firebase/firestore'
 import {
-  ref as storageRef, uploadBytesResumable,
-  getDownloadURL, deleteObject,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject
 } from 'firebase/storage'
-import { db, storage } from '../firebase'
 
 export function useProductos() {
-  const productos = ref([])
-  const cargando  = ref(true)
+  const productos  = ref([])
+  const cargando   = ref(true)
 
-  // ── Escucha en tiempo real ────────────────────────────────
-  const q = query(collection(db, 'productos'), orderBy('creadoEn', 'desc'))
-
-  const unsub = onSnapshot(q, (snap) => {
-    productos.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-    cargando.value  = false
-  }, (err) => {
-    console.error('[useProductos] onSnapshot error:', err)
-    cargando.value = false
-  })
-
+  // ── Escucha en tiempo real ──────────────────────────────────
+  const unsub = onSnapshot(
+    query(collection(db, 'productos'), orderBy('fechaCreacion', 'desc')),
+    (snap) => {
+      productos.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      cargando.value  = false
+    },
+    () => { cargando.value = false }
+  )
   onUnmounted(() => unsub())
 
-  // ── Helper: subir imagen a Storage ───────────────────────
+  // ── Subir imagen a Storage ──────────────────────────────────
   const subirImagen = (file, onProgress) => {
     return new Promise((resolve, reject) => {
-      const path    = `productos/${Date.now()}_${file.name}`
-      const sRef    = storageRef(storage, path)
-      const task    = uploadBytesResumable(sRef, file)
-
+      const path = `productos/${Date.now()}_${file.name}`
+      const sRef = storageRef(storage, path)
+      const task = uploadBytesResumable(sRef, file)
       task.on('state_changed',
-        snap => {
-          const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100)
-          onProgress?.(pct)
-        },
+        snap => onProgress?.(Math.round(snap.bytesTransferred / snap.totalBytes * 100)),
         reject,
-        async () => {
-          const url = await getDownloadURL(task.snapshot.ref)
-          resolve({ url, path })
-        }
+        async () => resolve({
+          url:  await getDownloadURL(task.snapshot.ref),
+          path: task.snapshot.ref.fullPath
+        })
       )
     })
   }
 
-  // ── Agregar producto ─────────────────────────────────────
+  // ── Agregar producto ────────────────────────────────────────
   const agregarProducto = async (datos, imagenFile, onProgress) => {
-    const { url, path } = await subirImagen(imagenFile, onProgress)
-    await addDoc(collection(db, 'productos'), {
-      ...datos,
-      imagenUrl:  url,
-      imagenPath: path,
-      estado:     datos.estado || 'disponible',
-      creadoEn:   serverTimestamp(),
-    })
-  }
-
-  // ── Editar producto ──────────────────────────────────────
-  const editarProducto = async (id, datos, imagenFile, imagenPathVieja, onProgress) => {
-    let imagenUrl  = datos.imagenUrl  || null
-    let imagenPath = imagenPathVieja  || null
+    let imagenUrl  = null
+    let imagenPath = null
 
     if (imagenFile) {
-      // Borrar imagen vieja si existe
-      if (imagenPathVieja) {
-        try { await deleteObject(storageRef(storage, imagenPathVieja)) } catch (_) {}
-      }
-      const res  = await subirImagen(imagenFile, onProgress)
-      imagenUrl  = res.url
-      imagenPath = res.path
+      const result = await subirImagen(imagenFile, onProgress)
+      imagenUrl  = result.url
+      imagenPath = result.path
     }
 
-    const ref = doc(db, 'productos', id)
-    await updateDoc(ref, { ...datos, imagenUrl, imagenPath, actualizadoEn: serverTimestamp() })
+    return addDoc(collection(db, 'productos'), {
+      ...datos,
+      precio:        Number(datos.precio),
+      imagenUrl,
+      imagenPath,
+      apartadoPor:   null,
+      fechaApartado: null,
+      fechaCreacion: serverTimestamp(),
+    })
   }
 
-  // ── Eliminar producto ────────────────────────────────────
+  // ── Editar producto ─────────────────────────────────────────
+  const editarProducto = async (id, datos, imagenFile, imagenPathVieja, onProgress) => {
+    let updates = { ...datos, precio: Number(datos.precio) }
+
+    if (imagenFile) {
+      // Sube nueva imagen
+      const result = await subirImagen(imagenFile, onProgress)
+      updates.imagenUrl  = result.url
+      updates.imagenPath = result.path
+
+      // Borra imagen vieja si existe
+      if (imagenPathVieja) {
+        try {
+          await deleteObject(storageRef(storage, imagenPathVieja))
+        } catch (_) {}
+      }
+    }
+
+    return updateDoc(doc(db, 'productos', id), updates)
+  }
+
+  // ── Eliminar producto ───────────────────────────────────────
   const eliminarProducto = async (id, imagenPath) => {
     if (imagenPath) {
-      try { await deleteObject(storageRef(storage, imagenPath)) } catch (_) {}
+      try {
+        await deleteObject(storageRef(storage, imagenPath))
+      } catch (_) {}
     }
-    await deleteDoc(doc(db, 'productos', id))
+    return deleteDoc(doc(db, 'productos', id))
   }
 
-  // ── Apartar producto ─────────────────────────────────────
-  const apartarProducto = async (id, nombreCliente) => {
-    await updateDoc(doc(db, 'productos', id), {
-      estado:      'apartado',
-      apartadoPor: nombreCliente,
-      apartadoEn:  serverTimestamp(),
+  // ── Apartar producto ────────────────────────────────────────
+  const apartarProducto = (id, nombre) =>
+    updateDoc(doc(db, 'productos', id), {
+      estado:        'apartado',
+      apartadoPor:   nombre,
+      fechaApartado: serverTimestamp(),
     })
-  }
 
-  // ── Liberar producto (vuelve a disponible) ───────────────
-  const liberarProducto = async (id) => {
-    await updateDoc(doc(db, 'productos', id), {
-      estado:      'disponible',
-      apartadoPor: null,
-      apartadoEn:  null,
+  // ── Regresar a disponible ───────────────────────────────────
+  const liberarProducto = (id) =>
+    updateDoc(doc(db, 'productos', id), {
+      estado:        'disponible',
+      apartadoPor:   null,
+      fechaApartado: null,
     })
-  }
 
-  // ── Marcar como vendido ──────────────────────────────────
-  const marcarVendido = async (id) => {
-    await updateDoc(doc(db, 'productos', id), {
-      estado:    'vendido',
-      vendidoEn: serverTimestamp(),
-    })
-  }
+  // ── Marcar como vendido ─────────────────────────────────────
+  const marcarVendido = (id) =>
+    updateDoc(doc(db, 'productos', id), { estado: 'vendido' })
 
   return {
     productos, cargando,
