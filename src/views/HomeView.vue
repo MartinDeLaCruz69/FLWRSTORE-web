@@ -13,7 +13,6 @@
       </div>
 
       <div class="hero__content fade-up" :class="{ visible: heroVisible }">
-        <span class="hero__badge">✨ Tu tienda K-Pop de confianza</span>
         <h1 class="hero__title">
           Bienvenida(o) a<br>
           <span class="hero__brand">FLWR<span class="hero__brand-icon">🌸</span>STORE</span>
