@@ -28,7 +28,7 @@
         <div class="hero__stats">
           <div class="stat"><strong>+500</strong><span>Pedidos entregados</span></div>
           <div class="stat-divider"></div>
-          <div class="stat"><strong>99%</strong><span>Clientes felices</span></div>
+          <div class="stat"><strong>99.9%</strong><span>Clientes felices</span></div>
           <div class="stat-divider"></div>
           <div class="stat"><strong>+2 años</strong><span>En el mercado</span></div>
         </div>
@@ -290,9 +290,9 @@ const esAdmin = computed(() =>
 
 // ── Hero cards (puedes poner URLs de imágenes reales) ─────────
 const heroCards = ref([
-  { emoji: '🎵', label: 'Álbumes',    img: null },
-  { emoji: '📸', label: 'Photocards', img: null },
-  { emoji: '🧸', label: 'Peluches',   img: null },
+  { emoji: '🎵', label: 'Álbumes',    img: 'C:/Users/martin.esparza/Desktop/album.jpg' },
+  { emoji: '📸', label: 'Photocards', img: 'C:/Users/martin.esparza/Desktop/photocards.jpg' },
+  { emoji: '🧸', label: 'Peluches',   img: 'C:/Users/martin.esparza/Desktop/peluche.jpg' },
 ])
 
 // ── Smooth scroll a sección ──────────────────────────────────
