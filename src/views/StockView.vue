@@ -492,6 +492,15 @@
       {{ adminPanelOpen ? '✕' : '🛠️' }}
     </button>
 
+    <!-- ══ VISOR FULLSCREEN ══ -->
+    <Transition name="modal">
+      <div v-if="fotoFullscreen" class="fullscreen-backdrop" @click="fotoFullscreen = null">
+        <button class="fullscreen-close" @click="fotoFullscreen = null">✕</button>
+        <img :src="fotoFullscreen" alt="Foto completa" class="fullscreen-img" />
+        <p class="fullscreen-hint">Clic en cualquier parte para cerrar</p>
+      </div>
+    </Transition>
+
   </div>
 </template>
 
@@ -499,6 +508,8 @@
 import { ref, computed } from 'vue'
 import { rolActual } from '../composables/useAuth'
 import { useProductos } from '../composables/useProductos'
+
+const fotoFullscreen = ref(null)
 
 // ── Rol ──────────────────────────────────────────────────────
 const esAdmin = computed(() =>
@@ -978,13 +989,111 @@ const accionRapida = async (accion, prod) => {
 }
 .modal-close:hover { background: rgba(233,30,140,.15); }
 
+/* ── Modal imagen adaptable ──────────────────────────────── */
 .modal-card__img {
-  height: 200px;
+  min-height: 200px;
+  max-height: 360px;
   background: linear-gradient(135deg, #fff0f5, #fce4ec);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 5rem;
   position: relative;
+  overflow: hidden;
 }
+
+.modal-card__img--has-photo {
+  min-height: 260px;
+  max-height: 400px;
+  background: #000;
+}
+
+.modal-photo {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: contain;   /* ← contiene toda la imagen sin recortar */
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+.modal-photo:hover { transform: scale(1.02); }
+
+.modal-emoji { font-size: 5rem; }
+
+.modal-card__img .badge {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  font-size: 0.78rem;
+  z-index: 2;
+}
+
+.modal-photo__zoom-hint {
+  position: absolute;
+  bottom: 14px; left: 14px;
+  background: rgba(0,0,0,.5);
+  color: rgba(255,255,255,.9);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.modal-card__img:hover .modal-photo__zoom-hint { opacity: 1; }
+
+/* ── Visor fullscreen ────────────────────────────────────── */
+.fullscreen-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  padding: 20px;
+  gap: 16px;
+}
+
+.fullscreen-img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 80px rgba(233,30,140,.3);
+  animation: zoomIn 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fullscreen-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.fullscreen-close:hover {
+  background: rgba(233,30,140,.5);
+  border-color: var(--pink-mid);
+}
+
+.fullscreen-hint {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,.4);
+  text-align: center;
+}
+
 .modal-card__img .badge { position: absolute; bottom: 14px; right: 14px; font-size: 0.78rem; }
 .modal-card__body { padding: 28px; }
 .modal-card__cat { font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--pink-accent); margin-bottom: 6px; }
@@ -1139,19 +1248,6 @@ const accionRapida = async (accion, prod) => {
   .admin-form__row { grid-template-columns: 1fr; }
   .stock-hero__stats { flex-direction: column; gap: 12px; padding: 16px 24px; }
   .sh-stat-div { width: 60px; height: 1px; }
-}
-
-/* ── Fotos reales ────────────────────────────────────────── */
-.product-card__photo {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
-}
-.product-card:hover .product-card__photo { transform: scale(1.08); }
-
-.modal-photo {
-  width: 100%; height: 100%;
-  object-fit: cover;
 }
 
 /* ── Loading ─────────────────────────────────────────────── */
