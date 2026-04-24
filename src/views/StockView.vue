@@ -160,13 +160,25 @@
         <div class="modal-card">
           <button class="modal-close" @click="modalProd = null">✕</button>
 
-          <div class="modal-card__img">
-            <img v-if="modalProd.imagenUrl" :src="modalProd.imagenUrl"
-              :alt="modalProd.nombre" class="modal-photo" />
-            <span v-else>{{ catEmoji[modalProd.categoria] || '🎵' }}</span>
+          <!-- ══ MODAL DETALLE — imagen mejorada ══ -->
+          <div class="modal-card__img" :class="{ 'modal-card__img--has-photo': modalProd.imagenUrl }">
+            <!-- Imagen clickeable para ver fullscreen -->
+            <img
+              v-if="modalProd.imagenUrl"
+              :src="modalProd.imagenUrl"
+              :alt="modalProd.nombre"
+              class="modal-photo"
+              @click="fotoFullscreen = modalProd.imagenUrl"
+              title="Clic para ver completa"
+            />
+            <span v-else class="modal-emoji">{{ catEmoji[modalProd.categoria] || '🎵' }}</span>
             <span class="badge badge--estado" :class="'badge--' + modalProd.estado">
               {{ estadoLabel[modalProd.estado] }}
             </span>
+            <!-- Hint de zoom -->
+            <div v-if="modalProd.imagenUrl" class="modal-photo__zoom-hint">
+              🔍 Clic para ampliar
+            </div>
           </div>
 
           <div class="modal-card__body">
