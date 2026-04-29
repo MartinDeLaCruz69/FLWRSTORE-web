@@ -290,9 +290,9 @@ const esAdmin = computed(() =>
 
 // ── Hero cards (puedes poner URLs de imágenes reales) ─────────
 const heroCards = ref([
-  { emoji: '🎵', label: 'Álbumes',    img: 'C:/Users/martin.esparza/Desktop/album.jpg' },
-  { emoji: '📸', label: 'Photocards', img: 'C:/Users/martin.esparza/Desktop/photocards.jpg' },
-  { emoji: '🧸', label: 'Peluches',   img: 'C:/Users/martin.esparza/Desktop/peluche.jpg' },
+  { emoji: '🎵', label: 'Álbumes',    img: 'https://images.squarespace-cdn.com/content/v1/62f53b668eb14457565e348d/98a27bc7-46cf-4645-b0fe-045d72562c4d/2026website.png' },
+  { emoji: '📸', label: 'Photocards', img: 'https://discover-es.zenmarket.jp/assets/Products/Music-Entertainment/Kpop/Kpop-categories/Carholder-category-Kpop.webp' },
+  { emoji: '🧸', label: 'Peluches',   img: 'https://i5.walmartimages.com/asr/2735e653-0c8a-4253-9697-d2542de51d7a.613dafe887f3587d4eeb830f54d8ff95.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF' },
 ])
 
 // ── Smooth scroll a sección ──────────────────────────────────
