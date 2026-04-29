@@ -508,6 +508,9 @@
 import { ref, computed } from 'vue'
 import { rolActual } from '../composables/useAuth'
 import { useProductos } from '../composables/useProductos'
+import { usuarioActual } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
+
 
 const fotoFullscreen = ref(null)
 
@@ -571,11 +574,18 @@ const abrirModal = (prod) => { modalProd.value = prod }
 const apartarProd   = ref(null)
 const nombreCliente = ref('')
 const errorNombre   = ref('')
+const router = useRouter()
 
 const abrirApartar = (prod) => {
+  // Si no hay sesión, manda al login
+  if (!usuarioActual.value) {
+    mostrarToast('⚠️ Inicia sesión para apartar un producto.', 'error')
+    setTimeout(() => router.push('/login'), 1500)
+    return
+  }
   apartarProd.value   = prod
   modalProd.value     = null
-  nombreCliente.value = ''
+  nombreCliente.value = usuarioActual.value.displayName || usuarioActual.value.email?.split('@')[0] || ''
   errorNombre.value   = ''
 }
 
@@ -633,6 +643,11 @@ const limpiarFormNuevo = () => {
 }
 
 const submitNuevo = async () => {
+
+  if (!esAdmin.value) {
+  mostrarToast('⚠️ No tienes permisos para esta acción.', 'error')
+  return
+}
   const { nombre, grupo, precio } = formNuevo.value
   if (!nombre || !grupo || !precio) return mostrarToast('⚠️ Nombre, grupo y precio son obligatorios.', 'error')
   if (!imagenFileNuevo.value)       return mostrarToast('⚠️ Agrega una foto del producto.', 'error')
@@ -687,6 +702,12 @@ const onImageEditar = (e) => {
 }
 
 const submitEditar = async () => {
+
+  if (!esAdmin.value) {
+    mostrarToast('⚠️ No tienes permisos para esta acción.', 'error')
+    return
+  }
+
   if (!prodEditando.value) return
   guardando.value = true
   try {
@@ -713,6 +734,12 @@ const submitEditar = async () => {
 
 // ── Confirmar eliminación ────────────────────────────────────
 const confirmarEliminar = async (prod) => {
+
+  if (!esAdmin.value) {
+  mostrarToast('⚠️ No tienes permisos para esta acción.', 'error')
+  return
+}
+
   if (!confirm(`¿Eliminar "${prod.nombre}" del stock? Esta acción no se puede deshacer.`)) return
   try {
     await eliminarProducto(prod.id, prod.imagenPath)
