@@ -8,6 +8,8 @@ import LegalView  from '../views/LegalView.vue'
 import PagosView  from '../views/PagosView.vue'
 import LoginView  from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
+import MisApartadosView from '../views/MisApartadosView.vue'
+
 
 const routes = [
   { path: '/',       redirect: '/home' },
@@ -15,6 +17,13 @@ const routes = [
   { path: '/stock',  component: StockView },
   { path: '/pagos',  component: PagosView },
   { path: '/legal',  component: LegalView },
+  
+  //-─ Mis Apartados — requiere sesión ─────────────────────────
+  {
+  path: '/mis-apartados',
+  component: MisApartadosView,
+  meta: { requiereAuth: true }
+  },
 
   // ── Auth — si ya hay sesión, redirige al home ──────────────
   {
@@ -42,10 +51,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const usuario = auth.currentUser
 
-  // Si la ruta es solo para no logueados (login/signup)
-  // y ya hay sesión activa → manda al home
   if (to.meta.soloSinSesion && usuario) {
     return next('/home')
+  }
+
+  // ← Nuevo: rutas que requieren estar logueado
+  if (to.meta.requiereAuth && !usuario) {
+    return next('/login')
   }
 
   next()
