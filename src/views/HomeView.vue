@@ -897,40 +897,344 @@ const marcarLeidoHandler = async (id) => {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-soft); border: none; cursor: pointer; transition: all 0.3s; }
 .dot.active { background: var(--pink-accent); width: 24px; border-radius: 4px; }
 
-/* ─── Lista admin de testimonios ────────────────────────────── */
+/* ─── ADMIN PANEL TESTIMONIOS ───────────────────────────────── */
+.admin__panel {
+  margin-top: 48px;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid rgba(233,30,140,.2);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(233,30,140,.08);
+}
+.admin__panel-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(233,30,140,.15);
+}
+.admin__panel-header span { font-size: 1.6rem; }
+.admin__panel-header h3 {
+  font-size: 1.15rem; color: var(--text); margin: 0;
+  font-family: 'Playfair Display', serif;
+}
+
+.admin__form { display: flex; flex-direction: column; gap: 14px; }
+.admin__form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.admin__input {
+  padding: 12px 16px; border-radius: 14px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.9rem; color: var(--text);
+  outline: none; background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%; box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
+}
+.admin__input:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.admin__input::placeholder { color: #bbb; }
+
+.admin__textarea {
+  padding: 12px 16px; border-radius: 14px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.9rem; color: var(--text);
+  outline: none; background: #fff;
+  resize: vertical; min-height: 100px;
+  width: 100%; box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+}
+.admin__textarea:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.admin__textarea::placeholder { color: #bbb; }
+
+/* Upload foto */
+.admin__upload {
+  position: relative;
+  border: 2px dashed rgba(233,30,140,.25);
+  border-radius: 16px; min-height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; background: #fff;
+  transition: border-color 0.2s, background 0.2s;
+  overflow: hidden;
+}
+.admin__upload:hover {
+  border-color: var(--pink-accent);
+  background: rgba(233,30,140,.03);
+}
+.admin__upload.has-foto {
+  border-style: solid; border-color: var(--pink-mid);
+}
+.admin__upload-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--text-light); font-size: 0.85rem; padding: 20px; text-align: center;
+}
+.admin__upload-placeholder span { font-size: 1.8rem; }
+.admin__upload-placeholder p { margin: 0; font-weight: 500; }
+.admin__upload-preview {
+  width: 100%; max-height: 180px; object-fit: cover; border-radius: 14px; display: block;
+}
+.admin__upload-remove {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(0,0,0,.5); color: #fff;
+  border: none; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.admin__form-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 4px;
+}
+.char-count { font-size: 0.78rem; color: var(--text-light); }
+
+/* Lista testimonios admin */
 .admin__testimonios-lista {
-  margin-top: 24px;
-  border-top: 1px solid rgba(233,30,140,.15);
-  padding-top: 20px;
+  margin-top: 28px;
+  border-top: 1.5px solid rgba(233,30,140,.15);
+  padding-top: 22px;
 }
 .admin__lista-titulo {
-  font-size: 0.82rem; font-weight: 700; color: var(--text-light);
-  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+  font-size: 0.78rem; font-weight: 700; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px;
 }
 .admin__testimonio-item {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-  padding: 12px; border-radius: 14px; background: #fff;
-  border: 1px solid rgba(233,30,140,.1); margin-bottom: 8px;
-  transition: border-color 0.2s;
+  padding: 14px; border-radius: 16px; background: #fff;
+  border: 1.5px solid rgba(233,30,140,.1); margin-bottom: 10px;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(233,30,140,.05);
 }
-.admin__testimonio-item:hover { border-color: rgba(233,30,140,.25); }
-.admin__testimonio-info { display: flex; gap: 10px; flex: 1; }
+.admin__testimonio-item:hover {
+  border-color: rgba(233,30,140,.3);
+  box-shadow: 0 4px 16px rgba(233,30,140,.1);
+}
+.admin__testimonio-info { display: flex; gap: 12px; flex: 1; }
 .admin__testimonio-avatar {
-  width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
-  background: var(--pink-soft); display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;      
+  min-height: 48px;     
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink-soft), #fce4ec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  border: 2px solid rgba(233,30,140,.15);
 }
 .admin__testimonio-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.admin__testimonio-info strong { display: block; font-size: 0.88rem; color: var(--text); }
-.admin__testimonio-info span   { font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 4px; }
-.admin__testimonio-info p      { font-size: 0.82rem; color: var(--text-light); margin: 0; line-height: 1.4; }
+.admin__testimonio-info > div:not(.admin__testimonio-avatar) {
+flex: auto;
+}
+.admin__testimonio-info strong {
+  display: block; font-size: 0.9rem; color: var(--text); margin-bottom: 2px;
+}
+.admin__testimonio-info span {
+  font-size: 0.75rem; color: var(--pink-accent); display: block; margin-bottom: 5px;
+}
+.admin__testimonio-info p {
+  font-size: 0.82rem; color: var(--text-light); margin: 0; line-height: 1.5;
+  font-style: italic;
+}
 .admin__testimonio-delete {
-  background: none; border: 1px solid rgba(239,68,68,.2); color: #ef4444;
-  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; flex-shrink: 0;
+  background: none; border: 1.5px solid rgba(239,68,68,.2); color: #ef4444;
+  width: 34px; height: 34px; border-radius: 10px; cursor: pointer; flex-shrink: 0;
   font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.admin__testimonio-delete:hover { background: rgba(239,68,68,.08); border-color: #ef4444; }
+.admin__testimonio-delete:hover {
+  background: rgba(239,68,68,.08); border-color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* ─── TESTIMONIOS VACÍO ─────────────────────────────────────── */
+.testimonials__empty {
+  margin-top: 40px;
+  text-align: center; padding: 60px 20px;
+  background: rgba(233,30,140,.03);
+  border: 2px dashed rgba(233,30,140,.15);
+  border-radius: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.testimonials__empty span { font-size: 3rem; }
+.testimonials__empty p { font-size: 0.95rem; color: var(--text-light); margin: 0; }
+
+/* ─── SECCIÓN COMENTARIOS — CLIENTE ────────────────────────── */
+.comment__form {
+  background: #fff; border-radius: 24px; padding: 32px;
+  border: 1.5px solid rgba(233,30,140,.15);
+  box-shadow: 0 8px 32px rgba(233,30,140,.07);
+}
+.comment__form h3 {
+  font-size: 1.3rem; color: var(--text); margin-bottom: 8px;
+  font-family: 'Playfair Display', serif;
+}
+.comment__form-desc {
+  font-size: 0.9rem; color: var(--text-light);
+  margin-bottom: 20px; line-height: 1.7;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(233,30,140,.1);
+}
+.comment__form-inner { display: flex; flex-direction: column; gap: 14px; }
+.comment__form textarea {
+  width: 100%; min-height: 120px;
+  padding: 16px; border-radius: 16px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.92rem; color: var(--text); resize: vertical;
+  outline: none; box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'DM Sans', sans-serif; line-height: 1.6;
+  background: #fff;
+}
+.comment__form textarea:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.comment__form textarea::placeholder { color: #bbb; }
+.comment__form-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+}
+.comment__success {
+  background: rgba(34,197,94,.08); border: 1.5px solid rgba(34,197,94,.25);
+  color: #15803d; padding: 14px 18px; border-radius: 14px;
+  font-size: 0.88rem; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+/* ─── COMENTARIOS — USUARIO NO REGISTRADO ───────────────────── */
+.comment__login-prompt {
+  margin-top: 8px;
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid rgba(233,30,140,.15);
+  border-radius: 20px; padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(233,30,140,.06);
+}
+.comment__login-prompt span { font-size: 2rem; flex-shrink: 0; }
+.comment__login-prompt p {
+  margin: 0; font-size: 0.95rem; color: var(--text-light); line-height: 1.6;
+}
+.link-pink {
+  color: var(--pink-accent); text-decoration: none; font-weight: 700;
+  border-bottom: 1.5px solid rgba(233,30,140,.3);
+  transition: border-color 0.2s;
+}
+.link-pink:hover { border-color: var(--pink-accent); }
+
+/* ─── COMENTARIOS — PANEL ADMIN ─────────────────────────────── */
+.comment__admin {
+  background: #fff; border-radius: 24px; padding: 32px;
+  border: 1.5px solid rgba(233,30,140,.15);
+  box-shadow: 0 8px 32px rgba(233,30,140,.07);
+}
+.comment__admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 10px;
+  padding-bottom: 16px; border-bottom: 1px solid rgba(233,30,140,.1);
+}
+.comment__admin-header > div { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.comment__admin-header h3 {
+  font-size: 1.15rem; color: var(--text); margin: 0;
+  font-family: 'Playfair Display', serif;
+}
+.comment__admin-badge {
+  display: inline-flex; align-items: center;
+  background: var(--pink-accent); color: #fff;
+  font-size: 0.72rem; font-weight: 700; padding: 4px 12px;
+  border-radius: 50px;
+}
+.comment__admin-empty {
+  text-align: center; padding: 50px 20px; color: var(--text-light);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: rgba(233,30,140,.03); border-radius: 16px;
+  border: 2px dashed rgba(233,30,140,.12);
+}
+.comment__admin-empty span { font-size: 3rem; opacity: 0.4; }
+.comment__admin-empty p { font-size: 0.9rem; margin: 0; }
+.comment__admin-list { display: flex; flex-direction: column; gap: 12px; }
+
+.comment__admin-item {
+  background: #fafafa; border: 1.5px solid rgba(233,30,140,.08);
+  border-radius: 18px; padding: 18px 20px;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,.03);
+}
+.comment__admin-item:hover {
+  border-color: rgba(233,30,140,.2);
+  box-shadow: 0 4px 16px rgba(233,30,140,.08);
+}
+.comment__admin-item--nuevo {
+  background: rgba(233,30,140,.04);
+  border-color: rgba(233,30,140,.2);
+}
+.comment__admin-item-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; flex-wrap: wrap;
+}
+.comment__admin-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;      
+  min-height: 40px;     
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(233,30,140,.25);
+}
+.comment__admin-item-header > div:not(.comment__admin-avatar) {
+  flex: auto; 
+}
+.comment__admin-item-header strong { font-size: 0.92rem; color: var(--text); display: block; }
+.comment__admin-email { font-size: 0.75rem; color: var(--text-light); display: block; }
+.comment__admin-fecha {
+  font-size: 0.75rem; color: var(--text-light); margin-left: auto;
+  background: rgba(233,30,140,.06); padding: 3px 10px; border-radius: 50px;
+}
+.comment__admin-new-badge {
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; font-size: 0.7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+}
+.comment__admin-texto {
+  font-size: 0.9rem; color: var(--text); line-height: 1.65;
+  margin: 0 0 12px; padding: 12px 14px;
+  background: #fff; border-radius: 12px;
+  border-left: 3px solid rgba(233,30,140,.2);
+}
+.btn-marcar-leido {
+  background: none; border: 1.5px solid rgba(34,197,94,.3); color: #15803d;
+  font-size: 0.78rem; font-weight: 600; padding: 7px 16px; border-radius: 50px;
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-marcar-leido:hover {
+  background: rgba(34,197,94,.08); border-color: #15803d;
+  transform: translateY(-1px);
+}
+.btn-ghost-sm {
+  background: transparent; border: 1.5px solid var(--pink-mid); color: var(--pink-deep);
+  padding: 8px 18px; border-radius: 50px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost-sm:hover { background: var(--pink-soft); border-color: var(--pink-accent); }
+
+/* ─── Responsive comentarios/admin ──────────────────────────── */
+@media (max-width: 640px) {
+  .admin__form-row { grid-template-columns: 1fr; }
+  .comment__login-prompt { flex-direction: column; text-align: center; }
+  .comment__admin-fecha { display: none; }
+  .admin__panel { padding: 20px; }
+  .comment__form { padding: 20px; }
+  .comment__admin { padding: 20px; }
+}
 
 /* ─── ENTREGAS / MAPA ────────────────────────────────────────── */
 .delivery__grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center; margin-top: 40px; }
@@ -948,80 +1252,6 @@ const marcarLeidoHandler = async (id) => {
 .cta__inner p  { color: rgba(255,255,255,.95); font-size: 1.1rem; max-width: 500px; text-align: center; margin: 0; }
 .big-emoji-cta { font-size: 4rem; animation: bounce 2s ease-in-out infinite; display: block; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-
-/* ─── SISTEMA DE COMENTARIOS ────────────────────────────── */
-.comment__form-desc {
-  font-size: 0.9rem; color: var(--text-light);
-  margin-bottom: 16px; line-height: 1.6;
-}
-.comment__success {
-  background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2);
-  color: #15803d; padding: 12px 16px; border-radius: 12px;
-  font-size: 0.88rem; text-align: center; margin-top: 8px;
-}
-
-/* Panel admin comentarios */
-.comment__admin {
-  background: #fff; border-radius: 24px; padding: 28px;
-  border: 1.5px solid rgba(233,30,140,.15);
-  box-shadow: 0 4px 20px rgba(233,30,140,.06);
-}
-.comment__admin-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
-}
-.comment__admin-header h3 { font-size: 1.15rem; color: var(--text); margin: 0; }
-.comment__admin-badge {
-  display: inline-block; background: #e91e8c; color: #fff;
-  font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
-  border-radius: 50px; margin-left: 8px;
-}
-.comment__admin-empty {
-  text-align: center; padding: 40px; color: var(--text-light);
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-}
-.comment__admin-empty span { font-size: 2.5rem; opacity: 0.4; }
-.comment__admin-list { display: flex; flex-direction: column; gap: 12px; }
-
-.comment__admin-item {
-  background: rgba(252,228,236,.2); border: 1px solid rgba(233,30,140,.1);
-  border-radius: 16px; padding: 16px 18px;
-  transition: background 0.2s;
-}
-.comment__admin-item--nuevo {
-  background: rgba(233,30,140,.06);
-  border-color: rgba(233,30,140,.25);
-}
-.comment__admin-item-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px; flex-wrap: wrap;
-}
-.comment__admin-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #fff; font-weight: 700; font-size: 0.95rem;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.comment__admin-item-header strong { font-size: 0.9rem; color: var(--text); }
-.comment__admin-email { font-size: 0.75rem; color: var(--text-light); display: block; }
-.comment__admin-fecha { font-size: 0.75rem; color: var(--text-light); margin-left: auto; }
-.comment__admin-new-badge {
-  background: rgba(233,30,140,.12); color: var(--pink-deep);
-  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 50px;
-}
-.comment__admin-texto { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; margin: 0 0 10px; }
-.btn-marcar-leido {
-  background: none; border: 1px solid rgba(34,197,94,.3); color: #15803d;
-  font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; cursor: pointer;
-  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-}
-.btn-marcar-leido:hover { background: rgba(34,197,94,.1); }
-.btn-ghost-sm {
-  background: transparent; border: 1.5px solid var(--pink-mid); color: var(--pink-deep);
-  padding: 7px 16px; border-radius: 50px; font-size: 0.82rem; cursor: pointer;
-  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-}
-.btn-ghost-sm:hover { background: var(--pink-soft); }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -1043,4 +1273,20 @@ const marcarLeidoHandler = async (id) => {
 @media (max-width: 768px) {
   .testimonials__nav { display: none; }
 }
+
+/* ─── FONT IMPORT para admins y forms ───────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ─── Sección review — ancho máximo correcto ─────────────────── */
+.section--review .section__inner {
+  max-width: 800px;
+}
+
+/* ─── Comment form — box-sizing fix ─────────────────────────── */
+.comment__form textarea,
+.admin__input,
+.admin__textarea {
+  box-sizing: border-box;
+}
+
 </style>
