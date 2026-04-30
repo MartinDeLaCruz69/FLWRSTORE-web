@@ -285,7 +285,7 @@
           <h3>¿Tienes algún comentario? 💗</h3>
           <p class="comment__form-desc">
             Cuéntanos tu experiencia, sugerencias o lo que quieras decirnos.
-            Andrea los leerá personalmente 🌸
+            nuestro equipo lo leerá pronto. 🌸
           </p>
           <div class="comment__form-inner">
             <textarea
@@ -307,7 +307,7 @@
             </div>
             <!-- Confirmación -->
             <div v-if="comentarioEnviado" class="comment__success">
-              ✅ ¡Gracias por tu comentario! Andrea lo leerá pronto 💖
+              ✅ ¡Gracias por tu comentario! nuestro equipo lo leerá pronto. 💖
             </div>
           </div>
         </div>
@@ -1274,9 +1274,6 @@ flex: auto;
   .testimonials__nav { display: none; }
 }
 
-/* ─── FONT IMPORT para admins y forms ───────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
-
 /* ─── Sección review — ancho máximo correcto ─────────────────── */
 .section--review .section__inner {
   max-width: 800px;
@@ -1288,5 +1285,9 @@ flex: auto;
 .admin__textarea {
   box-sizing: border-box;
 }
+
+/* ─── FONT IMPORT para admins y forms ───────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 
 </style>
