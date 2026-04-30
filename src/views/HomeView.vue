@@ -219,23 +219,97 @@
       </div>
     </section>
 
-    <!-- ============ RESEÑA ============ -->
+    <!-- ============ COMENTARIOS ============ -->
     <section class="section section--review" ref="comentariosRef">
       <div class="section__inner">
-        <div v-if="usuarioActual && !esAdmin" class="comment__form fade-up" :class="{ visible: comentariosVisible }">
-          <h3>¿Ya compraste? Deja tu reseña 💗</h3>
+
+        <!-- FORM para clientes logueados (no admins) -->
+        <div v-if="usuarioActual && !esAdmin"
+            class="comment__form fade-up"
+            :class="{ visible: comentariosVisible }">
+          <h3>¿Tienes algún comentario? 💗</h3>
+          <p class="comment__form-desc">
+            Cuéntanos tu experiencia, sugerencias o lo que quieras decirnos.
+            Andrea los leerá personalmente 🌸
+          </p>
           <div class="comment__form-inner">
-            <textarea v-model="nuevoComentario.texto" placeholder="Cuéntanos tu experiencia..." maxlength="200"></textarea>
+            <textarea
+              v-model="nuevoComentario.texto"
+              placeholder="Escribe tu comentario aquí..."
+              maxlength="300"
+              :disabled="enviandoComentario"
+            ></textarea>
             <div class="comment__form-footer">
-              <span class="char-count">{{ nuevoComentario.texto.length }}/200</span>
-              <button class="btn-primary" @click="enviarComentario" :disabled="!nuevoComentario.texto.trim()">Publicar reseña 🌸</button>
+              <span class="char-count">{{ nuevoComentario.texto.length }}/300</span>
+              <button
+                class="btn-primary"
+                @click="enviarComentarioHandler"
+                :disabled="!nuevoComentario.texto.trim() || enviandoComentario"
+              >
+                <span v-if="!enviandoComentario">Enviar comentario 🌸</span>
+                <span v-else>Enviando...</span>
+              </button>
+            </div>
+            <!-- Confirmación -->
+            <div v-if="comentarioEnviado" class="comment__success">
+              ✅ ¡Gracias por tu comentario! Andrea lo leerá pronto 💖
             </div>
           </div>
         </div>
+
+        <!-- PANEL ADMIN para ver comentarios -->
+        <div v-if="esAdmin" class="comment__admin fade-up" :class="{ visible: comentariosVisible }">
+          <div class="comment__admin-header">
+            <div>
+              <h3>📬 Comentarios de clientes</h3>
+              <span class="comment__admin-badge" v-if="noLeidos > 0">
+                {{ noLeidos }} sin leer
+              </span>
+            </div>
+            <button class="btn-ghost-sm" @click="filtroLeidos = !filtroLeidos">
+              {{ filtroLeidos ? 'Ver todos' : 'Solo no leídos' }}
+            </button>
+          </div>
+
+          <!-- Sin comentarios -->
+          <div v-if="comentariosFiltrados.length === 0" class="comment__admin-empty">
+            <span>💬</span>
+            <p>{{ filtroLeidos ? 'No hay comentarios sin leer' : 'Aún no hay comentarios' }}</p>
+          </div>
+
+          <!-- Lista -->
+          <div v-else class="comment__admin-list">
+            <div
+              v-for="c in comentariosFiltrados"
+              :key="c.id"
+              class="comment__admin-item"
+              :class="{ 'comment__admin-item--nuevo': !c.leido }"
+            >
+              <div class="comment__admin-item-header">
+                <div class="comment__admin-avatar">{{ c.nombreAutor?.charAt(0).toUpperCase() }}</div>
+                <div>
+                  <strong>{{ c.nombreAutor }}</strong>
+                  <span class="comment__admin-email">{{ c.autor }}</span>
+                </div>
+                <span class="comment__admin-fecha">
+                  {{ c.fecha?.toDate?.()?.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) || '—' }}
+                </span>
+                <span v-if="!c.leido" class="comment__admin-new-badge">Nuevo</span>
+              </div>
+              <p class="comment__admin-texto">{{ c.texto }}</p>
+              <button v-if="!c.leido" class="btn-marcar-leido" @click="marcarLeidoHandler(c.id)">
+                ✓ Marcar como leído
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prompt para no logueados -->
         <div v-else-if="!usuarioActual" class="comment__login-prompt fade-up" :class="{ visible: comentariosVisible }">
           <span>🌸</span>
-          <p>¿Ya compraste con nosotros? <router-link to="/login" class="link-pink">Inicia sesión</router-link> para dejar tu reseña.</p>
+          <p>¿Tienes algún comentario o sugerencia? <router-link to="/login" class="link-pink">Inicia sesión</router-link> para escribirnos.</p>
         </div>
+
       </div>
     </section>
 
