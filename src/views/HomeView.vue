@@ -356,6 +356,8 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { usuarioActual } from '../composables/useAuth'
 import { rolActual } from '../composables/useAuth'
+import { useComentarios } from '../composables/useComentarios'
+
 
 // ── Admin ────────────────────────────────────────────────────
 const esAdmin = computed(() =>
@@ -415,7 +417,12 @@ onMounted(() => {
   sections.forEach(([r]) => { if (r.value) observer.observe(r.value) })
   setTimeout(() => { heroVisible.value = true }, 100)
 })
-onUnmounted(() => observer?.disconnect())
+
+onUnmounted(() => {
+  observer?.disconnect()
+  clearInterval(testimonialTimer)
+  pararEscucha()
+})
 
 // ── Redes ────────────────────────────────────────────────────
 const socials = [
@@ -482,10 +489,46 @@ const deliveryZones = [
 const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.5!2d-102.29614!3d21.88237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef9c5d7b9fcb%3A0x0!2sLic.+Francisco+Primo+Verdad+205%2C+Zona+Centro%2C+Aguascalientes!5e0!3m2!1ses!2smx!4v1'
 
 // ── Comentarios ──────────────────────────────────────────────
-const nuevoComentario = ref({ texto: '' })
-const enviarComentario = () => {
+const { comentarios, enviarComentario, escucharComentarios,
+        pararEscucha, marcarLeido } = useComentarios()
+
+const nuevoComentario   = ref({ texto: '' })
+const enviandoComentario = ref(false)
+const comentarioEnviado  = ref(false)
+const filtroLeidos       = ref(false) // false = todos, true = solo no leídos
+
+const noLeidos = computed(() =>
+  comentarios.value.filter(c => !c.leido).length
+)
+
+const comentariosFiltrados = computed(() =>
+  filtroLeidos.value
+    ? comentarios.value.filter(c => !c.leido)
+    : comentarios.value
+)
+
+watch(esAdmin, (val) => {
+  if (val) escucharComentarios()
+  else pararEscucha()
+}, { immediate: true })
+
+const enviarComentarioHandler = async () => {
   if (!nuevoComentario.value.texto.trim()) return
-  nuevoComentario.value.texto = ''
+  enviandoComentario.value = true
+  try {
+    await enviarComentario(nuevoComentario.value.texto, usuarioActual.value)
+    nuevoComentario.value.texto = ''
+    comentarioEnviado.value = true
+    setTimeout(() => { comentarioEnviado.value = false }, 4000)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    enviandoComentario.value = false
+  }
+}
+
+const marcarLeidoHandler = async (id) => {
+  await marcarLeido(id)
 }
 </script>
 
