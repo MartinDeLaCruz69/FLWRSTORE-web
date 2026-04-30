@@ -157,67 +157,64 @@
     </section>
 
     <!-- ============ TESTIMONIOS ============ -->
-    <section class="section section--white" ref="clientesRef">
-      <div class="section__inner">
-        <div class="section__tag fade-up" :class="{ visible: clientesVisible }">💖 Comunidad</div>
-        <h2 class="section__title fade-up delay-1" :class="{ visible: clientesVisible }">Nuestros clientes felices</h2>
-        <p class="section__desc fade-up delay-2" :class="{ visible: clientesVisible }">
-          Ellos ya confiaron en nosotros. ¡Únete a la familia FLWRSTORE!
-        </p>
-        <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
-          <button class="testimonials__nav" @click="prevTestimonial">‹</button>
-          <div class="testimonials__track">
-            <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * (320 + 20)}px)` }">
-              <div v-for="(t, i) in testimonials" :key="i" class="testimonial__card" :class="{ active: activeTestimonial === i }">
-                <div class="testimonial__img-wrap">
-                  <img v-if="t.foto" :src="t.foto" :alt="t.name" class="testimonial__img" />
-                  <div v-else class="testimonial__img testimonial__img--placeholder">{{ t.emoji }}</div>
-                </div>
-                <div class="testimonial__header">
-                  <div>
-                    <strong>{{ t.name }}</strong>
-                    <span>{{ t.location }}</span>
-                  </div>
-                </div>
-                <p>{{ t.text }}</p>
-                <div class="testimonial__stars">⭐⭐⭐⭐⭐</div>
-                <div class="testimonial__tag">{{ t.product }}</div>
-              </div>
-            </div>
-          </div>
-          <button class="testimonials__nav" @click="nextTestimonial">›</button>
+    <div v-if="esAdmin" class="admin__panel fade-up delay-3" :class="{ visible: clientesVisible }">
+      <div class="admin__panel-header">
+        <span>🛠️</span>
+        <h3>Agregar testimonio (Admin)</h3>
+      </div>
+      <div class="admin__form">
+        <div class="admin__form-row">
+          <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente *" class="admin__input" />
+          <input v-model="nuevoTestimonio.location" placeholder="Ciudad" class="admin__input" />
         </div>
-        <div class="testimonials__dots">
-          <button v-for="(_, i) in testimonials" :key="i" class="dot" :class="{ active: activeTestimonial === i }" @click="activeTestimonial = i"></button>
+        <input v-model="nuevoTestimonio.product" placeholder="Producto comprado" class="admin__input" />
+        <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente... *" class="admin__textarea" maxlength="200"></textarea>
+
+        <!-- Upload de foto -->
+        <div class="admin__upload" @click="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
+          <input ref="fotoInput" type="file" accept="image/*" style="display:none" @change="handleFotoUpload" />
+          <div v-if="!fotoPreview" class="admin__upload-placeholder">
+            <span>📷</span>
+            <p>Haz clic para subir foto del cliente con su producto</p>
+          </div>
+          <img v-else :src="fotoPreview" alt="Preview" class="admin__upload-preview" />
+          <button v-if="fotoPreview" class="admin__upload-remove" @click.stop="removeFoto">✕</button>
         </div>
 
-        <div v-if="esAdmin" class="admin__panel fade-up delay-3" :class="{ visible: clientesVisible }">
-          <div class="admin__panel-header"><span>🛠️</span><h3>Agregar testimonio (Admin)</h3></div>
-          <div class="admin__form">
-            <div class="admin__form-row">
-              <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente" class="admin__input" />
-              <input v-model="nuevoTestimonio.location" placeholder="Ciudad" class="admin__input" />
-            </div>
-            <input v-model="nuevoTestimonio.product" placeholder="Producto comprado" class="admin__input" />
-            <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente..." class="admin__textarea" maxlength="200"></textarea>
-            <div class="admin__upload" @click="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
-              <input ref="fotoInput" type="file" accept="image/*" style="display:none" @change="handleFotoUpload" />
-              <div v-if="!fotoPreview" class="admin__upload-placeholder">
-                <span>📷</span><p>Haz clic para subir foto del cliente con su producto</p>
-              </div>
-              <img v-else :src="fotoPreview" alt="Preview" class="admin__upload-preview" />
-              <button v-if="fotoPreview" class="admin__upload-remove" @click.stop="removeFoto">✕</button>
-            </div>
-            <div class="admin__form-footer">
-              <span class="char-count">{{ nuevoTestimonio.text.length }}/200</span>
-              <button class="btn-primary" @click="agregarTestimonio" :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim()">
-                Publicar testimonio 🌸
-              </button>
-            </div>
-          </div>
+        <div class="admin__form-footer">
+          <span class="char-count">{{ nuevoTestimonio.text.length }}/200</span>
+          <button
+            class="btn-primary"
+            @click="agregarTestimonio"
+            :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim() || guardandoTestimonio"
+          >
+            <span v-if="!guardandoTestimonio">Publicar testimonio 🌸</span>
+            <span v-else>Guardando...</span>
+          </button>
         </div>
       </div>
-    </section>
+
+      <!-- Lista de testimonios con opción de eliminar -->
+      <div v-if="testimonials.length > 0" class="admin__testimonios-lista">
+        <p class="admin__lista-titulo">📋 Testimonios publicados ({{ testimonials.length }})</p>
+        <div v-for="t in testimonials" :key="t.id" class="admin__testimonio-item">
+          <div class="admin__testimonio-info">
+            <div class="admin__testimonio-avatar">
+              <img v-if="t.foto" :src="t.foto" :alt="t.name" />
+              <span v-else>{{ t.emoji }}</span>
+            </div>
+            <div>
+              <strong>{{ t.name }}</strong>
+              <span>{{ t.location }} · {{ t.product }}</span>
+              <p>{{ t.text }}</p>
+            </div>
+          </div>
+          <button class="admin__testimonio-delete" @click="eliminarTestimonio(t.id)" title="Eliminar">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- ============ COMENTARIOS ============ -->
     <section class="section section--review" ref="comentariosRef">
@@ -357,6 +354,7 @@ import { ref, onMounted, onUnmounted, computed, watch} from 'vue'
 import { usuarioActual } from '../composables/useAuth'
 import { rolActual } from '../composables/useAuth'
 import { useComentarios } from '../composables/useComentarios'
+import { useTestimonios } from '../composables/useTestimonios'
 
 
 // ── Admin ────────────────────────────────────────────────────
@@ -418,12 +416,11 @@ onMounted(() => {
   setTimeout(() => { heroVisible.value = true }, 100)
 })
 
-onUnmounted(() => observer?.disconnect())
-
 onUnmounted(() => {
   observer?.disconnect()
   clearInterval(testimonialTimer)
   pararEscucha()
+  pararEscuchaTestimonios()
 })
 
 // ── Redes ────────────────────────────────────────────────────
@@ -433,28 +430,30 @@ const socials = [
 ]
 
 // ── Testimonios ──────────────────────────────────────────────
-const testimonials = ref([
-  { emoji: '🌸', name: 'Valeria R.', location: 'Guadalajara', text: '¡Todo llegó perfectamente empaquetado! Súper rápido y Andrea es muy amable. Ya hice mi segunda compra 💖', product: 'Ready to Be — TWICE', foto: null },
-  { emoji: '🎀', name: 'Camila T.', location: 'CDMX', text: 'Las photocards llegaron en perfecto estado, con fundas protectoras. El packaging es muy bonito. 100% recomendada.', product: 'Photocard set — BTS', foto: null },
-  { emoji: '✨', name: 'Fernanda L.', location: 'Monterrey', text: 'Me atendieron súper bien por WhatsApp. ¡Ya soy cliente fija! El peluche llegó intacto.', product: 'Skzoo Ryan — Stray Kids', foto: null },
-  { emoji: '💗', name: 'Sofía M.', location: 'Aguascalientes', text: 'Entrega el mismo día en Ags, ¡no lo podía creer! Todo perfecto, el álbum sellado y con todas las inclusiones.', product: 'Born Pink — BLACKPINK', foto: null },
-])
+// ── Testimonios desde Firestore ───────────────────────────────
+const {
+  testimonios: testimonials,
+  escucharTestimonios,
+  pararEscuchaTestimonios,
+  agregarTestimonio: guardarTestimonio,
+  eliminarTestimonio,
+} = useTestimonios()
 
-const activeTestimonial = ref(0)
-const nextTestimonial = () => { activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.value.length }
-const prevTestimonial = () => { activeTestimonial.value = (activeTestimonial.value - 1 + testimonials.value.length) % testimonials.value.length }
+// Inicia escucha al montar
+onMounted(() => { escucharTestimonios() })
 
-let testimonialTimer
-onMounted(() => { testimonialTimer = setInterval(nextTestimonial, 4500) })
-onUnmounted(() => clearInterval(testimonialTimer))
-
-// ── Admin testimonio ─────────────────────────────────────────
+// ── Formulario admin testimonio ──────────────────────────────
 const fotoInput   = ref(null)
 const fotoPreview = ref(null)
 const fotoFile    = ref(null)
-const nuevoTestimonio = ref({ name: '', location: '', product: '', text: '', emoji: '🌸' })
+const guardandoTestimonio = ref(false)
+
+const nuevoTestimonio = ref({
+  name: '', location: '', product: '', text: '', emoji: '🌸'
+})
 
 const triggerFotoUpload = () => fotoInput.value?.click()
+
 const handleFotoUpload = (e) => {
   const file = e.target.files?.[0]
   if (!file) return
@@ -463,23 +462,39 @@ const handleFotoUpload = (e) => {
   reader.onload = (ev) => { fotoPreview.value = ev.target.result }
   reader.readAsDataURL(file)
 }
+
 const removeFoto = () => {
-  fotoPreview.value = null; fotoFile.value = null
+  fotoPreview.value = null
+  fotoFile.value    = null
   if (fotoInput.value) fotoInput.value.value = ''
 }
-const agregarTestimonio = () => {
+
+const agregarTestimonio = async () => {
   if (!nuevoTestimonio.value.name || !nuevoTestimonio.value.text.trim()) return
-  testimonials.value.push({
-    emoji: '🌸', name: nuevoTestimonio.value.name,
-    location: nuevoTestimonio.value.location || 'México',
-    text: nuevoTestimonio.value.text.trim(),
-    product: nuevoTestimonio.value.product || 'Compra verificada',
-    foto: fotoPreview.value || null,
-  })
-  activeTestimonial.value = testimonials.value.length - 1
-  nuevoTestimonio.value = { name: '', location: '', product: '', text: '', emoji: '🌸' }
-  removeFoto()
+  guardandoTestimonio.value = true
+  try {
+    await guardarTestimonio(nuevoTestimonio.value, fotoPreview.value)
+    // Ir al último testimonio
+    activeTestimonial.value = testimonials.value.length - 1
+    // Reset
+    nuevoTestimonio.value = { name: '', location: '', product: '', text: '', emoji: '🌸' }
+    removeFoto()
+  } catch (e) {
+    console.error('Error guardando testimonio:', e)
+  } finally {
+    guardandoTestimonio.value = false
+  }
 }
+
+
+
+const activeTestimonial = ref(0)
+const nextTestimonial = () => { activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.value.length }
+const prevTestimonial = () => { activeTestimonial.value = (activeTestimonial.value - 1 + testimonials.value.length) % testimonials.value.length }
+
+let testimonialTimer
+onMounted(() => { testimonialTimer = setInterval(nextTestimonial, 4500) })
+onUnmounted(() => clearInterval(testimonialTimer))
 
 // ── Entregas ─────────────────────────────────────────────────
 const deliveryZones = [
@@ -824,26 +839,40 @@ const marcarLeidoHandler = async (id) => {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-soft); border: none; cursor: pointer; transition: all 0.3s; }
 .dot.active { background: var(--pink-accent); width: 24px; border-radius: 4px; }
 
-/* ─── Admin panel testimonio ─────────────────────────────────── */
-.admin__panel { margin-top: 48px; background: linear-gradient(135deg, #fff0f5, #fce4ec); border: 1.5px solid rgba(233,30,140,.2); border-radius: 24px; padding: 32px; }
-.admin__panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.admin__panel-header span { font-size: 1.4rem; }
-.admin__panel-header h3 { font-size: 1.1rem; color: var(--text); margin: 0; }
-.admin__form { display: flex; flex-direction: column; gap: 12px; }
-.admin__form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.admin__input { padding: 12px 16px; border-radius: 12px; border: 1.5px solid rgba(233,30,140,.2); font-size: 0.9rem; color: var(--text); outline: none; background: #fff; transition: border-color 0.2s; width: 100%; box-sizing: border-box; }
-.admin__input:focus { border-color: var(--pink-accent); box-shadow: 0 0 0 3px rgba(233,30,140,.08); }
-.admin__textarea { padding: 12px 16px; border-radius: 12px; border: 1.5px solid rgba(233,30,140,.2); font-size: 0.9rem; color: var(--text); outline: none; background: #fff; resize: vertical; min-height: 90px; width: 100%; box-sizing: border-box; transition: border-color 0.2s; }
-.admin__textarea:focus { border-color: var(--pink-accent); }
-.admin__upload { position: relative; border: 2px dashed rgba(233,30,140,.25); border-radius: 16px; min-height: 120px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; transition: border-color 0.2s; overflow: hidden; }
-.admin__upload:hover { border-color: var(--pink-accent); background: rgba(233,30,140,.03); }
-.admin__upload.has-foto { border-style: solid; border-color: var(--pink-mid); }
-.admin__upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-light); font-size: 0.88rem; padding: 20px; text-align: center; }
-.admin__upload-placeholder span { font-size: 2rem; }
-.admin__upload-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 14px; display: block; }
-.admin__upload-remove { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(0,0,0,.5); color: #fff; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.admin__form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.char-count { font-size: 0.78rem; color: var(--text-light); }
+/* ─── Lista admin de testimonios ────────────────────────────── */
+.admin__testimonios-lista {
+  margin-top: 24px;
+  border-top: 1px solid rgba(233,30,140,.15);
+  padding-top: 20px;
+}
+.admin__lista-titulo {
+  font-size: 0.82rem; font-weight: 700; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+}
+.admin__testimonio-item {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 12px; border-radius: 14px; background: #fff;
+  border: 1px solid rgba(233,30,140,.1); margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.admin__testimonio-item:hover { border-color: rgba(233,30,140,.25); }
+.admin__testimonio-info { display: flex; gap: 10px; flex: 1; }
+.admin__testimonio-avatar {
+  width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+  background: var(--pink-soft); display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+.admin__testimonio-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.admin__testimonio-info strong { display: block; font-size: 0.88rem; color: var(--text); }
+.admin__testimonio-info span   { font-size: 0.75rem; color: var(--text-light); display: block; margin-bottom: 4px; }
+.admin__testimonio-info p      { font-size: 0.82rem; color: var(--text-light); margin: 0; line-height: 1.4; }
+.admin__testimonio-delete {
+  background: none; border: 1px solid rgba(239,68,68,.2); color: #ef4444;
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; flex-shrink: 0;
+  font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.admin__testimonio-delete:hover { background: rgba(239,68,68,.08); border-color: #ef4444; }
 
 /* ─── ENTREGAS / MAPA ────────────────────────────────────────── */
 .delivery__grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center; margin-top: 40px; }
