@@ -119,28 +119,34 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { db } from '../firebase'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
-import { usuarioActual } from '../composables/useAuth'
+import { usuarioActual, authCargando } from '../composables/useAuth'
 
-const cargando    = ref(true)
-const productos   = ref([])
-let unsubscribe   = null
+const cargando  = ref(true)
+const productos = ref([])
+let unsubscribe = null
 
 const catEmoji = {
   'Álbumes': '🎵', 'Photocards': '📸',
   'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
 }
 
-// ── Escucha productos apartados por este usuario ─────────────
-onMounted(() => {
-  if (!usuarioActual.value) return
+// ── Espera a que auth termine de cargar, luego suscribe ──────
+const iniciarEscucha = (usuario) => {
+  // Si ya había una suscripción activa, la limpiamos
+  unsubscribe?.()
+  unsubscribe = null
 
-  const nombreUsuario = usuarioActual.value.displayName ||
-                        usuarioActual.value.email?.split('@')[0] || ''
+  if (!usuario) {
+    productos.value = []
+    cargando.value  = false
+    return
+  }
 
-  // Busca productos donde apartadoPor contiene el nombre o email del usuario
+  const nombreUsuario = usuario.displayName || usuario.email?.split('@')[0] || ''
+
   const q = query(
     collection(db, 'productos'),
     where('estado', '==', 'apartado'),
@@ -150,33 +156,43 @@ onMounted(() => {
   unsubscribe = onSnapshot(q, (snap) => {
     productos.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
     cargando.value  = false
+  }, () => {
+    cargando.value = false
   })
+}
+
+// ── Watch: cuando el usuario esté listo (incluso tras recarga) ─
+watch(
+  [usuarioActual, authCargando],
+  ([usuario, cargandoAuth]) => {
+    // Esperamos a que auth termine de inicializar
+    if (cargandoAuth) return
+    iniciarEscucha(usuario)
+  },
+  { immediate: true }
+)
+
+onUnmounted(() => {
+  unsubscribe?.()
+  clearInterval(tickTimer)
 })
 
-onUnmounted(() => unsubscribe?.())
-
-// ── Solo los apartados por este usuario ─────────────────────
 const misApartados = computed(() => productos.value)
 
-// ── Calcular tiempo restante (24h desde fechaApartado) ───────
+// ── Countdown ────────────────────────────────────────────────
 const ahora = ref(Date.now())
 let tickTimer
 onMounted(() => { tickTimer = setInterval(() => { ahora.value = Date.now() }, 1000) })
-onUnmounted(() => clearInterval(tickTimer))
 
 const calcularTiempoRestante = (fechaApartado) => {
   if (!fechaApartado) return 'Sin fecha registrada'
-
   const fechaMs  = fechaApartado?.toDate?.()?.getTime() || fechaApartado
   const limite   = fechaMs + 24 * 60 * 60 * 1000
   const restante = limite - ahora.value
-
   if (restante <= 0) return '⚠️ Tiempo vencido — contacta a la tienda'
-
-  const horas   = Math.floor(restante / (1000 * 60 * 60))
-  const minutos = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60))
+  const horas    = Math.floor(restante / (1000 * 60 * 60))
+  const minutos  = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60))
   const segundos = Math.floor((restante % (1000 * 60)) / 1000)
-
   return `${horas.toString().padStart(2,'0')}:${minutos.toString().padStart(2,'0')}:${segundos.toString().padStart(2,'0')}`
 }
 
@@ -186,15 +202,15 @@ const timerClass = (fechaApartado) => {
   const limite   = fechaMs + 24 * 60 * 60 * 1000
   const restante = limite - ahora.value
   const horas    = restante / (1000 * 60 * 60)
-  if (restante <= 0)  return 'timer--vencido'
-  if (horas <= 2)     return 'timer--urgente'
-  if (horas <= 6)     return 'timer--advertencia'
+  if (restante <= 0) return 'timer--vencido'
+  if (horas <= 2)    return 'timer--urgente'
+  if (horas <= 6)    return 'timer--advertencia'
   return 'timer--ok'
 }
 
-// ── Generar link de WhatsApp con datos del producto ──────────
+// ── WhatsApp ─────────────────────────────────────────────────
 const generarMensajeWhatsApp = (prod) => {
-  const numero  = '524494271353' // ← número de Andrea sin espacios ni +
+  const numero  = '524494271353'
   const nombre  = usuarioActual.value?.displayName ||
                   usuarioActual.value?.email?.split('@')[0] || 'Cliente'
   const mensaje = `Hola! Soy ${nombre} y quiero coordinar el pago de mi apartado:\n\n` +

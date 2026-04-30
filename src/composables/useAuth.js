@@ -58,3 +58,7 @@ export const logout = async () => {
 export const recuperarPassword = async (email) => {
   await sendPasswordResetEmail(auth, email)
 }
+
+export { usuarioActual, rolActual, authCargando, login, registrar, logout, recuperarPassword 
+  
+}
