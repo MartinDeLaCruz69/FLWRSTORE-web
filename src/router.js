@@ -5,6 +5,7 @@ import PagosView from './views/PagosView.vue'
 import LegalView from './views/LegalView.vue'
 import LoginView from './views/LoginView.vue'
 import SignUpView from './views/SignUpView.vue'
+import MisApartadosView from './views/MisApartadosView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -13,7 +14,8 @@ const routes = [
   { path: '/pagos', component: PagosView },
   { path: '/legal', component: LegalView },
   { path: '/login', component: LoginView }, 
-  { path: '/signup', component: SignUpView } 
+  { path: '/signup', component: SignUpView },
+  { path: '/mis-apartados', component: MisApartadosView },
 ]
 
 const router = createRouter({
