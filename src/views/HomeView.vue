@@ -418,6 +418,8 @@ onMounted(() => {
   setTimeout(() => { heroVisible.value = true }, 100)
 })
 
+onUnmounted(() => observer?.disconnect())
+
 onUnmounted(() => {
   observer?.disconnect()
   clearInterval(testimonialTimer)
@@ -860,16 +862,79 @@ const marcarLeidoHandler = async (id) => {
 .big-emoji-cta { font-size: 4rem; animation: bounce 2s ease-in-out infinite; display: block; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
 
-/* ─── Reseña ─────────────────────────────────────────────────── */
-.comment__form { margin-top: 40px; background: #fff; border-radius: 24px; padding: 28px; border: 1.5px solid rgba(233,30,140,.15); box-shadow: 0 4px 20px rgba(233,30,140,.06); }
-.comment__form h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 16px; }
-.comment__form-inner { display: flex; flex-direction: column; gap: 12px; }
-.comment__form textarea { width: 100%; min-height: 100px; padding: 14px 16px; border-radius: 14px; border: 1.5px solid rgba(233,30,140,.2); font-size: 0.9rem; color: var(--text); resize: vertical; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
-.comment__form textarea:focus { border-color: var(--pink-accent); box-shadow: 0 0 0 3px rgba(233,30,140,.08); }
-.comment__form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.comment__login-prompt { margin-top: 32px; display: flex; align-items: center; gap: 14px; background: rgba(233,30,140,.05); border: 1px solid rgba(233,30,140,.12); border-radius: 16px; padding: 18px 22px; font-size: 0.9rem; color: var(--text-light); }
-.comment__login-prompt span { font-size: 1.5rem; }
-.link-pink { color: var(--pink-accent); text-decoration: none; font-weight: 600; }
+/* ─── SISTEMA DE COMENTARIOS ────────────────────────────── */
+.comment__form-desc {
+  font-size: 0.9rem; color: var(--text-light);
+  margin-bottom: 16px; line-height: 1.6;
+}
+.comment__success {
+  background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2);
+  color: #15803d; padding: 12px 16px; border-radius: 12px;
+  font-size: 0.88rem; text-align: center; margin-top: 8px;
+}
+
+/* Panel admin comentarios */
+.comment__admin {
+  background: #fff; border-radius: 24px; padding: 28px;
+  border: 1.5px solid rgba(233,30,140,.15);
+  box-shadow: 0 4px 20px rgba(233,30,140,.06);
+}
+.comment__admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+}
+.comment__admin-header h3 { font-size: 1.15rem; color: var(--text); margin: 0; }
+.comment__admin-badge {
+  display: inline-block; background: #e91e8c; color: #fff;
+  font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 50px; margin-left: 8px;
+}
+.comment__admin-empty {
+  text-align: center; padding: 40px; color: var(--text-light);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.comment__admin-empty span { font-size: 2.5rem; opacity: 0.4; }
+.comment__admin-list { display: flex; flex-direction: column; gap: 12px; }
+
+.comment__admin-item {
+  background: rgba(252,228,236,.2); border: 1px solid rgba(233,30,140,.1);
+  border-radius: 16px; padding: 16px 18px;
+  transition: background 0.2s;
+}
+.comment__admin-item--nuevo {
+  background: rgba(233,30,140,.06);
+  border-color: rgba(233,30,140,.25);
+}
+.comment__admin-item-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.comment__admin-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; font-weight: 700; font-size: 0.95rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.comment__admin-item-header strong { font-size: 0.9rem; color: var(--text); }
+.comment__admin-email { font-size: 0.75rem; color: var(--text-light); display: block; }
+.comment__admin-fecha { font-size: 0.75rem; color: var(--text-light); margin-left: auto; }
+.comment__admin-new-badge {
+  background: rgba(233,30,140,.12); color: var(--pink-deep);
+  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 50px;
+}
+.comment__admin-texto { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; margin: 0 0 10px; }
+.btn-marcar-leido {
+  background: none; border: 1px solid rgba(34,197,94,.3); color: #15803d;
+  font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; cursor: pointer;
+  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-marcar-leido:hover { background: rgba(34,197,94,.1); }
+.btn-ghost-sm {
+  background: transparent; border: 1.5px solid var(--pink-mid); color: var(--pink-deep);
+  padding: 7px 16px; border-radius: 50px; font-size: 0.82rem; cursor: pointer;
+  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost-sm:hover { background: var(--pink-soft); }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 900px) {
