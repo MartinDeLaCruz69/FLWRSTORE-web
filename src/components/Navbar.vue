@@ -21,7 +21,9 @@
       <div class="navbar__actions">
         <!-- Si hay sesión activa -->
         <template v-if="usuarioActual">
-          <span class="navbar__user">👋 {{ usuarioActual.displayName || usuarioActual.email }}</span>
+          <router-link to="/mis-apartados" class="navbar__user">
+            👋 {{ usuarioActual.displayName || usuarioActual.email }}
+          </router-link>
           <button class="btn-ghost" @click="cerrarSesion">Cerrar sesión</button>
         </template>
         <!-- Si no hay sesión -->
