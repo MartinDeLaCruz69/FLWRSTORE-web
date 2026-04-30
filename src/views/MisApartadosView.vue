@@ -194,14 +194,14 @@ const timerClass = (fechaApartado) => {
 
 // ── Generar link de WhatsApp con datos del producto ──────────
 const generarMensajeWhatsApp = (prod) => {
-  const numero  = '524492832441' // ← número de Andrea sin espacios ni +
+  const numero  = '524494271353' // ← número de Andrea sin espacios ni +
   const nombre  = usuarioActual.value?.displayName ||
                   usuarioActual.value?.email?.split('@')[0] || 'Cliente'
   const mensaje = `Hola! Soy ${nombre} y quiero coordinar el pago de mi apartado:\n\n` +
-                  `📦 *${prod.nombre}* — ${prod.grupo}\n` +
-                  `💰 Precio: $${prod.precio?.toLocaleString()} MXN\n` +
-                  `📋 Categoría: ${prod.categoria}\n\n` +
-                  `¿Me puedes confirmar los datos para el pago? 🌸`
+                  `- *${prod.nombre}* — ${prod.grupo}\n` +
+                  `- Precio: $${prod.precio?.toLocaleString()} MXN\n` +
+                  `- Categoría: ${prod.categoria}\n\n` +
+                  `¿Me puedes confirmar los datos para el pago?, Por favor.`
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`
 }
 </script>
