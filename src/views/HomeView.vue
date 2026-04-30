@@ -157,64 +157,122 @@
     </section>
 
     <!-- ============ TESTIMONIOS ============ -->
-    <div v-if="esAdmin" class="admin__panel fade-up delay-3" :class="{ visible: clientesVisible }">
-      <div class="admin__panel-header">
-        <span>🛠️</span>
-        <h3>Agregar testimonio (Admin)</h3>
-      </div>
-      <div class="admin__form">
-        <div class="admin__form-row">
-          <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente *" class="admin__input" />
-          <input v-model="nuevoTestimonio.location" placeholder="Ciudad" class="admin__input" />
-        </div>
-        <input v-model="nuevoTestimonio.product" placeholder="Producto comprado" class="admin__input" />
-        <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente... *" class="admin__textarea" maxlength="200"></textarea>
+    <section class="section section--white" ref="clientesRef">
+      <div class="section__inner">
+        <div class="section__tag fade-up" :class="{ visible: clientesVisible }">💖 Comunidad</div>
+        <h2 class="section__title fade-up delay-1" :class="{ visible: clientesVisible }">Nuestros clientes felices</h2>
+        <p class="section__desc fade-up delay-2" :class="{ visible: clientesVisible }">
+          Ellos ya confiaron en nosotros. ¡Únete a la familia FLWRSTORE!
+        </p>
 
-        <!-- Upload de foto -->
-        <div class="admin__upload" @click="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
-          <input ref="fotoInput" type="file" accept="image/*" style="display:none" @change="handleFotoUpload" />
-          <div v-if="!fotoPreview" class="admin__upload-placeholder">
-            <span>📷</span>
-            <p>Haz clic para subir foto del cliente con su producto</p>
-          </div>
-          <img v-else :src="fotoPreview" alt="Preview" class="admin__upload-preview" />
-          <button v-if="fotoPreview" class="admin__upload-remove" @click.stop="removeFoto">✕</button>
+        <!-- Estado vacío — sin testimonios aún -->
+        <div v-if="testimonials.length === 0" class="testimonials__empty fade-up delay-2" :class="{ visible: clientesVisible }">
+          <span>🌸</span>
+          <p>Próximamente aquí verás los comentarios de nuestros clientes.</p>
         </div>
 
-        <div class="admin__form-footer">
-          <span class="char-count">{{ nuevoTestimonio.text.length }}/200</span>
-          <button
-            class="btn-primary"
-            @click="agregarTestimonio"
-            :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim() || guardandoTestimonio"
-          >
-            <span v-if="!guardandoTestimonio">Publicar testimonio 🌸</span>
-            <span v-else>Guardando...</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Lista de testimonios con opción de eliminar -->
-      <div v-if="testimonials.length > 0" class="admin__testimonios-lista">
-        <p class="admin__lista-titulo">📋 Testimonios publicados ({{ testimonials.length }})</p>
-        <div v-for="t in testimonials" :key="t.id" class="admin__testimonio-item">
-          <div class="admin__testimonio-info">
-            <div class="admin__testimonio-avatar">
-              <img v-if="t.foto" :src="t.foto" :alt="t.name" />
-              <span v-else>{{ t.emoji }}</span>
+        <!-- Carrusel — solo si hay testimonios -->
+        <template v-else>
+          <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
+            <button class="testimonials__nav" @click="prevTestimonial">‹</button>
+            <div class="testimonials__track">
+              <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * (320 + 20)}px)` }">
+                <div
+                  v-for="(t, i) in testimonials" :key="t.id || i"
+                  class="testimonial__card"
+                  :class="{ active: activeTestimonial === i }"
+                >
+                  <div class="testimonial__img-wrap">
+                    <img v-if="t.foto" :src="t.foto" :alt="t.name" class="testimonial__img" />
+                    <div v-else class="testimonial__img testimonial__img--placeholder">{{ t.emoji || '🌸' }}</div>
+                  </div>
+                  <div class="testimonial__header">
+                    <div>
+                      <strong>{{ t.name }}</strong>
+                      <span>{{ t.location }}</span>
+                    </div>
+                  </div>
+                  <p>{{ t.text }}</p>
+                  <div class="testimonial__stars">⭐⭐⭐⭐⭐</div>
+                  <div class="testimonial__tag">{{ t.product }}</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <strong>{{ t.name }}</strong>
-              <span>{{ t.location }} · {{ t.product }}</span>
-              <p>{{ t.text }}</p>
+            <button class="testimonials__nav" @click="nextTestimonial">›</button>
+          </div>
+
+          <div class="testimonials__dots">
+            <button
+              v-for="(_, i) in testimonials" :key="i"
+              class="dot"
+              :class="{ active: activeTestimonial === i }"
+              @click="activeTestimonial = i"
+            ></button>
+          </div>
+        </template>
+
+        <!-- Panel admin — agregar y gestionar testimonios -->
+        <div v-if="esAdmin" class="admin__panel fade-up delay-3" :class="{ visible: clientesVisible }">
+          <div class="admin__panel-header">
+            <span>🛠️</span>
+            <h3>Agregar testimonio (Admin)</h3>
+          </div>
+          <div class="admin__form">
+            <div class="admin__form-row">
+              <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente *" class="admin__input" />
+              <input v-model="nuevoTestimonio.location" placeholder="Ciudad" class="admin__input" />
+            </div>
+            <input v-model="nuevoTestimonio.product" placeholder="Producto comprado" class="admin__input" />
+            <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente... *" class="admin__textarea" maxlength="200"></textarea>
+
+            <!-- Upload de foto — stopPropagation para evitar conflictos -->
+            <div class="admin__upload" @click.stop="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
+              <input ref="fotoInput" type="file" accept="image/*" style="display:none" @change="handleFotoUpload" />
+              <div v-if="!fotoPreview" class="admin__upload-placeholder">
+                <span>📷</span>
+                <p>Haz clic para subir foto del cliente con su producto</p>
+              </div>
+              <img v-else :src="fotoPreview" alt="Preview" class="admin__upload-preview" />
+              <button v-if="fotoPreview" class="admin__upload-remove" @click.stop="removeFoto">✕</button>
+            </div>
+
+            <div class="admin__form-footer">
+              <span class="char-count">{{ nuevoTestimonio.text.length }}/200</span>
+              <button
+                class="btn-primary"
+                @click="agregarTestimonio"
+                :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim() || guardandoTestimonio"
+              >
+                <span v-if="!guardandoTestimonio">Publicar testimonio 🌸</span>
+                <span v-else>Guardando...</span>
+              </button>
             </div>
           </div>
-          <button class="admin__testimonio-delete" @click="eliminarTestimonio(t.id)" title="Eliminar">
-            🗑️
-          </button>
+
+          <!-- Lista de testimonios existentes con opción de eliminar -->
+          <div v-if="testimonials.length > 0" class="admin__testimonios-lista">
+            <p class="admin__lista-titulo">📋 Testimonios publicados ({{ testimonials.length }})</p>
+            <div v-for="t in testimonials" :key="t.id" class="admin__testimonio-item">
+              <div class="admin__testimonio-info">
+                <div class="admin__testimonio-avatar">
+                  <img v-if="t.foto" :src="t.foto" :alt="t.name" />
+                  <span v-else>{{ t.emoji || '🌸' }}</span>
+                </div>
+                <div>
+                  <strong>{{ t.name }}</strong>
+                  <span>{{ t.location }} · {{ t.product }}</span>
+                  <p>{{ t.text }}</p>
+                </div>
+              </div>
+              <button class="admin__testimonio-delete" @click="eliminarTestimonio(t.id)" title="Eliminar">
+                🗑️
+              </button>
+            </div>
+          </div>
         </div>
+
       </div>
-    </div>
+    </section>
 
     <!-- ============ COMENTARIOS ============ -->
     <section class="section section--review" ref="comentariosRef">
