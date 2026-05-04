@@ -164,58 +164,113 @@
         <p class="section__desc fade-up delay-2" :class="{ visible: clientesVisible }">
           Ellos ya confiaron en nosotros. ¡Únete a la familia FLWRSTORE!
         </p>
-        <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
-          <button class="testimonials__nav" @click="prevTestimonial">‹</button>
-          <div class="testimonials__track">
-            <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * (320 + 20)}px)` }">
-              <div v-for="(t, i) in testimonials" :key="i" class="testimonial__card" :class="{ active: activeTestimonial === i }">
-                <div class="testimonial__img-wrap">
-                  <img v-if="t.foto" :src="t.foto" :alt="t.name" class="testimonial__img" />
-                  <div v-else class="testimonial__img testimonial__img--placeholder">{{ t.emoji }}</div>
-                </div>
-                <div class="testimonial__header">
-                  <div>
-                    <strong>{{ t.name }}</strong>
-                    <span>{{ t.location }}</span>
-                  </div>
-                </div>
-                <p>{{ t.text }}</p>
-                <div class="testimonial__stars">⭐⭐⭐⭐⭐</div>
-                <div class="testimonial__tag">{{ t.product }}</div>
-              </div>
-            </div>
-          </div>
-          <button class="testimonials__nav" @click="nextTestimonial">›</button>
-        </div>
-        <div class="testimonials__dots">
-          <button v-for="(_, i) in testimonials" :key="i" class="dot" :class="{ active: activeTestimonial === i }" @click="activeTestimonial = i"></button>
+
+        <!-- Estado vacío — sin testimonios aún -->
+        <div v-if="testimonials.length === 0" class="testimonials__empty fade-up delay-2" :class="{ visible: clientesVisible }">
+          <span>🌸</span>
+          <p>Próximamente aquí verás los comentarios de nuestros clientes.</p>
         </div>
 
+        <!-- Carrusel — solo si hay testimonios -->
+        <template v-else>
+          <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
+            <button class="testimonials__nav" @click="prevTestimonial">‹</button>
+            <div class="testimonials__track">
+              <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * (320 + 20)}px)` }">
+                <div
+                  v-for="(t, i) in testimonials" :key="t.id || i"
+                  class="testimonial__card"
+                  :class="{ active: activeTestimonial === i }"
+                >
+                  <div class="testimonial__img-wrap">
+                    <img v-if="t.foto" :src="t.foto" :alt="t.name" class="testimonial__img" />
+                    <div v-else class="testimonial__img testimonial__img--placeholder">{{ t.emoji || '🌸' }}</div>
+                  </div>
+                  <div class="testimonial__header">
+                    <div>
+                      <strong>{{ t.name }}</strong>
+                      <span>{{ t.location }}</span>
+                    </div>
+                  </div>
+                  <p>{{ t.text }}</p>
+                  <div class="testimonial__stars">⭐⭐⭐⭐⭐</div>
+                  <div class="testimonial__tag">{{ t.product }}</div>
+                </div>
+              </div>
+            </div>
+            <button class="testimonials__nav" @click="nextTestimonial">›</button>
+          </div>
+
+          <div class="testimonials__dots">
+            <button
+              v-for="(_, i) in testimonials" :key="i"
+              class="dot"
+              :class="{ active: activeTestimonial === i }"
+              @click="activeTestimonial = i"
+            ></button>
+          </div>
+        </template>
+
+        <!-- Panel admin — agregar y gestionar testimonios -->
         <div v-if="esAdmin" class="admin__panel fade-up delay-3" :class="{ visible: clientesVisible }">
-          <div class="admin__panel-header"><span>🛠️</span><h3>Agregar testimonio (Admin)</h3></div>
+          <div class="admin__panel-header">
+            <span>🛠️</span>
+            <h3>Agregar testimonio (Admin)</h3>
+          </div>
           <div class="admin__form">
             <div class="admin__form-row">
-              <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente" class="admin__input" />
+              <input v-model="nuevoTestimonio.name" placeholder="Nombre del cliente *" class="admin__input" />
               <input v-model="nuevoTestimonio.location" placeholder="Ciudad" class="admin__input" />
             </div>
             <input v-model="nuevoTestimonio.product" placeholder="Producto comprado" class="admin__input" />
-            <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente..." class="admin__textarea" maxlength="200"></textarea>
-            <div class="admin__upload" @click="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
+            <textarea v-model="nuevoTestimonio.text" placeholder="Testimonio del cliente... *" class="admin__textarea" maxlength="200"></textarea>
+
+            <!-- Upload de foto — stopPropagation para evitar conflictos -->
+            <div class="admin__upload" @click.stop="triggerFotoUpload" :class="{ 'has-foto': fotoPreview }">
               <input ref="fotoInput" type="file" accept="image/*" style="display:none" @change="handleFotoUpload" />
               <div v-if="!fotoPreview" class="admin__upload-placeholder">
-                <span>📷</span><p>Haz clic para subir foto del cliente con su producto</p>
+                <span>📷</span>
+                <p>Haz clic para subir foto del cliente con su producto</p>
               </div>
               <img v-else :src="fotoPreview" alt="Preview" class="admin__upload-preview" />
               <button v-if="fotoPreview" class="admin__upload-remove" @click.stop="removeFoto">✕</button>
             </div>
+
             <div class="admin__form-footer">
               <span class="char-count">{{ nuevoTestimonio.text.length }}/200</span>
-              <button class="btn-primary" @click="agregarTestimonio" :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim()">
-                Publicar testimonio 🌸
+              <button
+                class="btn-primary"
+                @click="agregarTestimonio"
+                :disabled="!nuevoTestimonio.name || !nuevoTestimonio.text.trim() || guardandoTestimonio"
+              >
+                <span v-if="!guardandoTestimonio">Publicar testimonio 🌸</span>
+                <span v-else>Guardando...</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de testimonios existentes con opción de eliminar -->
+          <div v-if="testimonials.length > 0" class="admin__testimonios-lista">
+            <p class="admin__lista-titulo">📋 Testimonios publicados ({{ testimonials.length }})</p>
+            <div v-for="t in testimonials" :key="t.id" class="admin__testimonio-item">
+              <div class="admin__testimonio-info">
+                <div class="admin__testimonio-avatar">
+                  <img v-if="t.foto" :src="t.foto" :alt="t.name" />
+                  <span v-else>{{ t.emoji || '🌸' }}</span>
+                </div>
+                <div>
+                  <strong>{{ t.name }}</strong>
+                  <span>{{ t.location }} · {{ t.product }}</span>
+                  <p>{{ t.text }}</p>
+                </div>
+              </div>
+              <button class="admin__testimonio-delete" @click="eliminarTestimonio(t.id)" title="Eliminar">
+                🗑️
               </button>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -230,7 +285,7 @@
           <h3>¿Tienes algún comentario? 💗</h3>
           <p class="comment__form-desc">
             Cuéntanos tu experiencia, sugerencias o lo que quieras decirnos.
-            Nuestro equipo los leerá pronto 🌸
+            Nuestro equipo lo leerá pronto. 🌸
           </p>
           <div class="comment__form-inner">
             <textarea
@@ -252,7 +307,7 @@
             </div>
             <!-- Confirmación -->
             <div v-if="comentarioEnviado" class="comment__success">
-              ✅ ¡Gracias por tu comentario! Nuestro equipo los leerá pronto. 💖
+              ✅ ¡Gracias por tu comentario! Nuestro equipo lo leerá pronto. 💖
             </div>
           </div>
         </div>
@@ -357,6 +412,7 @@ import { ref, onMounted, onUnmounted, computed, watch} from 'vue'
 import { usuarioActual } from '../composables/useAuth'
 import { rolActual } from '../composables/useAuth'
 import { useComentarios } from '../composables/useComentarios'
+import { useTestimonios } from '../composables/useTestimonios'
 
 
 // ── Admin ────────────────────────────────────────────────────
@@ -418,12 +474,11 @@ onMounted(() => {
   setTimeout(() => { heroVisible.value = true }, 100)
 })
 
-onUnmounted(() => observer?.disconnect())
-
 onUnmounted(() => {
   observer?.disconnect()
   clearInterval(testimonialTimer)
   pararEscucha()
+  pararEscuchaTestimonios()
 })
 
 // ── Redes ────────────────────────────────────────────────────
@@ -433,28 +488,30 @@ const socials = [
 ]
 
 // ── Testimonios ──────────────────────────────────────────────
-const testimonials = ref([
-  { emoji: '🌸', name: 'Valeria R.', location: 'Guadalajara', text: '¡Todo llegó perfectamente empaquetado! Súper rápido y Andrea es muy amable. Ya hice mi segunda compra 💖', product: 'Ready to Be — TWICE', foto: null },
-  { emoji: '🎀', name: 'Camila T.', location: 'CDMX', text: 'Las photocards llegaron en perfecto estado, con fundas protectoras. El packaging es muy bonito. 100% recomendada.', product: 'Photocard set — BTS', foto: null },
-  { emoji: '✨', name: 'Fernanda L.', location: 'Monterrey', text: 'Me atendieron súper bien por WhatsApp. ¡Ya soy cliente fija! El peluche llegó intacto.', product: 'Skzoo Ryan — Stray Kids', foto: null },
-  { emoji: '💗', name: 'Sofía M.', location: 'Aguascalientes', text: 'Entrega el mismo día en Ags, ¡no lo podía creer! Todo perfecto, el álbum sellado y con todas las inclusiones.', product: 'Born Pink — BLACKPINK', foto: null },
-])
+// ── Testimonios desde Firestore ───────────────────────────────
+const {
+  testimonios: testimonials,
+  escucharTestimonios,
+  pararEscuchaTestimonios,
+  agregarTestimonio: guardarTestimonio,
+  eliminarTestimonio,
+} = useTestimonios()
 
-const activeTestimonial = ref(0)
-const nextTestimonial = () => { activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.value.length }
-const prevTestimonial = () => { activeTestimonial.value = (activeTestimonial.value - 1 + testimonials.value.length) % testimonials.value.length }
+// Inicia escucha al montar
+onMounted(() => { escucharTestimonios() })
 
-let testimonialTimer
-onMounted(() => { testimonialTimer = setInterval(nextTestimonial, 4500) })
-onUnmounted(() => clearInterval(testimonialTimer))
-
-// ── Admin testimonio ─────────────────────────────────────────
+// ── Formulario admin testimonio ──────────────────────────────
 const fotoInput   = ref(null)
 const fotoPreview = ref(null)
 const fotoFile    = ref(null)
-const nuevoTestimonio = ref({ name: '', location: '', product: '', text: '', emoji: '🌸' })
+const guardandoTestimonio = ref(false)
+
+const nuevoTestimonio = ref({
+  name: '', location: '', product: '', text: '', emoji: '🌸'
+})
 
 const triggerFotoUpload = () => fotoInput.value?.click()
+
 const handleFotoUpload = (e) => {
   const file = e.target.files?.[0]
   if (!file) return
@@ -463,23 +520,39 @@ const handleFotoUpload = (e) => {
   reader.onload = (ev) => { fotoPreview.value = ev.target.result }
   reader.readAsDataURL(file)
 }
+
 const removeFoto = () => {
-  fotoPreview.value = null; fotoFile.value = null
+  fotoPreview.value = null
+  fotoFile.value    = null
   if (fotoInput.value) fotoInput.value.value = ''
 }
-const agregarTestimonio = () => {
+
+const agregarTestimonio = async () => {
   if (!nuevoTestimonio.value.name || !nuevoTestimonio.value.text.trim()) return
-  testimonials.value.push({
-    emoji: '🌸', name: nuevoTestimonio.value.name,
-    location: nuevoTestimonio.value.location || 'México',
-    text: nuevoTestimonio.value.text.trim(),
-    product: nuevoTestimonio.value.product || 'Compra verificada',
-    foto: fotoPreview.value || null,
-  })
-  activeTestimonial.value = testimonials.value.length - 1
-  nuevoTestimonio.value = { name: '', location: '', product: '', text: '', emoji: '🌸' }
-  removeFoto()
+  guardandoTestimonio.value = true
+  try {
+    await guardarTestimonio(nuevoTestimonio.value, fotoPreview.value)
+    // Ir al último testimonio
+    activeTestimonial.value = testimonials.value.length - 1
+    // Reset
+    nuevoTestimonio.value = { name: '', location: '', product: '', text: '', emoji: '🌸' }
+    removeFoto()
+  } catch (e) {
+    console.error('Error guardando testimonio:', e)
+  } finally {
+    guardandoTestimonio.value = false
+  }
 }
+
+
+
+const activeTestimonial = ref(0)
+const nextTestimonial = () => { activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.value.length }
+const prevTestimonial = () => { activeTestimonial.value = (activeTestimonial.value - 1 + testimonials.value.length) % testimonials.value.length }
+
+let testimonialTimer
+onMounted(() => { testimonialTimer = setInterval(nextTestimonial, 4500) })
+onUnmounted(() => clearInterval(testimonialTimer))
 
 // ── Entregas ─────────────────────────────────────────────────
 const deliveryZones = [
@@ -824,26 +897,344 @@ const marcarLeidoHandler = async (id) => {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-soft); border: none; cursor: pointer; transition: all 0.3s; }
 .dot.active { background: var(--pink-accent); width: 24px; border-radius: 4px; }
 
-/* ─── Admin panel testimonio ─────────────────────────────────── */
-.admin__panel { margin-top: 48px; background: linear-gradient(135deg, #fff0f5, #fce4ec); border: 1.5px solid rgba(233,30,140,.2); border-radius: 24px; padding: 32px; }
-.admin__panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.admin__panel-header span { font-size: 1.4rem; }
-.admin__panel-header h3 { font-size: 1.1rem; color: var(--text); margin: 0; }
-.admin__form { display: flex; flex-direction: column; gap: 12px; }
-.admin__form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.admin__input { padding: 12px 16px; border-radius: 12px; border: 1.5px solid rgba(233,30,140,.2); font-size: 0.9rem; color: var(--text); outline: none; background: #fff; transition: border-color 0.2s; width: 100%; box-sizing: border-box; }
-.admin__input:focus { border-color: var(--pink-accent); box-shadow: 0 0 0 3px rgba(233,30,140,.08); }
-.admin__textarea { padding: 12px 16px; border-radius: 12px; border: 1.5px solid rgba(233,30,140,.2); font-size: 0.9rem; color: var(--text); outline: none; background: #fff; resize: vertical; min-height: 90px; width: 100%; box-sizing: border-box; transition: border-color 0.2s; }
-.admin__textarea:focus { border-color: var(--pink-accent); }
-.admin__upload { position: relative; border: 2px dashed rgba(233,30,140,.25); border-radius: 16px; min-height: 120px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; transition: border-color 0.2s; overflow: hidden; }
-.admin__upload:hover { border-color: var(--pink-accent); background: rgba(233,30,140,.03); }
-.admin__upload.has-foto { border-style: solid; border-color: var(--pink-mid); }
-.admin__upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-light); font-size: 0.88rem; padding: 20px; text-align: center; }
-.admin__upload-placeholder span { font-size: 2rem; }
-.admin__upload-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 14px; display: block; }
-.admin__upload-remove { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(0,0,0,.5); color: #fff; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.admin__form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* ─── ADMIN PANEL TESTIMONIOS ───────────────────────────────── */
+.admin__panel {
+  margin-top: 48px;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid rgba(233,30,140,.2);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(233,30,140,.08);
+}
+.admin__panel-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(233,30,140,.15);
+}
+.admin__panel-header span { font-size: 1.6rem; }
+.admin__panel-header h3 {
+  font-size: 1.15rem; color: var(--text); margin: 0;
+  font-family: 'Playfair Display', serif;
+}
+
+.admin__form { display: flex; flex-direction: column; gap: 14px; }
+.admin__form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.admin__input {
+  padding: 12px 16px; border-radius: 14px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.9rem; color: var(--text);
+  outline: none; background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%; box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
+}
+.admin__input:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.admin__input::placeholder { color: #bbb; }
+
+.admin__textarea {
+  padding: 12px 16px; border-radius: 14px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.9rem; color: var(--text);
+  outline: none; background: #fff;
+  resize: vertical; min-height: 100px;
+  width: 100%; box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+}
+.admin__textarea:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.admin__textarea::placeholder { color: #bbb; }
+
+/* Upload foto */
+.admin__upload {
+  position: relative;
+  border: 2px dashed rgba(233,30,140,.25);
+  border-radius: 16px; min-height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; background: #fff;
+  transition: border-color 0.2s, background 0.2s;
+  overflow: hidden;
+}
+.admin__upload:hover {
+  border-color: var(--pink-accent);
+  background: rgba(233,30,140,.03);
+}
+.admin__upload.has-foto {
+  border-style: solid; border-color: var(--pink-mid);
+}
+.admin__upload-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--text-light); font-size: 0.85rem; padding: 20px; text-align: center;
+}
+.admin__upload-placeholder span { font-size: 1.8rem; }
+.admin__upload-placeholder p { margin: 0; font-weight: 500; }
+.admin__upload-preview {
+  width: 100%; max-height: 180px; object-fit: cover; border-radius: 14px; display: block;
+}
+.admin__upload-remove {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(0,0,0,.5); color: #fff;
+  border: none; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.admin__form-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 4px;
+}
 .char-count { font-size: 0.78rem; color: var(--text-light); }
+
+/* Lista testimonios admin */
+.admin__testimonios-lista {
+  margin-top: 28px;
+  border-top: 1.5px solid rgba(233,30,140,.15);
+  padding-top: 22px;
+}
+.admin__lista-titulo {
+  font-size: 0.78rem; font-weight: 700; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px;
+}
+.admin__testimonio-item {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 14px; border-radius: 16px; background: #fff;
+  border: 1.5px solid rgba(233,30,140,.1); margin-bottom: 10px;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(233,30,140,.05);
+}
+.admin__testimonio-item:hover {
+  border-color: rgba(233,30,140,.3);
+  box-shadow: 0 4px 16px rgba(233,30,140,.1);
+}
+.admin__testimonio-info { display: flex; gap: 12px; flex: 1; }
+.admin__testimonio-avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;      
+  min-height: 48px;     
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink-soft), #fce4ec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  border: 2px solid rgba(233,30,140,.15);
+}
+.admin__testimonio-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.admin__testimonio-info > div:not(.admin__testimonio-avatar) {
+flex: auto;
+}
+.admin__testimonio-info strong {
+  display: block; font-size: 0.9rem; color: var(--text); margin-bottom: 2px;
+}
+.admin__testimonio-info span {
+  font-size: 0.75rem; color: var(--pink-accent); display: block; margin-bottom: 5px;
+}
+.admin__testimonio-info p {
+  font-size: 0.82rem; color: var(--text-light); margin: 0; line-height: 1.5;
+  font-style: italic;
+}
+.admin__testimonio-delete {
+  background: none; border: 1.5px solid rgba(239,68,68,.2); color: #ef4444;
+  width: 34px; height: 34px; border-radius: 10px; cursor: pointer; flex-shrink: 0;
+  font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.admin__testimonio-delete:hover {
+  background: rgba(239,68,68,.08); border-color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* ─── TESTIMONIOS VACÍO ─────────────────────────────────────── */
+.testimonials__empty {
+  margin-top: 40px;
+  text-align: center; padding: 60px 20px;
+  background: rgba(233,30,140,.03);
+  border: 2px dashed rgba(233,30,140,.15);
+  border-radius: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.testimonials__empty span { font-size: 3rem; }
+.testimonials__empty p { font-size: 0.95rem; color: var(--text-light); margin: 0; }
+
+/* ─── SECCIÓN COMENTARIOS — CLIENTE ────────────────────────── */
+.comment__form {
+  background: #fff; border-radius: 24px; padding: 32px;
+  border: 1.5px solid rgba(233,30,140,.15);
+  box-shadow: 0 8px 32px rgba(233,30,140,.07);
+}
+.comment__form h3 {
+  font-size: 1.3rem; color: var(--text); margin-bottom: 8px;
+  font-family: 'Playfair Display', serif;
+}
+.comment__form-desc {
+  font-size: 0.9rem; color: var(--text-light);
+  margin-bottom: 20px; line-height: 1.7;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(233,30,140,.1);
+}
+.comment__form-inner { display: flex; flex-direction: column; gap: 14px; }
+.comment__form textarea {
+  width: 100%; min-height: 120px;
+  padding: 16px; border-radius: 16px;
+  border: 1.5px solid rgba(233,30,140,.2);
+  font-size: 0.92rem; color: var(--text); resize: vertical;
+  outline: none; box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'DM Sans', sans-serif; line-height: 1.6;
+  background: #fff;
+}
+.comment__form textarea:focus {
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.comment__form textarea::placeholder { color: #bbb; }
+.comment__form-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+}
+.comment__success {
+  background: rgba(34,197,94,.08); border: 1.5px solid rgba(34,197,94,.25);
+  color: #15803d; padding: 14px 18px; border-radius: 14px;
+  font-size: 0.88rem; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+/* ─── COMENTARIOS — USUARIO NO REGISTRADO ───────────────────── */
+.comment__login-prompt {
+  margin-top: 8px;
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid rgba(233,30,140,.15);
+  border-radius: 20px; padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(233,30,140,.06);
+}
+.comment__login-prompt span { font-size: 2rem; flex-shrink: 0; }
+.comment__login-prompt p {
+  margin: 0; font-size: 0.95rem; color: var(--text-light); line-height: 1.6;
+}
+.link-pink {
+  color: var(--pink-accent); text-decoration: none; font-weight: 700;
+  border-bottom: 1.5px solid rgba(233,30,140,.3);
+  transition: border-color 0.2s;
+}
+.link-pink:hover { border-color: var(--pink-accent); }
+
+/* ─── COMENTARIOS — PANEL ADMIN ─────────────────────────────── */
+.comment__admin {
+  background: #fff; border-radius: 24px; padding: 32px;
+  border: 1.5px solid rgba(233,30,140,.15);
+  box-shadow: 0 8px 32px rgba(233,30,140,.07);
+}
+.comment__admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 10px;
+  padding-bottom: 16px; border-bottom: 1px solid rgba(233,30,140,.1);
+}
+.comment__admin-header > div { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.comment__admin-header h3 {
+  font-size: 1.15rem; color: var(--text); margin: 0;
+  font-family: 'Playfair Display', serif;
+}
+.comment__admin-badge {
+  display: inline-flex; align-items: center;
+  background: var(--pink-accent); color: #fff;
+  font-size: 0.72rem; font-weight: 700; padding: 4px 12px;
+  border-radius: 50px;
+}
+.comment__admin-empty {
+  text-align: center; padding: 50px 20px; color: var(--text-light);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: rgba(233,30,140,.03); border-radius: 16px;
+  border: 2px dashed rgba(233,30,140,.12);
+}
+.comment__admin-empty span { font-size: 3rem; opacity: 0.4; }
+.comment__admin-empty p { font-size: 0.9rem; margin: 0; }
+.comment__admin-list { display: flex; flex-direction: column; gap: 12px; }
+
+.comment__admin-item {
+  background: #fafafa; border: 1.5px solid rgba(233,30,140,.08);
+  border-radius: 18px; padding: 18px 20px;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,.03);
+}
+.comment__admin-item:hover {
+  border-color: rgba(233,30,140,.2);
+  box-shadow: 0 4px 16px rgba(233,30,140,.08);
+}
+.comment__admin-item--nuevo {
+  background: rgba(233,30,140,.04);
+  border-color: rgba(233,30,140,.2);
+}
+.comment__admin-item-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; flex-wrap: wrap;
+}
+.comment__admin-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;      
+  min-height: 40px;     
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(233,30,140,.25);
+}
+.comment__admin-item-header > div:not(.comment__admin-avatar) {
+  flex: auto; 
+}
+.comment__admin-item-header strong { font-size: 0.92rem; color: var(--text); display: block; }
+.comment__admin-email { font-size: 0.75rem; color: var(--text-light); display: block; }
+.comment__admin-fecha {
+  font-size: 0.75rem; color: var(--text-light); margin-left: auto;
+  background: rgba(233,30,140,.06); padding: 3px 10px; border-radius: 50px;
+}
+.comment__admin-new-badge {
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #fff; font-size: 0.7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+}
+.comment__admin-texto {
+  font-size: 0.9rem; color: var(--text); line-height: 1.65;
+  margin: 0 0 12px; padding: 12px 14px;
+  background: #fff; border-radius: 12px;
+  border-left: 3px solid rgba(233,30,140,.2);
+}
+.btn-marcar-leido {
+  background: none; border: 1.5px solid rgba(34,197,94,.3); color: #15803d;
+  font-size: 0.78rem; font-weight: 600; padding: 7px 16px; border-radius: 50px;
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-marcar-leido:hover {
+  background: rgba(34,197,94,.08); border-color: #15803d;
+  transform: translateY(-1px);
+}
+.btn-ghost-sm {
+  background: transparent; border: 1.5px solid var(--pink-mid); color: var(--pink-deep);
+  padding: 8px 18px; border-radius: 50px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost-sm:hover { background: var(--pink-soft); border-color: var(--pink-accent); }
+
+/* ─── Responsive comentarios/admin ──────────────────────────── */
+@media (max-width: 640px) {
+  .admin__form-row { grid-template-columns: 1fr; }
+  .comment__login-prompt { flex-direction: column; text-align: center; }
+  .comment__admin-fecha { display: none; }
+  .admin__panel { padding: 20px; }
+  .comment__form { padding: 20px; }
+  .comment__admin { padding: 20px; }
+}
 
 /* ─── ENTREGAS / MAPA ────────────────────────────────────────── */
 .delivery__grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center; margin-top: 40px; }
@@ -861,80 +1252,6 @@ const marcarLeidoHandler = async (id) => {
 .cta__inner p  { color: rgba(255,255,255,.95); font-size: 1.1rem; max-width: 500px; text-align: center; margin: 0; }
 .big-emoji-cta { font-size: 4rem; animation: bounce 2s ease-in-out infinite; display: block; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-
-/* ─── SISTEMA DE COMENTARIOS ────────────────────────────── */
-.comment__form-desc {
-  font-size: 0.9rem; color: var(--text-light);
-  margin-bottom: 16px; line-height: 1.6;
-}
-.comment__success {
-  background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2);
-  color: #15803d; padding: 12px 16px; border-radius: 12px;
-  font-size: 0.88rem; text-align: center; margin-top: 8px;
-}
-
-/* Panel admin comentarios */
-.comment__admin {
-  background: #fff; border-radius: 24px; padding: 28px;
-  border: 1.5px solid rgba(233,30,140,.15);
-  box-shadow: 0 4px 20px rgba(233,30,140,.06);
-}
-.comment__admin-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
-}
-.comment__admin-header h3 { font-size: 1.15rem; color: var(--text); margin: 0; }
-.comment__admin-badge {
-  display: inline-block; background: #e91e8c; color: #fff;
-  font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
-  border-radius: 50px; margin-left: 8px;
-}
-.comment__admin-empty {
-  text-align: center; padding: 40px; color: var(--text-light);
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-}
-.comment__admin-empty span { font-size: 2.5rem; opacity: 0.4; }
-.comment__admin-list { display: flex; flex-direction: column; gap: 12px; }
-
-.comment__admin-item {
-  background: rgba(252,228,236,.2); border: 1px solid rgba(233,30,140,.1);
-  border-radius: 16px; padding: 16px 18px;
-  transition: background 0.2s;
-}
-.comment__admin-item--nuevo {
-  background: rgba(233,30,140,.06);
-  border-color: rgba(233,30,140,.25);
-}
-.comment__admin-item-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px; flex-wrap: wrap;
-}
-.comment__admin-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #fff; font-weight: 700; font-size: 0.95rem;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.comment__admin-item-header strong { font-size: 0.9rem; color: var(--text); }
-.comment__admin-email { font-size: 0.75rem; color: var(--text-light); display: block; }
-.comment__admin-fecha { font-size: 0.75rem; color: var(--text-light); margin-left: auto; }
-.comment__admin-new-badge {
-  background: rgba(233,30,140,.12); color: var(--pink-deep);
-  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 50px;
-}
-.comment__admin-texto { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; margin: 0 0 10px; }
-.btn-marcar-leido {
-  background: none; border: 1px solid rgba(34,197,94,.3); color: #15803d;
-  font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; cursor: pointer;
-  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-}
-.btn-marcar-leido:hover { background: rgba(34,197,94,.1); }
-.btn-ghost-sm {
-  background: transparent; border: 1.5px solid var(--pink-mid); color: var(--pink-deep);
-  padding: 7px 16px; border-radius: 50px; font-size: 0.82rem; cursor: pointer;
-  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-}
-.btn-ghost-sm:hover { background: var(--pink-soft); }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -956,4 +1273,21 @@ const marcarLeidoHandler = async (id) => {
 @media (max-width: 768px) {
   .testimonials__nav { display: none; }
 }
+
+/* ─── Sección review — ancho máximo correcto ─────────────────── */
+.section--review .section__inner {
+  max-width: 800px;
+}
+
+/* ─── Comment form — box-sizing fix ─────────────────────────── */
+.comment__form textarea,
+.admin__input,
+.admin__textarea {
+  box-sizing: border-box;
+}
+
+/* ─── FONT IMPORT para admins y forms ───────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+
 </style>

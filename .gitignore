@@ -1,4 +1,4 @@
-# Logs
+# ── Logs ─────────────────────────────────────────────────────
 logs
 *.log
 npm-debug.log*
@@ -6,19 +6,39 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+ 
+# ── Dependencias ──────────────────────────────────────────────
 node_modules
+node_modules/.cache
+
+# ── Build ─────────────────────────────────────────────────────
 dist
 dist-ssr
-*.local
 
-# Editor directories and files
+# ── ⚠️ Variables de entorno — NUNCA subir a Git ───────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# ── Firebase ──────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# ── Editor ────────────────────────────────────────────────────
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db.agents/
+skills-lock.json
