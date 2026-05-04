@@ -230,7 +230,7 @@
           <h3>¿Tienes algún comentario? 💗</h3>
           <p class="comment__form-desc">
             Cuéntanos tu experiencia, sugerencias o lo que quieras decirnos.
-            Andrea los leerá personalmente 🌸
+            Nuestro equipo los leerá pronto 🌸
           </p>
           <div class="comment__form-inner">
             <textarea
@@ -252,7 +252,7 @@
             </div>
             <!-- Confirmación -->
             <div v-if="comentarioEnviado" class="comment__success">
-              ✅ ¡Gracias por tu comentario! Andrea lo leerá pronto 💖
+              ✅ ¡Gracias por tu comentario! Nuestro equipo los leerá pronto. 💖
             </div>
           </div>
         </div>
