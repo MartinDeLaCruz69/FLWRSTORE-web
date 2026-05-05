@@ -436,12 +436,42 @@ const petalStyle = (i) => ({
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .login-page { grid-template-columns: 1fr; }
-  .login-deco { min-height: 280px; padding: 40px 24px; }
-  .deco__logo { font-size: 2rem; }
-  .deco__tagline { font-size: 1rem; }
-  .deco__cards { gap: 10px; }
-  .deco__card { padding: 14px 12px; }
-  .login-form-side { padding: 32px 20px; }
+  /* Layout vertical en mobile */
+  .login-page {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  /* Deco reducido arriba */
+  .login-deco {
+    min-height: 220px;
+    padding: 70px 20px 28px;
+  }
+  .deco__content { gap: 16px; padding: 0; }
+  .deco__logo { font-size: 1.8rem; letter-spacing: 4px; }
+  .deco__tagline { font-size: 0.95rem; }
+  .deco__cards { gap: 8px; }
+  .deco__card { padding: 12px 10px; }
+  .deco__card span { font-size: 1.5rem; }
+  .deco__card small { font-size: 0.65rem; }
+  .deco__stat { font-size: 0.78rem; padding: 8px 16px; }
+
+  /* Formulario */
+  .login-form-side {
+    padding: 28px 16px 48px;
+    align-items: flex-start;
+  }
+  .login-form-wrap { max-width: 100%; gap: 16px; }
+  .form-header h1 { font-size: 1.8rem; }
+  .field__input-wrap { padding: 11px 14px; }
+  .btn-submit { padding: 14px; font-size: 0.95rem; }
+}
+
+@media (max-width: 380px) {
+  .deco__cards { gap: 6px; }
+  .deco__card { padding: 10px 8px; }
+  .login-deco { min-height: 180px; }
 }
 </style>
