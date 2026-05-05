@@ -176,8 +176,42 @@ const currentYear = new Date().getFullYear()
 .footer__bottom strong { color: rgba(255,255,255,.55); }
 
 @media (max-width: 768px) {
-  .footer__inner { grid-template-columns: 1fr; gap: 32px; }
-  .footer__bottom { flex-direction: column; text-align: center; }
-  .footer__bottom-right { justify-content: center; }
+  .footer { padding: 40px 16px 0; }
+
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-bottom: 32px;
+  }
+
+  .footer__logo { font-size: 1.2rem; letter-spacing: 2px; }
+  .footer__brand p { font-size: 0.85rem; }
+
+  .footer__links h4,
+  .footer__contact h4 { font-size: 0.72rem; }
+
+  .footer__links a { font-size: 0.85rem; padding: 4px 0; }
+
+  .footer__contact-item strong { font-size: 0.82rem; }
+  .footer__contact-item p,
+  .footer__contact-item a { font-size: 0.75rem; }
+
+  .footer__bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 16px 0 24px;
+  }
+  .footer__bottom p { font-size: 0.7rem; }
+  .footer__bottom-right {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar__logo { font-size: 1rem; letter-spacing: 1px; }
+  .footer__logo { font-size: 1rem; }
 }
 </style>
