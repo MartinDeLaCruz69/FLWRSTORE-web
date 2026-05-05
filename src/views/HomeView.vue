@@ -176,7 +176,7 @@
           <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
             <button class="testimonials__nav" @click="prevTestimonial">‹</button>
             <div class="testimonials__track">
-              <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * (320 + 20)}px)` }">
+              <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * testimonialesOffset}px)` }">
                 <div
                   v-for="(t, i) in testimonials" :key="t.id || i"
                   class="testimonial__card"
@@ -414,6 +414,16 @@ import { rolActual } from '../composables/useAuth'
 import { useComentarios } from '../composables/useComentarios'
 import { useTestimonios } from '../composables/useTestimonios'
 
+// Offset responsivo del carrusel
+const windowWidth = ref(window.innerWidth)
+const handleWindowResize = () => { windowWidth.value = window.innerWidth }
+onMounted(() => window.addEventListener('resize', handleWindowResize))
+onUnmounted(() => window.removeEventListener('resize', handleWindowResize))
+
+const testimonialesOffset = computed(() => {
+  if (windowWidth.value <= 768) return windowWidth.value - 48 + 16 // card width + gap en mobile
+  return 320 + 20 // desktop
+})
 
 // ── Admin ────────────────────────────────────────────────────
 const esAdmin = computed(() =>
@@ -1272,6 +1282,48 @@ flex: auto;
 
 @media (max-width: 768px) {
   .testimonials__nav { display: none; }
+  /* Testimonios — card más compacta en mobile */
+  .testimonials__wrap { gap: 6px; margin-top: 24px; }
+  .testimonials__track { overflow: hidden; }
+  .testimonials__inner {
+    transition: transform 0.3s ease;
+  }
+  .testimonial__card {
+    flex: 0 0 calc(100vw - 48px); /* ocupa casi todo el ancho */
+    padding: 20px;
+    min-width: 0;
+  }
+  .testimonial__img-wrap { width: 64px; height: 64px; }
+  .testimonial__header strong { font-size: 0.88rem; }
+  .testimonial__card p { font-size: 0.85rem; }
+  .testimonials__nav { display: none; }
+  .testimonials__dots { margin-top: 14px; }
+
+  /* Admin panel testimonios en mobile */
+  .admin__panel { padding: 18px 14px; margin-top: 28px; }
+  .admin__form-row { grid-template-columns: 1fr; }
+  .admin__panel-header h3 { font-size: 1rem; }
+
+  /* Sección comentarios */
+  .section--review { padding: 32px 16px 48px; }
+  .comment__form { padding: 20px 16px; }
+  .comment__admin { padding: 20px 16px; }
+  .comment__login-prompt { padding: 18px 16px; flex-direction: column; text-align: center; }
+  .comment__admin-fecha { display: none; }
+  .comment__admin-item-header { flex-wrap: wrap; gap: 8px; }
+
+  /* Hero stats */
+  .hero__stats { gap: 16px; }
+  .stat strong { font-size: 1.1rem; }
+
+  /* Sección entregas */
+  .map__wrapper { height: 250px; }
+  .delivery__item { padding: 14px; }
+
+  /* CTA */
+  .cta__inner h2 { font-size: 1.6rem; }
+  .cta__inner p  { font-size: 0.92rem; }
+  .btn-cta-rose  { padding: 14px 28px; font-size: 0.9rem; }
 }
 
 /* ─── Sección review — ancho máximo correcto ─────────────────── */
