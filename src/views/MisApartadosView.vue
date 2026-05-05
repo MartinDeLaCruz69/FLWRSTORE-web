@@ -402,10 +402,68 @@ const generarMensajeWhatsApp = (prod) => {
 .info-item span { font-size: 1.2rem; flex-shrink: 0; }
 .info-item strong { color: #1a1a1a; }
 
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .apartado-card { grid-template-columns: 1fr; }
-  .apartado-card__img { min-height: 160px; }
-  .apartado-card__details { grid-template-columns: 1fr; }
+/* ══ RESPONSIVE MOBILE ══════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Hero */
+  .page-hero { padding: 80px 16px 40px; }
+  .page-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .page-hero p  { font-size: 0.9rem; }
+
+  /* Content */
+  .apartados-content { padding: 24px 12px 80px; }
+
+  /* Cards — apiladas en mobile */
+  .apartado-card {
+    grid-template-columns: 1fr;
+    border-radius: 20px;
+  }
+
+  /* Imagen arriba en mobile */
+  .apartado-card__img {
+    min-height: 200px;
+    max-height: 220px;
+  }
+  .apartado-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Body */
+  .apartado-card__body { padding: 16px; gap: 10px; }
+  .apartado-card__body h3 { font-size: 1.1rem; }
+  .apartado-card__grupo   { font-size: 0.85rem; }
+
+  /* Details en 2 columnas en mobile */
+  .apartado-card__details { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .detail-item { padding: 10px; }
+  .detail-label { font-size: 0.68rem; }
+  .detail-item strong { font-size: 0.82rem; }
+
+  /* Timer */
+  .timer-value { font-size: 1.05rem; letter-spacing: 0.5px; }
+  .timer-label { font-size: 0.68rem; }
+
+  /* WhatsApp btn — más grande para tocar fácil */
+  .btn-whatsapp {
+    padding: 14px 16px;
+    font-size: 0.88rem;
+  }
+
+  /* Info adicional */
+  .apartados-info { padding: 16px; gap: 10px; }
+  .info-item { font-size: 0.82rem; }
+
+  /* Empty state */
+  .empty-state { padding: 48px 16px; }
+  .empty-state h3 { font-size: 1.2rem; }
 }
+
+@media (max-width: 380px) {
+  .apartado-card__details { grid-template-columns: 1fr; }
+  .apartado-card__img { min-height: 160px; }
+  .page-hero { padding: 70px 12px 32px; }
+}
+
 </style>

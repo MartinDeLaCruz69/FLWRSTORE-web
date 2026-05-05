@@ -1264,17 +1264,133 @@ const accionRapida = async (accion, prod) => {
 .fab-admin:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 12px 36px rgba(233,30,140,.5); }
 
 /* ══ RESPONSIVE ═════════════════════════════════════════════ */
+/* ══ RESPONSIVE MOBILE ══════════════════════════════════════ */
 @media (max-width: 768px) {
-  .filters-bar__inner { gap: 8px; }
-  .search-box { max-width: 100%; }
-  .cat-pills { gap: 6px; }
-  .cat-pill { font-size: 0.78rem; padding: 6px 12px; }
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-  .modal-detail-grid { grid-template-columns: 1fr; }
-  .admin-panel { bottom: 90px; right: 12px; width: calc(100vw - 24px); }
-  .admin-form__row { grid-template-columns: 1fr; }
-  .stock-hero__stats { flex-direction: column; gap: 12px; padding: 16px 24px; }
-  .sh-stat-div { width: 60px; height: 1px; }
+
+  /* Hero */
+  .stock-hero { padding: 80px 16px 40px; }
+  .stock-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .stock-hero p { font-size: 0.92rem; }
+  .stock-hero__stats {
+    flex-direction: row;
+    gap: 16px;
+    padding: 12px 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  .sh-stat strong { font-size: 1.1rem; }
+  .sh-stat span   { font-size: 0.7rem; }
+  .sh-stat-div    { width: 1px; height: 28px; }
+
+  /* Filtros */
+  .filters-bar { top: 60px; }
+  .filters-bar__inner {
+    padding: 10px 12px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-box {
+    max-width: 100%;
+    min-width: unset;
+  }
+  .cat-pills {
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .cat-pills::-webkit-scrollbar { display: none; }
+  .cat-pill { font-size: 0.76rem; padding: 6px 12px; flex-shrink: 0; }
+  .estado-filter {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .estado-filter::-webkit-scrollbar { display: none; }
+  .estado-btn { font-size: 0.76rem; padding: 6px 12px; flex-shrink: 0; }
+
+  /* Grid */
+  .stock-main { padding: 24px 12px 120px; }
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Cards */
+  .product-card__img { height: 160px; }
+  .product-card__info { padding: 12px 12px 14px; }
+  .product-card__name { font-size: 0.92rem; }
+  .product-card__grupo { font-size: 0.75rem; margin-bottom: 10px; }
+  .product-card__price { font-size: 0.95rem; }
+  .btn-apartar { font-size: 0.72rem; padding: 6px 12px; }
+  .footer-tag { font-size: 0.68rem; }
+
+  /* Modal detalle — ocupa toda la pantalla */
+  .modal-backdrop { padding: 0; align-items: flex-end; }
+  .modal-card {
+    border-radius: 28px 28px 0 0;
+    max-height: 95vh;
+    max-width: 100%;
+  }
+  .modal-card__img { min-height: 200px; max-height: 250px; }
+  .modal-card__body { padding: 20px 16px; }
+  .modal-card__body h2 { font-size: 1.3rem; }
+  .modal-detail-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .modal-detail-item { padding: 10px; }
+  .modal-admin-actions { gap: 6px; }
+  .btn-admin-action { font-size: 0.72rem; padding: 8px 8px; min-width: 70px; }
+
+  /* Modal apartar */
+  .apartar-header { padding: 20px 16px 0; gap: 12px; }
+  .apartar-header span { font-size: 2.2rem; }
+  .apartar-header h3 { font-size: 1.1rem; }
+  .apartar-info { padding: 14px 16px; }
+  .apartar-form { padding: 0 16px 8px; }
+  .apartar-actions { padding: 14px 16px 24px; flex-direction: column; }
+  .apartar-actions .btn-ghost-sm { text-align: center; }
+
+  /* Toast */
+  .toast {
+    bottom: 80px;
+    max-width: calc(100vw - 32px);
+    white-space: normal;
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 12px 20px;
+  }
+
+  /* Panel admin — sube desde abajo como sheet */
+  .admin-panel {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 24px 24px 0 0;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .admin-panel__header { padding: 14px 16px; }
+  .admin-panel__body { padding: 16px; }
+  .admin-form__row { grid-template-columns: 1fr; gap: 10px; }
+  .admin-panel__tabs button { font-size: 0.75rem; padding: 6px 12px; }
+
+  /* FAB */
+  .fab-admin { bottom: 20px; right: 16px; width: 48px; height: 48px; font-size: 1.1rem; }
+
+  /* Fullscreen */
+  .fullscreen-close { top: 12px; right: 12px; width: 36px; height: 36px; }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 380px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .stock-hero__stats { gap: 10px; padding: 12px 14px; }
+  .product-card__img { height: 180px; }
 }
 
 /* ── Loading ─────────────────────────────────────────────── */
