@@ -264,8 +264,44 @@ onUnmounted(() => obs?.disconnect())
 }
 .btn-ghost:hover { background: rgba(255,255,255,.25); }
 
-@media (max-width: 640px) {
-  .payment__grid, .rules__grid { grid-template-columns: 1fr; }
-  .steps__list { grid-template-columns: 1fr; }
+@media (max-width: 768px) {
+  /* Hero */
+  .page-hero { padding: 80px 16px 48px; }
+  .page-hero h1 { font-size: clamp(1.7rem, 6vw, 2.4rem); }
+  .page-hero p  { font-size: 0.9rem; }
+
+  /* Content */
+  .pagos-content { padding: 32px 16px 80px; gap: 18px; }
+  .section-label { font-size: 0.75rem; }
+
+  /* Métodos */
+  .payment__grid { grid-template-columns: 1fr; gap: 14px; }
+  .payment__card { padding: 24px 20px; border-radius: 20px; }
+  .payment__card h3 { font-size: 1.1rem; }
+  .payment__card p  { font-size: 0.85rem; }
+  .payment__icon    { font-size: 2rem; margin-bottom: 10px; }
+
+  /* Nota */
+  .info-note { padding: 14px 16px; gap: 10px; font-size: 0.85rem; }
+
+  /* Pasos */
+  .steps__list { grid-template-columns: 1fr; gap: 14px; }
+  .step__card { padding: 22px 18px; border-radius: 16px; }
+  .step__card h3 { font-size: 0.9rem; }
+  .step__card p  { font-size: 0.82rem; }
+  .step__icon    { font-size: 1.7rem; }
+
+  /* Reglas */
+  .rules__grid { grid-template-columns: 1fr; gap: 12px; }
+  .rule__card { padding: 16px 14px; border-radius: 14px; }
+  .rule__card strong { font-size: 0.85rem; }
+  .rule__card p      { font-size: 0.8rem; }
+  .rule__icon        { font-size: 1.5rem; }
+
+  /* CTA */
+  .pagos__cta { padding: 28px 16px; border-radius: 20px; gap: 16px; }
+  .pagos__cta p { font-size: 0.95rem; }
+  .pagos__cta-btns { flex-direction: column; gap: 10px; width: 100%; }
+  .pagos__cta-btns .btn-primary { width: 100%; text-align: center; padding: 13px 20px; }
 }
 </style>
