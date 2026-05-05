@@ -379,10 +379,46 @@ const petalStyle = (i) => ({
 .err-enter-from, .err-leave-to { opacity: 0; transform: translateY(-4px); }
 
 @media (max-width: 768px) {
-  .signup-page { grid-template-columns: 1fr; }
-  .signup-deco { min-height: 260px; padding: 32px 20px; }
-  .deco__perks { display: none; }
-  .deco__logo  { font-size: 2rem; }
-  .signup-form-side { padding: 28px 20px; }
+  .signup-page {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .signup-deco {
+    min-height: 200px;
+    padding: 70px 20px 24px;
+  }
+  .deco__content { gap: 14px; padding: 0; }
+  .deco__logo { font-size: 1.8rem; letter-spacing: 4px; }
+  .deco__tagline { font-size: 0.92rem; }
+  .deco__perks { display: none; } /* ocultar perks en mobile para no ocupar espacio */
+
+  .signup-form-side {
+    padding: 24px 16px 48px;
+    align-items: flex-start;
+  }
+  .signup-form-wrap { max-width: 100%; gap: 14px; }
+  .form-header h1 { font-size: 1.8rem; }
+
+  /* Steps */
+  .steps-indicator { gap: 0; }
+  .step-dot { width: 28px; height: 28px; font-size: 0.75rem; }
+
+  /* Campos */
+  .field__input-wrap { padding: 11px 14px; }
+  .btn-submit { padding: 14px; font-size: 0.95rem; }
+  .step2-actions { flex-direction: column; gap: 8px; }
+  .btn-back-step { width: 100%; text-align: center; }
+  .btn-submit--flex { width: 100%; flex: none; }
+
+  /* Terms */
+  .terms-row { align-items: flex-start; gap: 8px; }
+}
+
+@media (max-width: 380px) {
+  .signup-deco { min-height: 160px; }
+  .deco__logo { font-size: 1.5rem; }
 }
 </style>
