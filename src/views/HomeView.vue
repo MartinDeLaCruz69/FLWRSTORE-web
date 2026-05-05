@@ -618,6 +618,7 @@ const marcarLeidoHandler = async (id) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 .home {
   --pink-soft:   #fce4ec;
@@ -1338,7 +1339,5 @@ flex: auto;
 .admin__textarea {
   box-sizing: border-box;
 }
-/* ─── FONT IMPORT para admins y forms ───────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 </style>
