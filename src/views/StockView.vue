@@ -510,6 +510,19 @@ import { rolActual } from '../composables/useAuth'
 import { useProductos } from '../composables/useProductos'
 import { usuarioActual } from '../composables/useAuth'
 import { useRouter } from 'vue-router'
+import { watch } from 'vue'
+
+watch([modalProd, apartarProd], ([modal, apartar]) => {
+  if (modal || apartar) {
+    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.width = '100%'
+  } else {
+    document.body.style.overflow = ''
+    document.body.style.position = ''
+    document.body.style.width = ''
+  }
+})
 
 
 const fotoFullscreen = ref(null)
