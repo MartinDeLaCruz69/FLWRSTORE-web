@@ -904,7 +904,16 @@ const marcarLeidoHandler = async (id) => {
 .testimonial__header span   { font-size: 0.8rem; color: var(--text-light); text-align: center; display: block; }
 .testimonial__card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; margin-bottom: 12px; font-style: italic; text-align: center; }
 .testimonial__stars { font-size: 1rem; margin-bottom: 8px; text-align: center; }
-.testimonial__tag { display: inline-block; background: var(--pink-soft); color: var(--pink-deep); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; text-align: center; width: 100%; }
+.testimonial__tag { 
+  display: inline-block; 
+  background: var(--pink-soft); 
+  color: var(--pink-deep); 
+  padding: 5px 1px; 
+  border-radius: 50px; 
+  font-size: 0.75rem; 
+  text-align: center; 
+  width: 100%; 
+}
 .testimonials__dots { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-soft); border: none; cursor: pointer; transition: all 0.3s; }
 .dot.active { background: var(--pink-accent); width: 24px; border-radius: 4px; }
@@ -1303,8 +1312,8 @@ flex: auto;
   }
   .testimonial__card {
     flex: 0 0 calc(100vw - 80px);
-    padding: 20px;
     min-width: 0;
+    padding: 20px;
     box-sizing: border-box;
   }
   .testimonial__img-wrap { width: 64px; height: 64px; }
