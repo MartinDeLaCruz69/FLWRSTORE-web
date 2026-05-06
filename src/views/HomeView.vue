@@ -421,8 +421,8 @@ onMounted(() => window.addEventListener('resize', handleWindowResize))
 onUnmounted(() => window.removeEventListener('resize', handleWindowResize))
 
 const testimonialesOffset = computed(() => {
-  if (windowWidth.value <= 768) return windowWidth.value - 48 + 16 // card width + gap en mobile
-  return 320 + 20 // desktop
+  if (windowWidth.value <= 768) return windowWidth.value - 80 + 16
+  return 320 + 20
 })
 
 // ── Admin ────────────────────────────────────────────────────
@@ -1285,20 +1285,24 @@ flex: auto;
 @media (max-width: 768px) {
   .testimonials__nav { display: none; }
   /* Testimonios — card más compacta en mobile */
-  .testimonials__track {
-    overflow: hidden;
-    width: 100%;
-  }
   .testimonials__wrap {
     gap: 0;
     margin-top: 24px;
     overflow: hidden;
+    width: 100%;
+  }
+  .testimonials__track {
+    overflow: hidden;
+    width: 100%;
+    flex: 1;
   }
   .testimonials__inner {
+    display: flex;
+    gap: 16px;
     transition: transform 0.3s ease;
   }
   .testimonial__card {
-    flex: 0 0 calc(100vw - 80px); /* ← más margen */
+    flex: 0 0 calc(100vw - 80px);
     padding: 20px;
     min-width: 0;
     box-sizing: border-box;
