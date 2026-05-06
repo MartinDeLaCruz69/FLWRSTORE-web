@@ -1285,15 +1285,23 @@ flex: auto;
 @media (max-width: 768px) {
   .testimonials__nav { display: none; }
   /* Testimonios — card más compacta en mobile */
-  .testimonials__wrap { gap: 6px; margin-top: 24px; }
-  .testimonials__track { overflow: hidden; }
+  .testimonials__track {
+    overflow: hidden;
+    width: 100%;
+  }
+  .testimonials__wrap {
+    gap: 0;
+    margin-top: 24px;
+    overflow: hidden;
+  }
   .testimonials__inner {
     transition: transform 0.3s ease;
   }
   .testimonial__card {
-    flex: 0 0 calc(100vw - 48px); /* ocupa casi todo el ancho */
+    flex: 0 0 calc(100vw - 80px); /* ← más margen */
     padding: 20px;
     min-width: 0;
+    box-sizing: border-box;
   }
   .testimonial__img-wrap { width: 64px; height: 64px; }
   .testimonial__header strong { font-size: 0.88rem; }
