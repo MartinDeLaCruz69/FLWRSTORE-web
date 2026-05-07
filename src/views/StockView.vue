@@ -1336,7 +1336,6 @@ onUnmounted(() => {
   .fab-admin__label { font-size: 0.7rem; padding: 5px 12px; }
 }
 
-/* ══ RESPONSIVE ═════════════════════════════════════════════ */
 /* ══ RESPONSIVE MOBILE ══════════════════════════════════════ */
 @media (max-width: 768px) {
 
@@ -1489,7 +1488,7 @@ onUnmounted(() => {
 }
 .admin-panel__tabs button.active {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #fff; border-color: transparent;
+  color: #000000; border-color: transparent;
 }
 .admin-panel__tabs button:disabled { opacity: 0.4; cursor: not-allowed; }
 .admin-panel__close {
