@@ -833,8 +833,20 @@ onUnmounted(() => {
 }
 .text-pink { color: var(--pink-accent); }
 .stock-hero p { color: var(--text-light); font-size: 1.05rem; margin-bottom: 32px; }
-
-.stock-hero__stats { display: inline-flex; align-items: center; gap: 28px; background: #fff; padding: 16px 32px; border-radius: 50px; box-shadow: 0 8px 32px rgba(233,30,140,.1); border: 1px solid rgba(233,30,140,.12); }
+.stock-hero__stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: #fff;
+  padding: 16px 32px;
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(233,30,140,.1);
+  border: 1px solid rgba(233,30,140,.12);
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
 .sh-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .sh-stat strong { font-size: 1.4rem; color: var(--pink-accent); font-family: 'Playfair Display', serif; }
 .sh-stat span { font-size: 0.75rem; color: var(--text-light); }
@@ -1340,19 +1352,26 @@ onUnmounted(() => {
 @media (max-width: 768px) {
 
   /* Hero */
-  /* Agrega al @media (max-width: 768px) */
-  .stock-hero__stats {
-    display: flex;
-    flex-wrap: nowrap;
+  .stock-hero {
+    padding: 80px 16px 40px;
     overflow: hidden;
-    width: calc(100% - 32px);
-    max-width: 100%;
   }
-  .stock-hero { overflow: hidden; }
-  .stock-page { overflow-x: hidden; }
-  .sh-stat strong { font-size: 1.1rem; }
-  .sh-stat span   { font-size: 0.7rem; }
-  .sh-stat-div    { width: 1px; height: 28px; }
+  .stock-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .stock-hero p  { font-size: 0.92rem; }
+
+  .stock-hero__stats {
+    gap: 0;
+    padding: 12px 8px;
+    border-radius: 20px;
+    width: 100%;
+  }
+  .sh-stat {
+    flex: 1;
+    padding: 0 4px;
+  }
+  .sh-stat strong { font-size: 1rem; }
+  .sh-stat span   { font-size: 0.65rem; }
+  .sh-stat-div    { width: 1px; height: 24px; flex-shrink: 0; }
 
   /* Filtros */
   .filters-bar { top: 60px; }
@@ -1457,9 +1476,9 @@ onUnmounted(() => {
 
 /* Pantallas muy pequeñas */
 @media (max-width: 380px) {
-  .products-grid { grid-template-columns: 1fr; }
-  .stock-hero__stats { gap: 10px; padding: 12px 14px; }
-  .product-card__img { height: 180px; }
+  .products-grid { grid-template-columns: 1fr;}
+  .stock-hero__stats { gap: 10px; padding: 12px 14px;}
+  .product-card__img { height: 180px;}
 }
 
 /* ── Loading ─────────────────────────────────────────────── */
