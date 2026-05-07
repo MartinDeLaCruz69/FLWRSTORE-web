@@ -421,7 +421,10 @@ onMounted(() => window.addEventListener('resize', handleWindowResize))
 onUnmounted(() => window.removeEventListener('resize', handleWindowResize))
 
 const testimonialesOffset = computed(() => {
-  if (windowWidth.value <= 768) return windowWidth.value - 80 + 16
+  if (windowWidth.value <= 768) {
+    const cardWidth = windowWidth.value - 80
+    return cardWidth + 16
+  }
   return 320 + 20
 })
 
@@ -1292,13 +1295,13 @@ flex: auto;
 }
 
 @media (max-width: 768px) {
-  .testimonials__nav { display: none; }
-  /* Testimonios — card más compacta en mobile */
+  /* ── Carrusel mobile ── */
   .testimonials__wrap {
-    gap: 0;
     margin-top: 24px;
+    gap: 0;
     overflow: hidden;
     width: 100%;
+    padding: 0;
   }
   .testimonials__track {
     overflow: hidden;
@@ -1308,19 +1311,21 @@ flex: auto;
   .testimonials__inner {
     display: flex;
     gap: 16px;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+    will-change: transform; /* evita el salto en mobile */
   }
   .testimonial__card {
     flex: 0 0 calc(100vw - 80px);
-    min-width: 0;
+    width: calc(100vw - 80px);
     padding: 20px;
+    min-width: 0;
     box-sizing: border-box;
   }
+  .testimonials__nav { display: none; }
+  .testimonials__dots { margin-top: 16px; }
   .testimonial__img-wrap { width: 64px; height: 64px; }
   .testimonial__header strong { font-size: 0.88rem; }
   .testimonial__card p { font-size: 0.85rem; }
-  .testimonials__nav { display: none; }
-  .testimonials__dots { margin-top: 14px; }
 
   /* Admin panel testimonios en mobile */
   .admin__panel { padding: 18px 14px; margin-top: 28px; }
