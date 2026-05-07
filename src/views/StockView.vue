@@ -1405,12 +1405,12 @@ onUnmounted(() => {
   /* Pills con scroll horizontal sin desbordarse */
   .cat-pills {
     display: flex;
-    gap: 6px;
+    gap: 3px;
     overflow-x: auto;
     overflow-y: visible;
     flex-wrap: nowrap;
     padding: 4px 0 8px 0;
-    width: 100%;
+    width: 90%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
