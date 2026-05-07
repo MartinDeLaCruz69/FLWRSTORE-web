@@ -834,7 +834,7 @@ onUnmounted(() => {
 .text-pink { color: var(--pink-accent); }
 .stock-hero p { color: var(--text-light); font-size: 1.05rem; margin-bottom: 32px; }
 .stock-hero__stats {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 28px;
@@ -843,10 +843,8 @@ onUnmounted(() => {
   border-radius: 50px;
   box-shadow: 0 8px 32px rgba(233,30,140,.1);
   border: 1px solid rgba(233,30,140,.12);
-  max-width: 100%;
-  box-sizing: border-box;
-  margin: 0 auto;
 }
+
 .sh-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .sh-stat strong { font-size: 1.4rem; color: var(--pink-accent); font-family: 'Playfair Display', serif; }
 .sh-stat span { font-size: 0.75rem; color: var(--text-light); }
@@ -1351,55 +1349,84 @@ onUnmounted(() => {
 /* ══ RESPONSIVE MOBILE ══════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Hero */
-  .stock-hero {
+  /* Hero content — centrar todo */
+  .stock-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+ .stock-hero {
     padding: 80px 16px 40px;
     overflow: hidden;
   }
   .stock-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
-  .stock-hero p  { font-size: 0.92rem; }
+  .stock-hero p  { font-size: 0.92rem; margin-bottom: 20px; }
 
   .stock-hero__stats {
+    display: inline-flex;
+    width: auto;
+    max-width: 100%;
     gap: 0;
-    padding: 12px 8px;
+    padding: 12px 16px;
     border-radius: 20px;
-    width: 100%;
+    box-sizing: border-box;
+    align-self: center;
   }
-  .sh-stat {
-    flex: 1;
-    padding: 0 4px;
-  }
+  .sh-stat { flex: 1; min-width: 60px; padding: 0 8px; }
   .sh-stat strong { font-size: 1rem; }
   .sh-stat span   { font-size: 0.65rem; }
   .sh-stat-div    { width: 1px; height: 24px; flex-shrink: 0; }
 
-  /* Filtros */
-  .filters-bar { top: 60px; }
+  .filters-bar {
+    top: 60px;
+    overflow: hidden;
+    width: 100%;
+  }
+
   .filters-bar__inner {
     padding: 10px 12px;
     gap: 8px;
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .search-box {
     max-width: 100%;
-    min-width: unset;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
+  .search-box input { min-width: 0; }
+
+  /* Pills con scroll horizontal sin desbordarse */
   .cat-pills {
+    display: flex;
     gap: 6px;
     overflow-x: auto;
     flex-wrap: nowrap;
     padding-bottom: 4px;
+    width: 100%;
+    box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
   .cat-pills::-webkit-scrollbar { display: none; }
   .cat-pill { font-size: 0.76rem; padding: 6px 12px; flex-shrink: 0; }
+
   .estado-filter {
+    display: flex;
     overflow-x: auto;
     flex-wrap: nowrap;
+    width: 100%;
+    box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    gap: 6px;
   }
   .estado-filter::-webkit-scrollbar { display: none; }
   .estado-btn { font-size: 0.76rem; padding: 6px 12px; flex-shrink: 0; }
