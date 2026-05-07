@@ -1,7 +1,6 @@
 <template>
   <div class="legal-page">
 
-    <!-- Hero -->
     <section class="page-hero">
       <div class="page-hero__bg"></div>
       <div class="page-hero__content">
@@ -20,12 +19,22 @@
           <h2>Identidad y contacto</h2>
         </div>
         <div class="legal-block__body">
-          <div class="info-row"><span class="info-row__label">Nombre comercial</span><span class="info-row__val">FLWR🌸STORE</span></div>
-          <div class="info-row"><span class="info-row__label">Titular</span><span class="info-row__val">Andrea Esqueda</span></div>
+          <div class="info-row">
+            <span class="info-row__label">Nombre comercial</span>
+            <span class="info-row__val">FLWR🌸STORE</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Titular</span>
+            <span class="info-row__val">Andrea Esqueda Rosario</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row__label">Ubicación</span>
+            <span class="info-row__val">Aguascalientes, Aguascalientes, México</span>
+          </div>
           <div class="info-row">
             <span class="info-row__label">Canal de ventas</span>
             <div class="info-row__val">
-              <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="link-pill">💬 Únete al canal oficial de WhatsApp</a>
+              <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="link-pill">💬 Canal oficial de WhatsApp</a>
             </div>
           </div>
           <div class="info-row">
@@ -37,78 +46,144 @@
           <div class="info-row">
             <span class="info-row__label">Horario de atención</span>
             <div class="info-row__val">
-              Lun–Sáb 10:00–20:00 &nbsp;·&nbsp; Dom 11:00–15:00<br>
-              <small>Mensajes fuera de horario se responden al día siguiente.</small>
+              Lun–Sáb 10:00–20:00 · Dom 11:00–15:00<br>
+              <small>Mensajes fuera de horario se responden al día hábil siguiente.</small>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 2. Reglas de apartado -->
+      <!-- 2. Productos -->
       <div class="legal-block fade-up" :class="{ visible: vis[1] }" ref="el1">
+        <div class="legal-block__header">
+          <span class="legal-block__icon">🎵</span>
+          <h2>Sobre los productos</h2>
+        </div>
+        <div class="legal-block__body">
+          <div class="policy-item"><span>✅</span><p>Todos los productos ofrecidos son <strong>originales</strong>. No vendemos réplicas ni productos no oficiales.</p></div>
+          <div class="policy-item"><span>📸</span><p>Las fotografías de los productos son reales y tomadas por el equipo de FLWRSTORE. El color y detalles pueden variar ligeramente por condiciones de iluminación.</p></div>
+          <div class="policy-item"><span>📦</span><p>Los productos de <strong>segunda mano</strong> se describen con su condición real. Se indica claramente si tienen detalles, uso o faltantes.</p></div>
+          <div class="policy-item"><span>🔄</span><p>El stock se actualiza en tiempo real. Un producto visible en la tienda puede agotarse o apartarse mientras navegas.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>FLWRSTORE no es distribuidora oficial de ningún sello discográfico. Somos una tienda de reventa especializada en K-Pop.</p></div>
+        </div>
+      </div>
+
+      <!-- 3. Apartados -->
+      <div class="legal-block fade-up" :class="{ visible: vis[2] }" ref="el2">
         <div class="legal-block__header">
           <span class="legal-block__icon">📌</span>
           <h2>Reglas de apartado</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>⏱️</span><p>Los apartados tienen una duración máxima de <strong>24 horas</strong>.</p></div>
-          <div class="policy-item"><span>💳</span><p>Pasadas las 24 horas sin pago, el producto regresa automáticamente a stock disponible.</p></div>
-          <div class="policy-item"><span>💰</span><p>Para compras mayores a <strong>$550 MXN</strong> se puede acordar un anticipo del 20% para facilidades de pago.</p></div>
-          <div class="policy-item"><span>✅</span><p>El apartado queda confirmado únicamente por los canales oficiales de WhatsApp.</p></div>
+          <div class="policy-item"><span>⏱️</span><p>Los apartados tienen una duración máxima de <strong>24 horas</strong> a partir de la confirmación.</p></div>
+          <div class="policy-item"><span>💳</span><p>Pasadas las 24 horas sin pago confirmado, el producto regresa automáticamente al stock disponible sin previo aviso.</p></div>
+          <div class="policy-item"><span>💰</span><p>Para compras mayores a <strong>$550 MXN</strong> se puede acordar un anticipo del 20% para facilidades de pago, sujeto a disponibilidad y acuerdo con la administradora.</p></div>
+          <div class="policy-item"><span>✅</span><p>El apartado queda confirmado <strong>únicamente</strong> cuando la administradora lo confirma por WhatsApp oficial. Un apartado en la plataforma no garantiza el producto sin esta confirmación.</p></div>
+          <div class="policy-item"><span>👤</span><p>Cada usuario puede tener activo un máximo de <strong>3 apartados simultáneos</strong>.</p></div>
         </div>
       </div>
 
-      <!-- 3. Cancelaciones -->
-      <div class="legal-block fade-up" :class="{ visible: vis[2] }" ref="el2">
+      <!-- 4. Pagos -->
+      <div class="legal-block fade-up" :class="{ visible: vis[3] }" ref="el3">
+        <div class="legal-block__header">
+          <span class="legal-block__icon">💳</span>
+          <h2>Métodos de pago</h2>
+        </div>
+        <div class="legal-block__body">
+          <div class="policy-item"><span>🏦</span><p><strong>Transferencia SPEI</strong> — desde cualquier banco mexicano. Los datos se proporcionan al confirmar el pedido por WhatsApp.</p></div>
+          <div class="policy-item"><span>🏪</span><p><strong>Depósito OXXO</strong> — en cualquier tienda OXXO del país. Los datos de depósito se envían por WhatsApp oficial.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>No aceptamos pagos por transferencias a cuentas personales no verificadas, efectivo en mano sin comprobante, ni plataformas de terceros no acordadas previamente.</p></div>
+          <div class="policy-item"><span>📸</span><p>El cliente debe enviar <strong>comprobante de pago</strong> al canal oficial de WhatsApp para confirmar su pedido. Sin comprobante no se considera pagado.</p></div>
+          <div class="policy-item"><span>🕐</span><p>La confirmación de pago se realiza en un máximo de <strong>2 horas hábiles</strong> tras recibir el comprobante.</p></div>
+        </div>
+      </div>
+
+      <!-- 5. Cancelaciones -->
+      <div class="legal-block fade-up" :class="{ visible: vis[4] }" ref="el4">
         <div class="legal-block__header">
           <span class="legal-block__icon">🚫</span>
           <h2>Cancelaciones y reembolsos</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>❌</span><p>No se realizan reembolsos en ningún tipo de pedido una vez efectuado el pago.</p></div>
-          <div class="policy-item"><span>❌</span><p>No se permiten cancelaciones una vez realizado el pago.</p></div>
-          <div class="policy-item"><span>⚠️</span><p>En pedidos tipo <em>claims</em> o preventas: si no se cumplen los pagos (EMS, aduana, etc.), el producto pasa a stock sin derecho a devolución.</p></div>
-          <div class="policy-item"><span>⚠️</span><p>En preventas o claims, no hay cambios de producto después de confirmar el pedido.</p></div>
-          <div class="policy__highlight">⭐ Al realizar una compra, el cliente acepta todos los términos y condiciones de FLWRSTORE.</div>
+          <div class="policy-item"><span>❌</span><p><strong>No se realizan reembolsos</strong> en ningún tipo de pedido una vez efectuado el pago.</p></div>
+          <div class="policy-item"><span>❌</span><p>No se permiten cancelaciones una vez realizado y confirmado el pago.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>En pedidos tipo <em>claims</em> o preventas: si no se cubren los costos adicionales (EMS, aduana, etc.) en el tiempo acordado, el producto pasa a stock disponible sin derecho a devolución del anticipo.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>En preventas o claims no hay cambios de versión o producto después de confirmar el pedido.</p></div>
+          <div class="policy-item"><span>✅</span><p><strong>Excepción:</strong> Si el producto presentara un defecto no descrito al momento de la venta y comprobable con evidencia fotográfica, se evaluará caso por caso.</p></div>
+          <div class="policy__highlight">⭐ Al realizar una compra, el cliente acepta todos los términos y condiciones de FLWRSTORE en su versión vigente.</div>
         </div>
       </div>
 
-      <!-- 4. Envíos -->
-      <div class="legal-block fade-up" :class="{ visible: vis[3] }" ref="el3">
+      <!-- 6. Envíos -->
+      <div class="legal-block fade-up" :class="{ visible: vis[5] }" ref="el5">
         <div class="legal-block__header">
           <span class="legal-block__icon">📦</span>
-          <h2>Envíos y responsabilidades</h2>
+          <h2>Envíos y entregas</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>📍</span><p>Entrega personal frente al <strong>Templo de San José</strong>, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes.</p></div>
-          <div class="policy-item"><span>🛵</span><p>Envío local por <strong>Uber o DiDi</strong> dentro de Aguascalientes.</p></div>
-          <div class="policy-item"><span>📮</span><p>Envíos nacionales por <strong>Correos de México</strong> o <strong>Estafeta</strong> vía Lolapay.</p></div>
-          <div class="policy-item"><span>⚠️</span><p>Los tiempos de envío pueden variar según la paquetería y están fuera de nuestro control directo.</p></div>
-          <div class="policy-item"><span>📋</span><p>El cliente es responsable de proporcionar correctamente su dirección. No nos hacemos responsables por retrasos o pérdidas derivadas de datos incorrectos.</p></div>
-          <div class="policy-item"><span>📸</span><p>Si el producto llega dañado por la paquetería, se puede solicitar evidencia para revisión. No nos responsabilizamos por daños ocurridos durante el envío.</p></div>
+          <div class="policy-item"><span>📍</span><p><strong>Entrega personal</strong> — Frente al Templo de San José, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes. Se coordina día y hora por WhatsApp.</p></div>
+          <div class="policy-item"><span>🛵</span><p><strong>Envío local</strong> — por Uber Flash o DiDi dentro de Aguascalientes. El costo de envío corre por cuenta del cliente salvo acuerdo previo.</p></div>
+          <div class="policy-item"><span>📮</span><p><strong>Envío nacional</strong> — por Correos de México o Estafeta vía Lolapay. El costo se calcula según el destino y peso.</p></div>
+          <div class="policy-item"><span>🎁</span><p><strong>Envío gratuito</strong> en compras mayores a <strong>$550 MXN</strong> dentro de la zona metropolitana de Aguascalientes.</p></div>
+          <div class="policy-item"><span>📋</span><p>El cliente es responsable de proporcionar correctamente su dirección de entrega. FLWRSTORE no se hace responsable por retrasos o pérdidas derivadas de datos incorrectos.</p></div>
+          <div class="policy-item"><span>📸</span><p>Si el producto llega dañado por causas de la paquetería, el cliente debe notificarlo dentro de las <strong>24 horas</strong> siguientes a la recepción con evidencia fotográfica.</p></div>
+          <div class="policy-item"><span>⏱️</span><p>Los tiempos estimados de envío son: Local 1–2 días, Nacional 3–7 días hábiles según paquetería.</p></div>
         </div>
       </div>
 
-      <!-- 5. Comunicación -->
-      <div class="legal-block fade-up" :class="{ visible: vis[4] }" ref="el4">
+      <!-- 7. Privacidad de datos -->
+      <div class="legal-block fade-up" :class="{ visible: vis[6] }" ref="el6">
+        <div class="legal-block__header">
+          <span class="legal-block__icon">🔒</span>
+          <h2>Privacidad y protección de datos</h2>
+        </div>
+        <div class="legal-block__body">
+          <div class="policy-item"><span>📋</span><p>FLWRSTORE recopila datos personales básicos (nombre, correo electrónico) con el único fin de gestionar tu cuenta y coordinar pedidos.</p></div>
+          <div class="policy-item"><span>🔒</span><p>Tu información personal <strong>no se comparte, vende ni transfiere</strong> a terceros bajo ninguna circunstancia.</p></div>
+          <div class="policy-item"><span>🗄️</span><p>Los datos se almacenan de forma segura mediante <strong>Firebase (Google Cloud)</strong>, con cifrado en tránsito y en reposo.</p></div>
+          <div class="policy-item"><span>✉️</span><p>Tu correo electrónico solo se usa para autenticación en la plataforma. No enviamos correos de marketing sin tu consentimiento.</p></div>
+          <div class="policy-item"><span>🗑️</span><p>Puedes solicitar la eliminación de tu cuenta y datos personales en cualquier momento contactándonos por WhatsApp oficial.</p></div>
+          <div class="policy-item"><span>🍪</span><p>Esta plataforma no utiliza cookies de rastreo ni publicidad de terceros. Solo se usan cookies técnicas necesarias para el funcionamiento de la sesión.</p></div>
+          <div class="policy__highlight">🇲🇽 Este aviso de privacidad se rige conforme a la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> vigente en México.</div>
+        </div>
+      </div>
+
+      <!-- 8. Comunicación oficial -->
+      <div class="legal-block fade-up" :class="{ visible: vis[7] }" ref="el7">
         <div class="legal-block__header">
           <span class="legal-block__icon">💬</span>
           <h2>Comunicación oficial</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>✅</span><p>Todos los pedidos se confirman únicamente a través de los <strong>canales oficiales de WhatsApp</strong>.</p></div>
-          <div class="policy-item"><span>❌</span><p>No nos hacemos responsables por acuerdos realizados fuera de estos medios.</p></div>
-          <div style="margin-top: 12px;">
-            <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="btn-primary">💬 Ir al canal oficial</a>
+          <div class="policy-item"><span>✅</span><p>Todos los pedidos, confirmaciones y acuerdos se realizan <strong>únicamente</strong> a través del canal oficial de WhatsApp de FLWRSTORE.</p></div>
+          <div class="policy-item"><span>❌</span><p>No nos hacemos responsables por acuerdos, pagos o compromisos realizados fuera de los canales oficiales.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>FLWRSTORE <strong>nunca</strong> solicitará contraseñas, datos bancarios completos ni información sensible por ningún medio.</p></div>
+          <div class="policy-item"><span>📱</span><p>Las cuentas oficiales son: WhatsApp canal <strong>FLWRSTORE</strong> e Instagram <strong>@its.flwr_store</strong>. Cualquier otra cuenta es ajena a nosotros.</p></div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+            <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="btn-primary">💬 Canal de WhatsApp</a>
+            <a href="https://www.instagram.com/its.flwr_store?igsh=MThrMDR5cmZ2ZGxyMg==" target="_blank" class="btn-secondary">📸 Instagram</a>
           </div>
         </div>
       </div>
 
+      <!-- 9. Modificaciones -->
+      <div class="legal-block fade-up" :class="{ visible: vis[8] }" ref="el8">
+        <div class="legal-block__header">
+          <span class="legal-block__icon">📝</span>
+          <h2>Modificaciones a estos términos</h2>
+        </div>
+        <div class="legal-block__body">
+          <div class="policy-item"><span>🔄</span><p>FLWRSTORE se reserva el derecho de actualizar estos términos y condiciones en cualquier momento sin previo aviso.</p></div>
+          <div class="policy-item"><span>📅</span><p>La versión vigente siempre estará disponible en esta página. La fecha de última actualización es: <strong>Mayo 2025</strong>.</p></div>
+          <div class="policy-item"><span>✅</span><p>El uso continuo de la plataforma después de cualquier cambio implica la aceptación de los nuevos términos.</p></div>
+        </div>
+      </div>
+
       <!-- Footer -->
-      <div class="legal__footer fade-up" :class="{ visible: vis[5] }" ref="el5">
+      <div class="legal__footer fade-up" :class="{ visible: vis[9] }" ref="el9">
         <span>🌸</span>
-        <p>Agradecemos profundamente tu confianza y por ser parte de esta comunidad. Cada compra la hacemos con amor.</p>
-        <strong>— FLWR STORE · Andrea Esqueda</strong>
+        <p>Agradecemos profundamente tu confianza y por ser parte de esta comunidad. Cada compra la hacemos con amor y compromiso.</p>
+        <strong>— FLWR STORE · Andrea Esqueda Rosario · Aguascalientes, México</strong>
       </div>
 
     </div>
@@ -116,15 +191,18 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const vis = ref([false, false, false, false, false, false])
+const vis = ref(Array(10).fill(false))
 const el0 = ref(null), el1 = ref(null), el2 = ref(null)
 const el3 = ref(null), el4 = ref(null), el5 = ref(null)
+const el6 = ref(null), el7 = ref(null), el8 = ref(null)
+const el9 = ref(null)
 
 let observer
 onMounted(() => {
-  const els = [el0, el1, el2, el3, el4, el5]
+  const els = [el0, el1, el2, el3, el4, el5, el6, el7, el8, el9]
 
   observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -135,10 +213,11 @@ onMounted(() => {
 
   setTimeout(() => {
     els.forEach(r => { if (r.value) observer.observe(r.value) })
-    vis.value[0] = true // primer bloque visible de inmediato
+    vis.value[0] = true
   }, 200)
 })
 onUnmounted(() => observer?.disconnect())
+
 </script>
 
 <style scoped>
@@ -200,7 +279,8 @@ onUnmounted(() => observer?.disconnect())
 /* ── Links ── */
 .link-pill {
   display: inline-flex; align-items: center; gap: 6px;
-  background: #25D366; color: #fff;
+  background: linear-gradient(135deg,  #33f072, #3ce64a, #2ddc27, #23cc64);
+  color: #ffffff;
   padding: 7px 18px; border-radius: 50px;
   font-size: 0.85rem; font-weight: 500;
   text-decoration: none; transition: opacity 0.2s;
@@ -228,14 +308,25 @@ onUnmounted(() => observer?.disconnect())
 /* ── Botón ── */
 .btn-primary {
   display: inline-block;
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #000000; border: none; padding: 12px 28px; border-radius: 50px;
+  background: linear-gradient(135deg,  #33f072, #3ce64a, #2ddc27, #23cc64);
+  color: #ffffff; border: none; padding: 12px 28px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
   text-decoration: none; cursor: pointer;
   box-shadow: 0 6px 20px rgba(233,30,140,.3);
   transition: all 0.3s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(233,30,140,.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 10px rgba(233,30,140,.4);}
+
+.btn-secondary {
+  display: inline-block;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366);
+  color: #fff; border: none; padding: 12px 28px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(220,39,67,.3);
+  transition: all 0.3s;
+}
+.btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 10px 10px rgba(233,30,140,.4);}
 
 /* ── Footer ── */
 .legal__footer {
