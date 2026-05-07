@@ -770,12 +770,26 @@ const accionRapida = async (accion, prod) => {
 }
 
 // ── Bloquear scroll sin freezear la página ───────────────────
-watch([modalProd, apartarProd, fotoFullscreen], ([modal, apartar, fullscreen]) => {
-  if (modal || apartar || fullscreen) {
+// Guarda la posición del scroll antes de fijar
+let scrollY = 0
+
+watch([modalProd, apartarProd, fotoFullscreen, adminPanelOpen], ([modal, apartar, fullscreen, panel]) => {
+  const hayModal = modal || apartar || fullscreen
+
+  if (hayModal) {
+    // Solo bloqueamos scroll para modales, no para el panel admin
+    scrollY = window.scrollY
     document.body.style.overflow = 'hidden'
-    // NO usar position:fixed — congela la página al navegar
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
   } else {
+    // Restaurar posición exacta
     document.body.style.overflow = ''
+    document.body.style.position = ''
+    document.body.style.top = ''
+    document.body.style.width = ''
+    window.scrollTo(0, scrollY)
   }
 })
 
