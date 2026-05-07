@@ -488,9 +488,13 @@
     </Transition>
 
     <!-- FAB Admin -->
-    <button v-if="esAdmin" class="fab-admin" @click="adminPanelOpen = !adminPanelOpen" :title="adminPanelOpen ? 'Cerrar panel' : 'Panel admin'">
-      {{ adminPanelOpen ? '✕' : '🛠️' }}
-    </button>
+    <div v-if="esAdmin" class="fab-admin-wrap">
+      <span class="fab-admin__label" v-if="!adminPanelOpen">Panel admin</span>
+      <button class="fab-admin" @click="adminPanelOpen = !adminPanelOpen"
+              :title="adminPanelOpen ? 'Cerrar panel' : 'Panel admin'">
+      <span class="fab-admin__icon">{{ adminPanelOpen ? '✕' : '🛠️' }}</span>
+      </button>
+    </div>
 
     <!-- ══ VISOR FULLSCREEN ══ -->
     <Transition name="modal">
@@ -1280,15 +1284,52 @@ onUnmounted(() => {
 .slide-up-enter-from, .slide-up-leave-to { opacity: 0; transform: translateY(20px) scale(0.97); }
 
 /* FAB */
-.fab-admin {
-  position: fixed; bottom: 32px; right: 28px; z-index: 160;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  border: none; color: #000000; font-size: 1.3rem; cursor: pointer;
-  box-shadow: 0 8px 28px rgba(233,30,140,.4);
-  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+.fab-admin-wrap {
+  position: fixed;
+  bottom: 32px; right: 28px;
+  z-index: 160;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.fab-admin:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 12px 36px rgba(233,30,140,.5); }
+.fab-admin__label {
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 50px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  animation: fadeInLabel 0.5s ease both;
+  font-family: 'DM Sans', sans-serif;
+}
+@keyframes fadeInLabel {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.fab-admin {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  border: 2.5px solid rgba(233,30,140,.4);
+  color: #fff; font-size: 1.3rem; cursor: pointer;
+  box-shadow: 0 8px 28px rgba(0,0,0,.35), 0 0 0 4px rgba(233,30,140,.15);
+  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; justify-content: center;
+}
+.fab-admin:hover {
+  transform: scale(1.12) rotate(10deg);
+  box-shadow: 0 12px 36px rgba(0,0,0,.4), 0 0 0 6px rgba(233,30,140,.25);
+  border-color: var(--pink-accent);
+}
+.fab-admin__icon { font-size: 1.4rem; line-height: 1; }
+
+/* Mobile FAB */
+@media (max-width: 768px) {
+  .fab-admin-wrap { bottom: 20px; right: 16px; }
+  .fab-admin { width: 52px; height: 52px; font-size: 1.2rem; }
+  .fab-admin__label { font-size: 0.7rem; padding: 5px 12px; }
+}
 
 /* ══ RESPONSIVE ═════════════════════════════════════════════ */
 /* ══ RESPONSIVE MOBILE ══════════════════════════════════════ */
@@ -1405,9 +1446,6 @@ onUnmounted(() => {
   .admin-panel__body { padding: 16px; }
   .admin-form__row { grid-template-columns: 1fr; gap: 10px; }
   .admin-panel__tabs button { font-size: 0.75rem; padding: 6px 12px; }
-
-  /* FAB */
-  .fab-admin { bottom: 20px; right: 16px; width: 48px; height: 48px; font-size: 1.1rem; }
 
   /* Fullscreen */
   .fullscreen-close { top: 12px; right: 12px; width: 36px; height: 36px; }
