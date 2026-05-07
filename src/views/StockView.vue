@@ -1382,7 +1382,6 @@ onUnmounted(() => {
 
   .filters-bar {
     top: 60px;
-    overflow: hidden;
     width: 100%;
   }
 
@@ -1393,7 +1392,7 @@ onUnmounted(() => {
     align-items: stretch;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    /* NO overflow: hidden aquí — bloquea el scroll de pills */
   }
   .search-box {
     max-width: 100%;
@@ -1408,15 +1407,24 @@ onUnmounted(() => {
     display: flex;
     gap: 6px;
     overflow-x: auto;
+    overflow-y: visible;
     flex-wrap: nowrap;
-    padding-bottom: 4px;
+    padding: 4px 0 8px 0;
     width: 100%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    /* Indicador visual de que hay más contenido */
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
   }
   .cat-pills::-webkit-scrollbar { display: none; }
-  .cat-pill { font-size: 0.76rem; padding: 6px 12px; flex-shrink: 0; }
+  .cat-pill {
+    font-size: 0.76rem;
+    padding: 6px 12px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 
   .estado-filter {
     display: flex;
