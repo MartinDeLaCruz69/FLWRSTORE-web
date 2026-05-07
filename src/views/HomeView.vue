@@ -171,11 +171,15 @@
           <p>Próximamente aquí verás los comentarios de nuestros clientes.</p>
         </div>
 
+        
+
         <!-- Carrusel — solo si hay testimonios -->
         <template v-else>
           <div class="testimonials__wrap fade-up delay-2" :class="{ visible: clientesVisible }">
             <button class="testimonials__nav" @click="prevTestimonial">‹</button>
-            <div class="testimonials__track">
+            <div class="testimonials__track"
+              @touchstart="pausarCarrusel"
+              @touchend="reanudarCarrusel">
               <div class="testimonials__inner" :style="{ transform: `translateX(-${activeTestimonial * testimonialesOffset}px)` }">
                 <div
                   v-for="(t, i) in testimonials" :key="t.id || i"
@@ -563,8 +567,22 @@ const activeTestimonial = ref(0)
 const nextTestimonial = () => { activeTestimonial.value = (activeTestimonial.value + 1) % testimonials.value.length }
 const prevTestimonial = () => { activeTestimonial.value = (activeTestimonial.value - 1 + testimonials.value.length) % testimonials.value.length }
 
-let testimonialTimer
-onMounted(() => { testimonialTimer = setInterval(nextTestimonial, 4500) })
+let testimonialTimer = null
+
+const iniciarTimer = () => {
+  clearInterval(testimonialTimer)
+  testimonialTimer = setInterval(nextTestimonial, 4500)
+}
+
+const pausarCarrusel = () => {
+  clearInterval(testimonialTimer)
+}
+
+const reanudarCarrusel = () => {
+  iniciarTimer()
+}
+
+onMounted(() => { iniciarTimer() })
 onUnmounted(() => clearInterval(testimonialTimer))
 
 // ── Entregas ─────────────────────────────────────────────────
@@ -1355,9 +1373,9 @@ flex: auto;
 }
 
 /* ─── Sección review — ancho máximo correcto ─────────────────── */
-.section--review .section__inner {
-  max-width: 800px;
-}
+.section { padding: 60px 16px; }
+.section--review { padding: 32px 16px 48px; }
+.section__inner { padding: 0; }
 
 /* ─── Comment form — box-sizing fix ─────────────────────────── */
 .comment__form textarea,
