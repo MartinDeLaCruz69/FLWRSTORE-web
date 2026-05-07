@@ -692,6 +692,7 @@ const abrirEditar = (prod) => {
   imagenFileEditar.value    = null
   imagenPreviewEditar.value = prod.imagenUrl || null
   adminTab.value = 'editar'
+  adminPanelOpen.value = true  // ← abre el panel automáticamente
 }
 
 const onImageEditar = (e) => {
