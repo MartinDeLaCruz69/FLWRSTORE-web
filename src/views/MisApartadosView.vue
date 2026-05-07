@@ -82,13 +82,16 @@
             </div>
 
             <!-- Acción WhatsApp -->
-            <a
-              :href="generarMensajeWhatsApp(prod)"
-              target="_blank"
-              class="btn-whatsapp"
-            >
-              💬 Coordinar pago por WhatsApp
-            </a>
+            <!-- Acción WhatsApp — dos opciones -->
+            <div class="whatsapp-actions">
+              <a :href="generarMensajeWhatsApp(prod)" target="_blank" class="btn-whatsapp">
+                💬 Coordinar pago directo
+              </a>
+              <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW" 
+                target="_blank" class="btn-whatsapp-grupo">
+                👥 Ver canal de la tienda
+              </a>
+            </div>
 
             <!-- Nota de políticas -->
             <p class="apartado-card__nota">
@@ -210,16 +213,21 @@ const timerClass = (fechaApartado) => {
 
 // ── WhatsApp ─────────────────────────────────────────────────
 const generarMensajeWhatsApp = (prod) => {
-  const numero  = '524494271353'
+  // Enlace directo al canal de WhatsApp de FLWRSTORE
+  const grupoUrl = 'https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW'
   const nombre  = usuarioActual.value?.displayName ||
                   usuarioActual.value?.email?.split('@')[0] || 'Cliente'
   const mensaje = `Hola! Soy ${nombre} y quiero coordinar el pago de mi apartado:\n\n` +
                   `- *${prod.nombre}* — ${prod.grupo}\n` +
                   `- Precio: $${prod.precio?.toLocaleString()} MXN\n` +
                   `- Categoría: ${prod.categoria}\n\n` +
-                  `¿Me puedes confirmar los datos para el pago?, Por favor.`
+                  `¿Me pueden confirmar los datos para el pago? 🌸`
+  // Abre WhatsApp con el mensaje pre-llenado al número de Andrea
+  // pero también muestra el enlace del grupo
+  const numero = '524494271353'
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`
 }
+
 </script>
 
 <style scoped>
@@ -379,6 +387,24 @@ const generarMensajeWhatsApp = (prod) => {
   transition: all 0.3s;
 }
 .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,.4); }
+.whatsapp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.btn-whatsapp-grupo {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: rgba(37,211,102,.1);
+  border: 1.5px solid rgba(37,211,102,.3);
+  color: #128C7E; text-decoration: none;
+  padding: 12px 20px; border-radius: 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600;
+  transition: all 0.3s;
+}
+.btn-whatsapp-grupo:hover {
+  background: rgba(37,211,102,.15);
+  transform: translateY(-2px);
+}
 
 /* Nota */
 .apartado-card__nota {
