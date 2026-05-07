@@ -864,12 +864,6 @@ const marcarLeidoHandler = async (id) => {
   color: var(--text-light); border: 2px dashed rgba(233,30,140,.2); font-size: 0.9rem;
 }
 .big-emoji { font-size: 4rem; }
-.about__img-deco {
-  position: absolute; bottom: -20px; right: -20px;
-  width: 100px; height: 100px;
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  border-radius: 20px; opacity: 0.2; z-index: -1;
-}
 
 /* ─── ORGANIGRAMA ───────────────────────────────────────────── */
 .org__tree { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
