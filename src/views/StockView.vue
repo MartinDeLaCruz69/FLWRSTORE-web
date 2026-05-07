@@ -878,15 +878,15 @@ onUnmounted(() => {
 .search-box__clear { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 0.75rem; padding: 2px 4px; transition: color 0.2s; }
 .search-box__clear:hover { color: var(--pink-accent); }
 
-.cat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.cat-pills { display: flex; gap: 10px; flex-wrap: wrap; }
 .cat-pill {
   background: #fff; border: 1.5px solid rgba(233,30,140,.15);
   color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
-  padding: 7px 16px; border-radius: 50px; cursor: pointer;
+  padding: 5px 15px; border-radius: 50px; cursor: pointer;
   transition: all 0.25s; white-space: nowrap;
 }
 .cat-pill:hover { border-color: var(--pink-mid); background: rgba(233,30,140,.05); }
-.cat-pill.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; border-color: transparent; box-shadow: 0 4px 14px rgba(233,30,140,.3); }
+.cat-pill.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; border-color: transparent; box-shadow: 0 3px 5px rgba(233,30,140,.3); }
 
 .estado-filter { display: flex; gap: 6px; }
 .estado-btn {
@@ -1405,12 +1405,12 @@ onUnmounted(() => {
   /* Pills con scroll horizontal sin desbordarse */
   .cat-pills {
     display: flex;
-    gap: 3px;
+    gap: 6px;
     overflow-x: auto;
     overflow-y: visible;
     flex-wrap: nowrap;
     padding: 4px 0 8px 0;
-    width: 90%;
+    width: 100%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
