@@ -1377,6 +1377,39 @@ flex: auto;
   .cta__inner h2 { font-size: 1.6rem; }
   .cta__inner p  { font-size: 0.92rem; }
   .btn-cta-rose  { padding: 14px 28px; font-size: 0.9rem; }
+
+  .stock-hero {
+    padding: 80px 16px 40px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .stock-hero__content {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .stock-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  .stock-hero p  { font-size: 0.92rem; }
+
+  /* Fix desbordamiento stats */
+  .stock-hero__stats {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    gap: 0;
+    justify-content: space-around;
+    border-radius: 20px;
+  }
+  .sh-stat { flex: 1; }
+  .sh-stat strong { font-size: 1.1rem; }
+  .sh-stat span   { font-size: 0.68rem; }
+  .sh-stat-div    { width: 1px; height: 28px; flex-shrink: 0; }
+
 }
 
 /* ─── Sección review — ancho máximo correcto ─────────────────── */
