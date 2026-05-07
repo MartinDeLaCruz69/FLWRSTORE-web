@@ -488,7 +488,7 @@ onMounted(() => {
     })
   }, { threshold: 0.1 })
   sections.forEach(([r]) => { if (r.value) observer.observe(r.value) })
-  setTimeout(() => { heroVisible.value = true }, 100)
+  setTimeout(() => { heroVisible.value = true }, 150)
 })
 
 onUnmounted(() => {
@@ -724,7 +724,14 @@ const marcarLeidoHandler = async (id) => {
   100%{ opacity: 0; transform: translateY(110vh) rotate(360deg); }
 }
 
-.hero__content { position: relative; z-index: 2; max-width: 580px; }
+.hero__content {
+  position: relative; z-index: 2; max-width: 580px;
+  will-change: opacity, transform; /* fix iOS Safari */
+}
+.fade-up, .fade-left, .fade-right {
+  opacity: 0;
+  will-change: opacity, transform; /* fix iOS Safari */
+}
 
 .hero__badge {
   display: inline-block;
@@ -1382,6 +1389,17 @@ flex: auto;
 .admin__input,
 .admin__textarea {
   box-sizing: border-box;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari específico */
+  .fade-up.visible,
+  .fade-left.visible,
+  .fade-right.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
 }
 
 </style>
