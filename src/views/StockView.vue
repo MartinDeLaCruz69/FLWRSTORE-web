@@ -1294,16 +1294,16 @@ onUnmounted(() => {
 @media (max-width: 768px) {
 
   /* Hero */
-  .stock-hero { padding: 80px 16px 40px; }
-  .stock-hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
-  .stock-hero p { font-size: 0.92rem; }
+  /* Agrega al @media (max-width: 768px) */
   .stock-hero__stats {
-    flex-direction: row;
-    gap: 16px;
-    padding: 12px 20px;
-    width: 100%;
-    justify-content: center;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    width: calc(100% - 32px);
+    max-width: 100%;
   }
+  .stock-hero { overflow: hidden; }
+  .stock-page { overflow-x: hidden; }
   .sh-stat strong { font-size: 1.1rem; }
   .sh-stat span   { font-size: 0.7rem; }
   .sh-stat-div    { width: 1px; height: 28px; }
