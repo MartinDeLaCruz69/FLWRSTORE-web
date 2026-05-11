@@ -299,9 +299,21 @@ onUnmounted(() => obs?.disconnect())
   .rule__icon        { font-size: 1.5rem; }
 
   /* CTA */
-  .pagos__cta { padding: 28px 16px; border-radius: 20px; gap: 16px; }
+  .pagos__cta { padding: 28px 20px; border-radius: 20px; gap: 16px; }
   .pagos__cta p { font-size: 0.95rem; }
-  .pagos__cta-btns { flex-direction: column; gap: 10px; width: 100%; }
-  .pagos__cta-btns .btn-primary { width: 100%; text-align: center; padding: 13px 20px; }
+  .pagos__cta-btns {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;  /* ← limita el ancho para que no llegue al borde */
+    margin: 0 auto;    /* ← centra los botones */
+  }
+  .pagos__cta-btns .btn-primary {
+    width: 100%;
+    text-align: center;
+    padding: 13px 20px;
+    box-sizing: border-box;
+  }
 }
+
 </style>
