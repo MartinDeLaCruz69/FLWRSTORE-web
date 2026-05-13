@@ -6,6 +6,7 @@ import LegalView from './views/LegalView.vue'
 import LoginView from './views/LoginView.vue'
 import SignUpView from './views/SignUpView.vue'
 import MisApartadosView from './views/MisApartadosView.vue'
+import NotFoundView from './views/NotFoundView.vue' // ← Nuevo: vista 404
 
 const routes = [
   { path: '/', component: HomeView },
@@ -16,6 +17,7 @@ const routes = [
   { path: '/login', component: LoginView }, 
   { path: '/signup', component: SignUpView },
   { path: '/mis-apartados', component: MisApartadosView },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView }
 ]
 
 const router = createRouter({

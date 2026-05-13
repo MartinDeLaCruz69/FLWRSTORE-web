@@ -9,6 +9,8 @@ import PagosView  from '../views/PagosView.vue'
 import LoginView  from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import MisApartadosView from '../views/MisApartadosView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
+
 
 
 const routes = [
@@ -38,7 +40,7 @@ const routes = [
   },
 
   // ── 404 ───────────────────────────────────────────────────
-  { path: '/:pathMatch(.*)*', redirect: '/home' },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView }
 ]
 
 const router = createRouter({
