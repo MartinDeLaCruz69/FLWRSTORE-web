@@ -27,22 +27,26 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+const emit = defineEmits(['done'])
+
 const visible = ref(true)
 const progress = ref(0)
 
 const petalStyle = (i) => ({
   '--delay': `${i * 0.15}s`,
   '--angle': `${(i / 8) * 360}deg`,
-  '--dist': `${60 + (i % 3) * 25}px`
+  '--dist':  `${60 + (i % 3) * 25}px`
 })
 
 onMounted(() => {
-  // Barra de progreso animada
   const interval = setInterval(() => {
     progress.value += 2
     if (progress.value >= 100) {
       clearInterval(interval)
-      setTimeout(() => { visible.value = false }, 400)
+      setTimeout(() => {
+        visible.value = false
+        setTimeout(() => emit('done'), 600) // espera la animación de salida
+      }, 400)
     }
   }, 25)
 })
