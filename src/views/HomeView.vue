@@ -19,16 +19,16 @@
         </h1>
         <p class="hero__sub">
           Albums, photocards, peluches y mucho más.<br>
-          Todo con amor, desde Aguascalientes para ti.
+          Todo con amor, desde Aguascalientes para tí.
         </p>
         <div class="hero__ctas">
           <router-link to="/stock" class="btn-primary btn-lg">Ver Stock disponible</router-link>
           <a href="#quienes-somos" class="btn-ghost btn-lg" @click.prevent="scrollToSection">¡CONÓCENOS! ↓</a>
         </div>
         <div class="hero__stats">
-          <div class="stat"><strong>+500</strong><span>Pedidos entregados</span></div>
+          <div class="stat"><strong>+1000</strong><span>Pedidos entregados</span></div>
           <div class="stat-divider"></div>
-          <div class="stat"><strong>99.9%</strong><span>Clientes felices</span></div>
+          <div class="stat"><strong>99%</strong><span>Clientes felices</span></div>
           <div class="stat-divider"></div>
           <div class="stat"><strong>+2 años</strong><span>En el mercado</span></div>
         </div>
@@ -68,13 +68,13 @@
         <h2 class="section__title fade-up delay-1" :class="{ visible: quienesVisible }">¿Quiénes somos?</h2>
         <div class="about__grid">
           <div class="about__text fade-left" :class="{ visible: quienesVisible }">
-            <p>Somos <strong>FLWRSTORE</strong>, una tienda de K-Pop nacida del amor por la música y la cultura coreana. Comenzamos compartiendo álbumes y photocards entre amigos, y poco a poco crecimos hasta convertirnos en un espacio de confianza para fans de toda la república.</p>
-            <p>Cada producto que ofrecemos ha sido cuidadosamente seleccionado para ti. Nos aseguramos de entregarte tu pedido en buenas condiciones, con el mismo amor con el que fue elegido.</p>
-            <p>Más que una tienda, somos una comunidad 🌸</p>
+            <p>Somos <strong>FLWRSTORE</strong>, una tienda de mercancía de K-Pop nacida del amor por la música y la cultura coreana. Comenzamos compartiendo álbumes y photocards entre amigos, y poco a poco crecimos hasta convertirnos en un espacio de confianza para fans de toda la república.</p>
+            <p>Cada producto que ofrecemos ha sido cuidadosamente seleccionado por ti y para tí. Nos aseguramos de entregarte tu pedido en buenas condiciones, con el mismo amor con el que fue elegido.</p>
+            <p>Más que una tienda, somos una gran comunidad 🌸</p>
             <div class="about__values">
               <div class="value-pill fade-up delay-1" :class="{ visible: quienesVisible }">🎁 Empaque seguro</div>
               <div class="value-pill fade-up delay-2" :class="{ visible: quienesVisible }">💌 Atención personalizada</div>
-              <div class="value-pill fade-up delay-3" :class="{ visible: quienesVisible }">⚡ Entregas personales y en línea</div>
+              <div class="value-pill fade-up delay-3" :class="{ visible: quienesVisible }">⚡ Entregas personales y por correo</div>
               <div class="value-pill fade-up delay-4" :class="{ visible: quienesVisible }">🌟 Productos originales</div>
             </div>
           </div>
@@ -102,28 +102,28 @@
         <div class="org__tree">
           <div class="org__level fade-up delay-1" :class="{ visible: equipoVisible }">
             <div class="org__card org__card--main">
-              <div class="org__avatar">👑</div>
+              <div class="org__avatar">💌</div>
               <strong>Fundadora</strong>
-              <span>Andrea Esqueda Rosario</span>
+              <span>Lic. Andrea Esqueda Rosario</span>
             </div>
           </div>
           <div class="org__connector fade-up" :class="{ visible: equipoVisible }"></div>
           <div class="org__level org__level--two fade-up delay-2" :class="{ visible: equipoVisible }">
             <div class="org__card">
-              <div class="org__avatar">🌸</div>
+              <div class="org__avatar">🎀</div>
               <strong>Administradora de apoyo</strong>
               <span>Melissa Esparza</span>
             </div>
             <div class="org__card">
               <div class="org__avatar">💻</div>
-              <strong>Desarrollo Front/Back</strong>
+              <strong>Desarrollo Completo</strong>
               <span>Ing. Juan Martín Esparza de la Cruz</span>
             </div>
           </div>
           <div class="org__connector fade-up" :class="{ visible: equipoVisible }"></div>
           <div class="org__level fade-up delay-3" :class="{ visible: equipoVisible }">
             <div class="org__card org__card--community">
-              <div class="org__avatar">🌸</div>
+              <div class="org__avatar">👑</div>
               <strong>¡Tú, nuestra comunidad!</strong>
               <span>Sin ti, nada de esto existiría</span>
             </div>
@@ -138,7 +138,7 @@
         <div class="section__tag fade-up" :class="{ visible: redesVisible }">📱 Síguenos</div>
         <h2 class="section__title fade-up delay-1" :class="{ visible: redesVisible }">Encuéntranos en redes</h2>
         <p class="section__desc fade-up delay-2" :class="{ visible: redesVisible }">
-          Estamos activas todos los días. Sigue nuestro contenido, entérate de drops y hazte parte de la comunidad.
+          Estamos activos todos los días. Dentro de nuestro horario de atención, sigue nuestro contenido, entérate de lo nuevo y hazte parte de la comunidad.
         </p>
         <div class="social__grid">
           <a v-for="(social, i) in socials" :key="social.name" :href="social.url" target="_blank"
