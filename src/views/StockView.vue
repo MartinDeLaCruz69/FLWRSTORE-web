@@ -514,6 +514,8 @@ import { rolActual } from '../composables/useAuth'
 import { useProductos } from '../composables/useProductos'
 import { usuarioActual } from '../composables/useAuth'
 import { useRouter } from 'vue-router'
+import confetti from 'canvas-confetti'
+
 
 
 const fotoFullscreen = ref(null)
@@ -604,6 +606,39 @@ const confirmarApartado = async () => {
     await apartarProducto(apartarProd.value.id, nombreCliente.value.trim())
     mostrarToast(`✅ ¡${apartarProd.value.nombre} apartado a nombre de ${nombreCliente.value.trim()}!`, 'success')
     apartarProd.value = null
+
+    // Confetti solo para clientes, no admins
+    if (!esAdmin.value) {
+      setTimeout(() => {
+        // Lluvia de pétalos rosa 🌸
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff'],
+          shapes: ['circle'],
+          scalar: 1.1,
+        })
+        // Segunda ráfaga con delay
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.7 },
+            colors: ['#f48fb1', '#e91e8c', '#fce4ec'],
+          })
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.7 },
+            colors: ['#f48fb1', '#e91e8c', '#fce4ec'],
+          })
+        }, 300)
+      }, 400) // espera a que el modal se cierre
+    }
+
   } catch {
     mostrarToast('⚠️ Error al apartar. Intenta de nuevo.', 'error')
   }

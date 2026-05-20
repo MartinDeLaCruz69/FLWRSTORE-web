@@ -26,7 +26,7 @@
           <a href="#quienes-somos" class="btn-ghost btn-lg" @click.prevent="scrollToSection">¡CONÓCENOS! ↓</a>
         </div>
         <div class="hero__stats">
-          <div class="stat"><strong>+1000</strong><span>Pedidos entregados</span></div>
+          <div class="stat"><strong>+500</strong><span>Pedidos entregados</span></div>
           <div class="stat-divider"></div>
           <div class="stat"><strong>99%</strong><span>Clientes felices</span></div>
           <div class="stat-divider"></div>
