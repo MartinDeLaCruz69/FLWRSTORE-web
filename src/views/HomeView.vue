@@ -439,9 +439,9 @@ const esAdmin = computed(() =>
 
 // ── Hero cards (puedes poner URLs de imágenes reales) ─────────
 const heroCards = ref([
-  { emoji: '🎵', label: 'Álbumes',    img: 'https://images.squarespace-cdn.com/content/v1/62f53b668eb14457565e348d/98a27bc7-46cf-4645-b0fe-045d72562c4d/2026website.png' },
-  { emoji: '📸', label: 'Photocards', img: 'https://discover-es.zenmarket.jp/assets/Products/Music-Entertainment/Kpop/Kpop-categories/Carholder-category-Kpop.webp' },
-  { emoji: '🧸', label: 'Peluches',   img: 'https://i5.walmartimages.com/asr/2735e653-0c8a-4253-9697-d2542de51d7a.613dafe887f3587d4eeb830f54d8ff95.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF' },
+  { label: 'Álbumes',    img: '/imagenes/albumes.jpeg' },
+  { label: 'Photocards', img: '/imagenes/photocards.jpeg' },
+  { label: 'Peluches',   img: '/imagenes/peluches.jpeg' },
 ])
 
 // ── Smooth scroll a sección ──────────────────────────────────
@@ -757,12 +757,16 @@ const marcarLeidoHandler = async (id) => {
 .stat-divider { width: 1px; height: 36px; background: rgba(233,30,140,.2); }
 
 /* ─── Hero cards ────────────────────────────────────────────── */
-.hero__visual { position: relative; z-index: 2; flex-shrink: 0; }
+.hero__visual { 
+  position: relative; 
+  z-index: 2; 
+  flex-shrink: 0; 
+}
 
 .hero__card-stack {
   position: relative;
-  width: 340px;   /* ← más ancho para ver las 3 */
-  height: 380px;
+  width: 400px;   /* ← más ancho para ver las 3 */
+  height: 350px;
 }
 
 .card-float {
@@ -772,7 +776,10 @@ const marcarLeidoHandler = async (id) => {
   border-radius: 20px;
   box-shadow: var(--shadow);
   padding: 16px;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 10px;
   transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s;
 }
 /* Separación más visible entre las 3 cards */
@@ -784,7 +791,7 @@ const marcarLeidoHandler = async (id) => {
 }
 .card-float--mid   {
   bottom: 50px; left: 75px;
-  transform: rotate(0deg);
+  transform: rotate(1deg);
   opacity: 0.9;
   animation: floatCard 5s ease-in-out 0.5s infinite;
   z-index: 1;
@@ -799,26 +806,39 @@ const marcarLeidoHandler = async (id) => {
 @keyframes floatCard { 0%,100%{transform-origin:center; margin-top:0} 50%{margin-top:-10px} }
 
 .card-float:hover {
-  transform: rotate(0deg) translateY(-12px) scale(1.05) !important;
+  transform: translateY(-12px) !important;
   box-shadow: 0 28px 60px rgba(233,30,140,.3);
   z-index: 10;
 }
 
 .card-img-wrap {
-  width: 110px; height: 110px;
-  border-radius: 14px; overflow: hidden;
-  background: var(--pink-soft);
-  display: flex; align-items: center; justify-content: center;
+  width: 110px; 
+  height: 110px;
+  border-radius: 14px; 
+  overflow: hidden;
+  background: 
+  var(--pink-soft);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
 }
 .card-img {
-  width: 100%; height: 100%;
+  width: 100%; 
+  height: 100%;
   object-fit: cover;
   border-radius: 14px;
   transition: transform 0.3s;
 }
-.card-float:hover .card-img { transform: scale(1.08); }
-.card-img-placeholder { font-size: 2.8rem; }
-.card-float span { font-size: 0.8rem; color: var(--text-light); font-weight: 500; }
+.card-float:hover .card-img { 
+  transform: scale(1.08); 
+}
+.card-img-placeholder { 
+  font-size: 2.8rem; 
+}
+.card-float span { 
+  color: var(--text-dark); 
+  font-weight: 500;
+}
 
 /* ─── Botones ────────────────────────────────────────────────── */
 .btn-primary {
