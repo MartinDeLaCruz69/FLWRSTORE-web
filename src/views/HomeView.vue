@@ -79,12 +79,22 @@
             </div>
           </div>
           <div class="about__image fade-right" :class="{ visible: quienesVisible }">
-            <div class="about__img-frame">
-              <div class="about__img-placeholder">
-                <span class="big-emoji">🌸</span>
-                <p>Foto del equipo</p>
+            <div class="team__cards">
+              <div
+                v-for="(miembro, i) in equipo"
+                :key="miembro.nombre"
+                class="team__card"
+                :style="{ '--i': i }"
+              >
+                <div class="team__card-avatar">
+                  <span class="team__card-emoji">{{ miembro.emoji }}</span>
+                </div>
+                <div class="team__card-info">
+                  <strong>{{ miembro.nombre }}</strong>
+                  <span>{{ miembro.rol }}</span>
+                </div>
+                <div class="team__card-deco"></div>
               </div>
-              <div class="about__img-deco"></div>
             </div>
           </div>
         </div>
@@ -102,7 +112,7 @@
         <div class="org__tree">
           <div class="org__level fade-up delay-1" :class="{ visible: equipoVisible }">
             <div class="org__card org__card--main">
-              <div class="org__avatar">💌</div>
+              <div class="org__avatar">🌸</div>
               <strong>Fundadora</strong>
               <span>Lic. Andrea Esqueda Rosario</span>
             </div>
@@ -116,7 +126,7 @@
             </div>
             <div class="org__card">
               <div class="org__avatar">💻</div>
-              <strong>Desarrollo Completo</strong>
+              <strong>Desarrollador</strong>
               <span>Ing. Juan Martín Esparza de la Cruz</span>
             </div>
           </div>
@@ -498,6 +508,24 @@ onUnmounted(() => {
   pararEscuchaTestimonios()
 })
 
+const equipo = [
+  {
+    emoji: '🌸',
+    nombre: 'Andrea Esqueda',
+    rol: 'Fundadora & Administradora',
+  },
+  {
+    emoji: '🎀',
+    nombre: 'Melissa Esparza',
+    rol: 'Administradora de apoyo',
+  },
+  {
+    emoji: '💻',
+    nombre: 'Ing. Juan Martín',
+    rol: 'Desarrollo Completo y Soporte Técnico',
+  },
+]
+
 // ── Redes ────────────────────────────────────────────────────
 const socials = [
   { name: 'Instagram', handle: '@its.flwr_store', emoji: '📸', gradient: 'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', url: 'https://www.instagram.com/its.flwr_store?igsh=MThrMDR5cmZ2ZGxyMg==', desc: 'Fotos de productos, unboxings y novedades' },
@@ -560,7 +588,6 @@ const agregarTestimonio = async () => {
     guardandoTestimonio.value = false
   }
 }
-
 
 
 const activeTestimonial = ref(0)
@@ -876,14 +903,114 @@ const marcarLeidoHandler = async (id) => {
   color: var(--pink-deep); padding: 8px 18px; border-radius: 50px;
   font-size: 0.85rem; font-weight: 500;
 }
-.about__img-frame { position: relative; }
-.about__img-placeholder {
-  background: linear-gradient(135deg, var(--pink-soft), #fff); border-radius: 30px;
-  aspect-ratio: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 12px;
-  color: var(--text-light); border: 2px dashed rgba(233,30,140,.2); font-size: 0.9rem;
+
+/* ─── TARJETAS DEL EQUIPO ───────────────────────────────────── */
+.team__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
 }
-.big-emoji { font-size: 4rem; }
+
+.team__card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px 20px;
+  border: 1.5px solid rgba(233,30,140,.12);
+  box-shadow: 0 4px 20px rgba(233,30,140,.08);
+  overflow: hidden;
+  cursor: default;
+  animation: cardSlideIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: calc(var(--i) * 0.15s);
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1),
+              box-shadow 0.3s ease,
+              border-color 0.3s;
+}
+
+.team__card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(233,30,140,.18);
+  border-color: var(--pink-mid);
+}
+
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Avatar circular con gradiente */
+.team__card-avatar {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fce4ec, #f48fb1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 14px rgba(233,30,140,.2);
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.team__card:hover .team__card-avatar {
+  transform: scale(1.12) rotate(-5deg);
+}
+
+/* Primer card — fundadora destacada */
+.team__card:first-child {
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border-color: rgba(233,30,140,.25);
+}
+.team__card:first-child .team__card-avatar {
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  box-shadow: 0 6px 20px rgba(233,30,140,.35);
+}
+
+.team__card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.team__card-info strong {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 600;
+}
+.team__card-info span {
+  font-size: 0.78rem;
+  color: var(--pink-accent);
+  font-weight: 500;
+}
+
+/* Decorativo de fondo */
+.team__card-deco {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(233,30,140,.05);
+  transition: transform 0.3s ease;
+}
+.team__card:hover .team__card-deco {
+  transform: scale(1.5);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .team__cards { gap: 10px; }
+  .team__card { padding: 14px 16px; gap: 12px; }
+  .team__card-avatar { width: 48px; height: 48px; min-width: 48px; font-size: 1.3rem; }
+  .team__card-info strong { font-size: 0.88rem; }
+  .team__card-info span   { font-size: 0.73rem; }
+}
 
 /* ─── ORGANIGRAMA ───────────────────────────────────────────── */
 .org__tree { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
