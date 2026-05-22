@@ -35,6 +35,6 @@ fi
 echo ""
 echo "🌸 ══════════════════════════════════════════ 🌸"
 echo "   ✅ ¡FLWRSTORE actualizada en producción!"
-echo "   🔗 https://flwrstore-8d547.web.app"
+echo "   🔗 https://flwrstore.com.mx"
 echo "🌸 ══════════════════════════════════════════ 🌸"
 echo ""
