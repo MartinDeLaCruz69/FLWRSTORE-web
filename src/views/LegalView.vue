@@ -174,7 +174,7 @@
         </div>
         <div class="legal-block__body">
           <div class="policy-item"><span>🔄</span><p>FLWRSTORE se reserva el derecho de actualizar estos términos y condiciones en cualquier momento sin previo aviso.</p></div>
-          <div class="policy-item"><span>📅</span><p>La versión vigente siempre estará disponible en esta página. La fecha de última actualización es: <strong>Mayo 2025</strong>.</p></div>
+          <div class="policy-item"><span>📅</span><p>La versión vigente siempre estará disponible en esta página. La fecha de última actualización es: <strong>Mayo 2026</strong>.</p></div>
           <div class="policy-item"><span>✅</span><p>El uso continuo de la plataforma después de cualquier cambio implica la aceptación de los nuevos términos.</p></div>
         </div>
       </div>
