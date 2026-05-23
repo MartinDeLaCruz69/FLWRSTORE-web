@@ -60,7 +60,7 @@
           <h2>Sobre los productos</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>✅</span><p>Todos los productos ofrecidos son <strong>originales</strong>. No vendemos réplicas ni productos no oficiales.</p></div>
+          <div class="policy-item"><span>✅</span><p>Todos los productos ofrecidos son <strong>originales</strong>. No vendemos réplicas ni productos no oficiales, a menos que se especifique.</p></div>
           <div class="policy-item"><span>📸</span><p>Las fotografías de los productos son reales y tomadas por el equipo de FLWRSTORE. El color y detalles pueden variar ligeramente por condiciones de iluminación.</p></div>
           <div class="policy-item"><span>📦</span><p>Los productos de <strong>segunda mano</strong> se describen con su condición real. Se indica claramente si tienen detalles, uso o faltantes.</p></div>
           <div class="policy-item"><span>🔄</span><p>El stock se actualiza en tiempo real. Un producto visible en la tienda puede agotarse o apartarse mientras navegas.</p></div>
@@ -75,7 +75,7 @@
           <h2>Reglas de apartado</h2>
         </div>
         <div class="legal-block__body">
-          <div class="policy-item"><span>⏱️</span><p>Los apartados tienen una duración máxima de <strong>24 horas</strong> a partir de la confirmación.</p></div>
+          <div class="policy-item"><span>⏱️</span><p>Los apartados tienen una duración máxima de <strong>24 horas</strong> a partir de la confirmación, a menos que se llegue a otro acuerdo con la administradora.</p></div>
           <div class="policy-item"><span>💳</span><p>Pasadas las 24 horas sin pago confirmado, el producto regresa automáticamente al stock disponible sin previo aviso.</p></div>
           <div class="policy-item"><span>💰</span><p>Para compras mayores a <strong>$550 MXN</strong> se puede acordar un anticipo del 20% para facilidades de pago, sujeto a disponibilidad y acuerdo con la administradora.</p></div>
           <div class="policy-item"><span>✅</span><p>El apartado queda confirmado <strong>únicamente</strong> cuando la administradora lo confirma por WhatsApp oficial. Un apartado en la plataforma no garantiza el producto sin esta confirmación.</p></div>
@@ -92,8 +92,8 @@
         <div class="legal-block__body">
           <div class="policy-item"><span>🏦</span><p><strong>Transferencia SPEI</strong> — desde cualquier banco mexicano. Los datos se proporcionan al confirmar el pedido por WhatsApp.</p></div>
           <div class="policy-item"><span>🏪</span><p><strong>Depósito OXXO</strong> — en cualquier tienda OXXO del país. Los datos de depósito se envían por WhatsApp oficial.</p></div>
-          <div class="policy-item"><span>⚠️</span><p>No aceptamos pagos por transferencias a cuentas personales no verificadas, efectivo en mano sin comprobante, ni plataformas de terceros no acordadas previamente.</p></div>
-          <div class="policy-item"><span>📸</span><p>El cliente debe enviar <strong>comprobante de pago</strong> al canal oficial de WhatsApp para confirmar su pedido. Sin comprobante no se considera pagado.</p></div>
+          <div class="policy-item"><span>⚠️</span><p>No aceptamos pagos por transferencias a cuentas personales no verificadas, ni plataformas de terceros no acordadas previamente.</p></div>
+          <div class="policy-item"><span>📸</span><p>El cliente debe enviar <strong>comprobante de pago</strong> a las administradoras para confirmar su pedido. Sin comprobante no se considera pagado.</p></div>
           <div class="policy-item"><span>🕐</span><p>La confirmación de pago se realiza en un máximo de <strong>2 horas hábiles</strong> tras recibir el comprobante.</p></div>
         </div>
       </div>
@@ -122,12 +122,11 @@
         </div>
         <div class="legal-block__body">
           <div class="policy-item"><span>📍</span><p><strong>Entrega personal</strong> — Frente al Templo de San José, Lic. Francisco Primo Verdad 205, Zona Centro, Aguascalientes. Se coordina día y hora por WhatsApp.</p></div>
-          <div class="policy-item"><span>🛵</span><p><strong>Envío local</strong> — por Uber Flash o DiDi dentro de Aguascalientes. El costo de envío corre por cuenta del cliente salvo acuerdo previo.</p></div>
+          <div class="policy-item"><span>🛵</span><p><strong>Envío local</strong> — por Uber Flash o DiDi dentro de Aguascalientes. El costo de envío corre por cuenta del cliente.</p></div>
           <div class="policy-item"><span>📮</span><p><strong>Envío nacional</strong> — por Correos de México o Estafeta vía Lolapay. El costo se calcula según el destino y peso.</p></div>
-          <div class="policy-item"><span>🎁</span><p><strong>Envío gratuito</strong> en compras mayores a <strong>$550 MXN</strong> dentro de la zona metropolitana de Aguascalientes.</p></div>
           <div class="policy-item"><span>📋</span><p>El cliente es responsable de proporcionar correctamente su dirección de entrega. FLWRSTORE no se hace responsable por retrasos o pérdidas derivadas de datos incorrectos.</p></div>
           <div class="policy-item"><span>📸</span><p>Si el producto llega dañado por causas de la paquetería, el cliente debe notificarlo dentro de las <strong>24 horas</strong> siguientes a la recepción con evidencia fotográfica.</p></div>
-          <div class="policy-item"><span>⏱️</span><p>Los tiempos estimados de envío son: Local 1–2 días, Nacional 3–7 días hábiles según paquetería.</p></div>
+          <div class="policy-item"><span>⏱️</span><p>Los tiempos estimados de envío son: Nacional 3–14 días hábiles según paquetería.</p></div>
         </div>
       </div>
 
