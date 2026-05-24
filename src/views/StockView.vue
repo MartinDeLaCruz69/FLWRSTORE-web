@@ -997,8 +997,11 @@ onUnmounted(() => {
   overflow: hidden;
 }
 .product-card__img-inner {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
+  width: 100%; 
+  height: 100%;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   position: relative;
 }
 .product-card__emoji {
@@ -1009,9 +1012,14 @@ onUnmounted(() => {
 .product-card:hover .product-card__emoji { transform: scale(1.15) rotate(-5deg); }
 
 .product-card__overlay {
-  position: absolute; inset: 0;
+  position: absolute; 
+  inset: 0;
   background: linear-gradient(135deg, rgba(233,30,140,.85), rgba(194,24,91,.9));
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
   color: #fff;
@@ -1092,7 +1100,7 @@ onUnmounted(() => {
 }
 .modal-close {
   position: absolute; top: 14px; right: 14px; z-index: 10;
-  background: rgba(0,0,0,.08); border: none; width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08); border: none; width: 32px; height: 32px; border-radius: 50%;
   cursor: pointer; font-size: 0.85rem; transition: background 0.2s;
 }
 .modal-close:hover { background: rgba(233,30,140,.15); }
@@ -1119,8 +1127,8 @@ onUnmounted(() => {
 .modal-photo {
   width: 100%;
   height: 100%;
-  max-height: 400px;
-  object-fit: contain;   /* ← contiene toda la imagen sin recortar */
+  max-height: 300px;
+  object-fit: contain;
   display: block;
   cursor: zoom-in;
   transition: transform 0.3s ease;
