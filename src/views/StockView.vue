@@ -995,14 +995,19 @@ onUnmounted(() => {
   height: 200px;
   background: linear-gradient(135deg, #fff8f5, #fce4ec);
   overflow: hidden;
-}
-.product-card__img-inner {
-  width: 100%; 
-  height: 100%;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
-  position: relative;
+}
+.product-card__img-inner img,
+.product-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;        /* ← cambia de cover a contain */
+  object-position: center;
+  padding: 1px;               /* ← pequeño padding para que no pegue a los bordes */
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff8f5, #fce4ec);
 }
 .product-card__emoji {
   font-size: 4.5rem;
@@ -1100,10 +1105,10 @@ onUnmounted(() => {
 }
 .modal-close {
   position: absolute; top: 14px; right: 14px; z-index: 10;
-  background: rgba(255, 255, 255, 0.08); border: none; width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.493); border: none; width: 32px; height: 32px; border-radius: 50%;
   cursor: pointer; font-size: 0.85rem; transition: background 0.2s;
 }
-.modal-close:hover { background: rgba(233,30,140,.15); }
+.modal-close:hover { background: rgba(255, 255, 255, 0.15); }
 
 /* ── Modal imagen adaptable ──────────────────────────────── */
 .modal-card__img {
