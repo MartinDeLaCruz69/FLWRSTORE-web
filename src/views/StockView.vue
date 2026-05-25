@@ -236,6 +236,7 @@
                   🗑️ Eliminar
                 </button>
               </div>
+              <br>
               <button
                 v-if="modalProd.estado === 'disponible'"
                 class="btn-apartar btn-apartar--lg"
