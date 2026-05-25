@@ -103,7 +103,7 @@
             <div class="org__card org__card--main">
               <div class="org__avatar">🌸</div>
               <strong>Fundadora</strong>
-              <span>Lic. Andrea Esqueda Rosario</span>
+              <span>Andrea Esqueda </span>
             </div>
           </div>
           <div class="org__connector fade-up" :class="{ visible: equipoVisible }"></div>
@@ -116,7 +116,7 @@
             <div class="org__card">
               <div class="org__avatar">💻</div>
               <strong>Desarrollador</strong>
-              <span>Ing. Juan Martín Esparza de la Cruz</span>
+              <span>Martín de la Cruz</span>
             </div>
           </div>
           <div class="org__connector fade-up" :class="{ visible: equipoVisible }"></div>

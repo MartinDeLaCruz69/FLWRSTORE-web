@@ -7,7 +7,7 @@
       <div class="page-hero__content">
         <span class="page-tag">💳 Pagos</span>
         <h1>Formas de pago &<br><span class="text-pink">Flujo de compra</span></h1>
-        <p>Así de sencillo es comprar en FLWR STORE 🌸</p>
+        <p>Así de sencillo es comprar en FLWRSTORE 🌸</p>
       </div>
     </section>
 

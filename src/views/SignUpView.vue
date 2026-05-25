@@ -224,10 +224,10 @@ const handleSubmit = async () => {
 }
 
 const perks = [
-  { icon: '🌸', text: 'Aparta productos con tu nombre'       },
-  { icon: '📦', text: 'Historial de tus pedidos'             },
-  { icon: '💬', text: 'Notificaciones de nuevo stock'        },
-  { icon: '💖', text: 'Parte de la comunidad FLWRSTORE'      },
+  { icon: '🌸', text: 'Aparta tus productos con tu nombre' },
+  { icon: '💬', text: 'Mandanos mensaje y realiza el pago' },
+  { icon: '📦', text: 'Recibe tu pedido en empaque seguro' },
+  { icon: '💖', text: 'Sé parte de la comunidad FLWRSTORE' },
 ]
 
 const petalStyle = (i) => ({

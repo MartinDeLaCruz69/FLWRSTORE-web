@@ -21,7 +21,7 @@
         <div class="legal-block__body">
           <div class="info-row">
             <span class="info-row__label">Nombre comercial</span>
-            <span class="info-row__val">FLWR🌸STORE</span>
+            <span class="info-row__val">FLWRSTORE</span>
           </div>
           <div class="info-row">
             <span class="info-row__label">Titular</span>
@@ -182,7 +182,7 @@
       <div class="legal__footer fade-up" :class="{ visible: vis[9] }" ref="el9">
         <span>🌸</span>
         <p>Agradecemos profundamente tu confianza y por ser parte de esta comunidad. Cada compra la hacemos con amor y compromiso.</p>
-        <strong>— FLWR STORE · Andrea Esqueda Rosario · Aguascalientes, México</strong>
+        <strong>— FLWRSTORE </strong>
       </div>
 
     </div>

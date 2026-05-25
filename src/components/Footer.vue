@@ -4,7 +4,7 @@
 
       <div class="footer__brand">
         <div class="footer__logo">FLWR 🌸 STORE</div>
-        <p>Tu tienda K-Pop de confianza.<br>Hecho con amor desde Aguascalientes 💖</p>
+        <p>Tu tienda K-Pop de confianza.<br>Siguenos en redes sociales:</p>
         <div class="footer__socials">
           <a href="https://www.instagram.com/its.flwr_store?igsh=MThrMDR5cmZ2ZGxyMg==" target="_blank" class="footer__social" aria-label="Instagram">📸</a>
           <a href="https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW?mode=gi_t" target="_blank" class="footer__social" aria-label="WhatsApp">💬</a>
@@ -54,10 +54,10 @@
     </div>
 
     <div class="footer__bottom">
-      <p>© {{ currentYear }} FLWR STORE · Andrea Esqueda · Todos los derechos reservados.</p>
+      <p>© {{ currentYear }} FLWRSTORE · Todos los derechos reservados.</p>
       <div class="footer__bottom-right">
         <span class="footer__version">v1.1.0</span>
-        <p>Diseño y desarrollo web por <strong>Ing. Juan Martín Esparza de la Cruz</strong></p>
+        <p>Diseño y Desarrollo completo por <strong>Ing. Juan Martín Esparza de la Cruz</strong></p>
       </div>
     </div>
   </footer>
