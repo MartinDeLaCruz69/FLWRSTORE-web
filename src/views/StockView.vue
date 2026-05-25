@@ -922,7 +922,7 @@ onUnmounted(() => {
   transition: all 0.25s; white-space: nowrap;
 }
 .cat-pill:hover { border-color: var(--pink-mid); background: rgba(233,30,140,.05); }
-.cat-pill.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; border-color: transparent; box-shadow: 0 3px 5px rgba(233,30,140,.3); }
+.cat-pill.active { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #ffffff; border-color: transparent; box-shadow: 0 3px 5px rgba(233,30,140,.3); }
 
 .estado-filter { display: flex; gap: 6px; }
 .estado-btn {
@@ -1060,7 +1060,7 @@ onUnmounted(() => {
 .product-card__price { font-size: 1.1rem; font-weight: 700; color: var(--text); font-family: 'Playfair Display', serif; }
 .btn-apartar {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #000000; border: none; padding: 8px 16px; border-radius: 50px;
+  color: #ffffff; border: none; padding: 8px 16px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
   cursor: pointer; transition: all 0.25s;
   box-shadow: 0 4px 14px rgba(233,30,140,.28);
