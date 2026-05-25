@@ -51,4 +51,4 @@ Si deseas ejecutar este proyecto localmente:
 1. Clonar el repositorio.
 2. Instalar dependencias: `npm install`
 3. Correr el servidor de desarrollo: `npm run dev`
-4. Acceder a: `http://localhost:5173/`
+4. Acceder a: `localhost`
