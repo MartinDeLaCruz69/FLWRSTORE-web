@@ -7,7 +7,7 @@
       <main class="main-content">
         <RouterView />
       </main>
-      <Footer v-if="!isAuthPage" />
+      
     </template>
 
     <Transition name="scroll-btn">
