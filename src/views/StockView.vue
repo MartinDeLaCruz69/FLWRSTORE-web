@@ -534,11 +534,10 @@ const {
 } = useProductos()
 
 // ── Catálogos ────────────────────────────────────────────────
-const categorias = ['Álbumes', 'Photocards', 'Peluches', 'Lightsticks', 'Revistas']
+const categorias = ['Álbumes', 'Photocards', 'Peluches', 'Lightsticks', 'Revistas', 'LLaveros']
 
 const catEmoji = {
-  'Todos': '🌸', 'Álbumes': '🎵', 'Photocards': '📸',
-  'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
+  'Todos': '🌸', 'Álbumes': '🎵', 'Photocards': '📸', 'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖', 'LLaveros': '🔑',
 }
 
 const estadoLabel = {
@@ -1296,7 +1295,7 @@ onUnmounted(() => {
   font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
   box-shadow: 0 8px 30px rgba(0,0,0,.2); white-space: nowrap;
 }
-.toast--success { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #000000; }
+.toast--success { background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent)); color: #ffffff; }
 .toast--error   { background: #ef4444; color: #fff; }
 .toast-enter-active { transition: all 0.4s cubic-bezier(.34,1.56,.64,1); }
 .toast-leave-active { transition: all 0.3s ease; }
@@ -1336,7 +1335,7 @@ onUnmounted(() => {
 
 .btn-admin-add {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #000000; border: none; padding: 12px; border-radius: 14px;
+  color: #ffffff; border: none; padding: 12px; border-radius: 14px;
   font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
   cursor: pointer; transition: all 0.25s;
   box-shadow: 0 6px 20px rgba(233,30,140,.28);
@@ -1540,17 +1539,22 @@ onUnmounted(() => {
 
   /* Panel admin — sube desde abajo como sheet */
   .admin-panel {
+    position: fixed;
     bottom: 0;
     right: 0;
     left: 0;
     width: 100%;
     max-width: 100%;
     border-radius: 24px 24px 0 0;
-    max-height: 85vh;
+    height: 90vh;
+    max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
   }
   .admin-panel__header { padding: 14px 16px; }
-  .admin-panel__body { padding: 16px; }
+  .admin-panel__body { padding: 16px; overflow-y: auto; }
   .admin-form__row { grid-template-columns: 1fr; gap: 10px; }
   .admin-panel__tabs button { font-size: 0.75rem; padding: 6px 12px; }
 

@@ -132,8 +132,7 @@ const productos = ref([])
 let unsubscribe = null
 
 const catEmoji = {
-  'Álbumes': '🎵', 'Photocards': '📸',
-  'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖',
+  'Álbumes': '🎵', 'Photocards': '📸', 'Peluches': '🧸', 'Lightsticks': '✨', 'Revistas': '📖', 'LLaveros': '🔑',
 }
 
 // ── Espera a que auth termine de cargar, luego suscribe ──────
