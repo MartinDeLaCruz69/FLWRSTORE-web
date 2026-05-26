@@ -1349,7 +1349,8 @@ onUnmounted(() => {
 /* FAB */
 .fab-admin-wrap {
   position: fixed;
-  bottom: 32px; right: 28px;
+  bottom: 28px;
+  right: 20px;
   z-index: 160;
   display: flex;
   align-items: center;
@@ -1539,20 +1540,21 @@ onUnmounted(() => {
 
   /* Panel admin — sube desde abajo como sheet */
   .admin-panel {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 24px 24px 0 0;
-    height: 90vh;
-    max-height: 90vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
-  }
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  z-index: 150;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 -8px 40px rgba(0,0,0,.15);
+  border: 1.5px solid rgba(233,30,140,.15);
+  border-bottom: none;
+}
   .admin-panel__header { padding: 14px 16px; }
   .admin-panel__body { padding: 16px; overflow-y: auto; }
   .admin-form__row { grid-template-columns: 1fr; gap: 10px; }
