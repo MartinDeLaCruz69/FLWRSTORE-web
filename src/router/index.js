@@ -10,16 +10,18 @@ import LoginView  from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import MisApartadosView from '../views/MisApartadosView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
+import ComingSoonView from './views/ComingSoonView.vue'
 
 
 
 const routes = [
-  { path: '/',       redirect: '/home' },
-  { path: '/home',   component: HomeView  },
+  { path: '/',       redirect: '/coming-soon' },
+  { path: '/home',   component: HomeView },
   { path: '/stock',  component: StockView },
   { path: '/pagos',  component: PagosView },
   { path: '/legal',  component: LegalView },
-  
+  { path: '/coming-soon', component: ComingSoonView },
+
   //-─ Mis Apartados — requiere sesión ─────────────────────────
   {
   path: '/mis-apartados',
