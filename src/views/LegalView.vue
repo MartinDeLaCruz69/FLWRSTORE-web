@@ -143,7 +143,7 @@
           <div class="policy-item"><span>✉️</span><p>Tu correo electrónico solo se usa para autenticación en la plataforma. No enviamos correos de marketing sin tu consentimiento.</p></div>
           <div class="policy-item"><span>🗑️</span><p>Puedes solicitar la eliminación de tu cuenta y datos personales en cualquier momento contactándonos por WhatsApp oficial.</p></div>
           <div class="policy-item"><span>🍪</span><p>Esta plataforma no utiliza cookies de rastreo ni publicidad de terceros. Solo se usan cookies técnicas necesarias para el funcionamiento de la sesión.</p></div>
-          <div class="policy__highlight">🇲🇽 Este aviso de privacidad se rige conforme a la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> vigente en México.</div>
+          <div class="policy__highlight">🚩 Este aviso de privacidad se rige conforme a la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> vigente en México.</div>
         </div>
       </div>
 
@@ -173,8 +173,15 @@
         </div>
         <div class="legal-block__body">
           <div class="policy-item"><span>🔄</span><p>FLWRSTORE se reserva el derecho de actualizar estos términos y condiciones en cualquier momento sin previo aviso.</p></div>
-          <div class="policy-item"><span>📅</span><p>La versión vigente siempre estará disponible en esta página. La fecha de última actualización es: <strong>Mayo 2026</strong>.</p></div>
+          <div class="policy-item"><span>📅</span><p>La versión vigente siempre estará disponible en esta página.  <br> La fecha de última actualización es: <strong>Mayo 2026</strong>.</p></div>
           <div class="policy-item"><span>✅</span><p>El uso continuo de la plataforma después de cualquier cambio implica la aceptación de los nuevos términos.</p></div>
+        </div>
+      </div>
+
+      <div class="legal-block fade-up" :class="{ visible: vis[8] }" ref="el8">
+        <div class="legal-block__header">
+          <span class="legal-block__icon">🔜</span>
+          <h2>Próxima Versión: v1.1.1</h2>
         </div>
       </div>
 

@@ -3,7 +3,7 @@
     <SplashScreen v-if="mostrando" @done="mostrando = false" />
 
     <template v-if="!mostrando">
-      <Navbar />
+      
       <main class="main-content">
         <RouterView />
       </main>
@@ -80,9 +80,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 </script>
 
 <style>
-.main-content {
-  padding-top: 70px;
-}
+
 .scroll-top {
   position: fixed;
   bottom: 32px;

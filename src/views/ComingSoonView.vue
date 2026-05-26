@@ -12,34 +12,50 @@
     <div class="coming-soon__content">
       <div class="coming-soon__icon">🌸</div>
       <div class="coming-soon__logo">FLWR 🌸 STORE</div>
-      <h1>Próximamente</h1>
-      <p>Estamos preparando algo especial para ti.<br>¡Muy pronto abrimos nuestras puertas!</p>
 
-      <div class="countdown">
-        <div class="countdown__unit">
-          <strong>{{ tiempo.dias }}</strong>
-          <span>Días</span>
-        </div>
-        <div class="countdown__sep">:</div>
-        <div class="countdown__unit">
-          <strong>{{ tiempo.horas }}</strong>
-          <span>Horas</span>
-        </div>
-        <div class="countdown__sep">:</div>
-        <div class="countdown__unit">
-          <strong>{{ tiempo.minutos }}</strong>
-          <span>Minutos</span>
-        </div>
-        <div class="countdown__sep">:</div>
-        <div class="countdown__unit">
-          <strong>{{ tiempo.segundos }}</strong>
-          <span>Segundos</span>
-        </div>
-      </div>
+      <template v-if="!lanzado">
+        <h1>Próximamente</h1>
+        <p>Estamos preparando algo especial para ti.<br>¡Muy pronto abrimos nuestras puertas!</p>
 
-      <div v-if="lanzado" class="countdown__lanzado">
-        🎉 ¡Ya abrimos! Bienvenida a FLWRSTORE 🌸
-      </div>
+        <div class="countdown">
+          <div class="countdown__unit">
+            <strong>{{ tiempo.dias }}</strong>
+            <span>Días</span>
+          </div>
+          <div class="countdown__sep">:</div>
+          <div class="countdown__unit">
+            <strong>{{ tiempo.horas }}</strong>
+            <span>Horas</span>
+          </div>
+          <div class="countdown__sep">:</div>
+          <div class="countdown__unit">
+            <strong>{{ tiempo.minutos }}</strong>
+            <span>Minutos</span>
+          </div>
+          <div class="countdown__sep">:</div>
+          <div class="countdown__unit">
+            <strong>{{ tiempo.segundos }}</strong>
+            <span>Segundos</span>
+          </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <h1>¡Ya abrimos! 🎉</h1>
+        <p>Gracias por tu espera. Bienvenida a <strong>FLWR🌸STORE</strong>,<br>tu tienda K-Pop de confianza.</p>
+
+        <div class="countdown__lanzado">
+          🌸 ¡La tienda ya está disponible!
+        </div>
+
+        <router-link to="/home" class="btn-entrar">
+          ✨ Entrar a la tienda
+        </router-link>
+
+        <p class="redirigiendo" v-if="segundosRedireccion > 0">
+          Redirigiendo automáticamente en {{ segundosRedireccion }}s...
+        </p>
+      </template>
 
       <a
         href="https://www.instagram.com/its.flwr_store"
@@ -54,32 +70,66 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import confetti from 'canvas-confetti'
 
-// ── FECHA DE LANZAMIENTO ─────────────────────────────────────
-// Para cambiarla: modifica solo esta línea
-// Formato: año, mes (0-11), día, hora, minuto
-const FECHA_LANZAMIENTO = new Date(2026, 4, 29, 12, 0, 0) // 29 mayo 2026 12:00pm
+const router = useRouter()
 
-const tiempo = ref({ dias: 0, horas: 0, minutos: 0, segundos: 0 })
+// ── FECHAS CLAVE ─────────────────────────────────────────────
+// Cambia solo estas dos líneas si mueves el lanzamiento
+const FECHA_LANZAMIENTO    = new Date(2026, 4, 29, 12, 0, 0) // 29 mayo 2026 12:00pm
+const FECHA_FIN_COMING_SOON = new Date(2026, 5, 1, 12, 0, 0) // 31 mayo 2026 — redirige solo al home
+
+const tiempo = ref({ dias: '00', horas: '00', minutos: '00', segundos: '00' })
 const lanzado = ref(false)
+const segundosRedireccion = ref(10)
 let confettiLanzado = false
 let timer = null
+let timerRedireccion = null
 
 const pad = (n) => String(n).padStart(2, '0')
 
+const iniciarRedireccion = () => {
+  timerRedireccion = setInterval(() => {
+    segundosRedireccion.value--
+    if (segundosRedireccion.value <= 0) {
+      clearInterval(timerRedireccion)
+      router.push('/home')
+    }
+  }, 1000)
+}
+
+const lanzarConfetti = () => {
+  const colores = ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff']
+  confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: colores })
+  setTimeout(() => {
+    confetti({ particleCount: 80, angle: 60,  spread: 60, origin: { x: 0, y: 0.7 }, colors: colores })
+    confetti({ particleCount: 80, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: colores })
+  }, 400)
+}
+
 const calcular = () => {
   const ahora = new Date()
+
+  // Si ya pasaron los 2 días post-lanzamiento → redirige directo
+  if (ahora >= FECHA_FIN_COMING_SOON) {
+    router.push('/home')
+    return
+  }
+
   const diff = FECHA_LANZAMIENTO - ahora
 
   if (diff <= 0) {
     tiempo.value = { dias: '00', horas: '00', minutos: '00', segundos: '00' }
-    lanzado.value = true
-    if (!confettiLanzado) {
-      confettiLanzado = true
-      lanzarConfetti()
+    if (!lanzado.value) {
+      lanzado.value = true
+      clearInterval(timer)
+      if (!confettiLanzado) {
+        confettiLanzado = true
+        lanzarConfetti()
+      }
+      iniciarRedireccion()
     }
-    clearInterval(timer)
     return
   }
 
@@ -96,15 +146,6 @@ const calcular = () => {
   }
 }
 
-const lanzarConfetti = () => {
-  const colores = ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff']
-  confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: colores })
-  setTimeout(() => {
-    confetti({ particleCount: 80, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors: colores })
-    confetti({ particleCount: 80, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: colores })
-  }, 400)
-}
-
 const petalStyle = (i) => ({
   '--x':        `${(i * 37) % 100}%`,
   '--delay':    `${(i * 0.5) % 6}s`,
@@ -116,7 +157,11 @@ onMounted(() => {
   calcular()
   timer = setInterval(calcular, 1000)
 })
-onUnmounted(() => clearInterval(timer))
+
+onUnmounted(() => {
+  clearInterval(timer)
+  clearInterval(timerRedireccion)
+})
 </script>
 
 <style scoped>
@@ -215,53 +260,65 @@ p {
 }
 
 .countdown__unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
   min-width: 64px;
 }
 .countdown__unit strong {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 6vw, 3.5rem);
-  color: #e91e8c;
-  line-height: 1;
+  color: #e91e8c; line-height: 1;
 }
 .countdown__unit span {
-  font-size: 0.7rem;
-  color: #9e6e7e;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-weight: 600;
+  font-size: 0.7rem; color: #9e6e7e;
+  text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
 }
 
 .countdown__sep {
-  font-size: 2rem;
-  color: #f48fb1;
-  font-weight: 700;
-  line-height: 1;
-  padding-bottom: 20px;
+  font-size: 2rem; color: #f48fb1;
+  font-weight: 700; line-height: 1; padding-bottom: 20px;
 }
 
 .countdown__lanzado {
   background: linear-gradient(135deg, #f48fb1, #e91e8c);
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 600;
+  color: #fff; padding: 14px 28px; border-radius: 50px;
+  font-size: 1rem; font-weight: 600;
   box-shadow: 0 8px 25px rgba(233,30,140,.3);
+}
+
+.btn-entrar {
+  background: linear-gradient(135deg, #f48fb1, #e91e8c);
+  color: #fff; border: none;
+  padding: 16px 40px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.05rem; font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 25px rgba(233,30,140,.35);
+  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  animation: pulseBtn 2s ease-in-out infinite;
+}
+.btn-entrar:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 16px 40px rgba(233,30,140,.45);
+}
+@keyframes pulseBtn {
+  0%,100% { box-shadow: 0 8px 25px rgba(233,30,140,.35); }
+  50%     { box-shadow: 0 8px 40px rgba(233,30,140,.6); }
+}
+
+.redirigiendo {
+  font-size: 0.82rem;
+  color: #c2185b;
+  opacity: 0.7;
+  margin-top: -8px;
 }
 
 .btn-ig {
   background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366);
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 50px;
+  color: #fff; border: none;
+  padding: 14px 28px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 0.95rem; font-weight: 600;
   text-decoration: none;
   box-shadow: 0 8px 25px rgba(220,39,67,.3);
   transition: all 0.3s;
@@ -273,5 +330,6 @@ p {
   .countdown__unit { min-width: 52px; }
   .countdown__sep { font-size: 1.4rem; padding-bottom: 16px; }
   p { font-size: 0.92rem; }
+  .btn-entrar { padding: 14px 28px; font-size: 0.95rem; }
 }
 </style>
