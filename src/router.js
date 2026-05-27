@@ -11,7 +11,7 @@ import ComingSoonView from './views/ComingSoonView.vue'
 
 
 const routes = [
-  { path: "/", component: HomeView },
+  { path: "/", component: ComingSoonView },
   { path: "/home", component: HomeView },
   { path: "/stock", component: StockView },
   { path: "/pagos", component: PagosView },

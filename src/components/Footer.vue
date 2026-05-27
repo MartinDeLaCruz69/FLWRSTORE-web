@@ -24,7 +24,7 @@
 
       <div class="footer__links">
         <h4>Navegación</h4>
-        <router-link to="/">Inicio</router-link>
+        <router-link to="/home">Inicio</router-link>
         <router-link to="/stock">Stock disponible</router-link>
         <router-link to="/pagos">Formas de pago</router-link>
         <router-link to="/legal">Aviso legal</router-link>
