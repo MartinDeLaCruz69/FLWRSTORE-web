@@ -238,7 +238,7 @@ onUnmounted(() => {
 .navbar__links li a::after {
   content: "🌸";
   position: absolute;
-  bottom: -18px;
+  bottom: -15px;
   left: 50%;
   transform: translateX(-50%) scale(0);
   font-size: 0.55rem;

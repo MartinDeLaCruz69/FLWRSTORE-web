@@ -81,8 +81,9 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
 <style>
 .main-content {
-  padding-top: 70px;
+  padding-top: 68px;
 }
+
 .scroll-top {
   position: fixed;
   bottom: 32px;

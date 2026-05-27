@@ -64,6 +64,14 @@
             <p>Templo de San José, Zona Centro, Ags.</p>
           </div>
         </div>
+        <div class="footer__contact-item">
+          <span>📩</span>
+          <div>
+            <strong>¿Encontraste algún error o tienes alguna pregunta? <br>Escribenos:</strong>
+            <p>Correo: matindelacruz169@gmail.com </p>
+            <p>Teléfono: +52 449 110 9105</p>
+          </div>
+        </div>
       </div>
     </div>
 
