@@ -12,13 +12,13 @@ import ComingSoonView from './views/ComingSoonView.vue'
 
 const routes = [
   { path: "/", component: ComingSoonView },
-  { path: "/home", component: HomeView },
-  { path: "/stock", component: StockView },
-  { path: "/pagos", component: PagosView },
-  { path: "/legal", component: LegalView },
-  { path: "/login", component: LoginView },
-  { path: "/signup", component: SignUpView },
-  { path: "/mis-apartados", component: MisApartadosView },
+  { path: "/home", component: ComingSoonView },
+  { path: "/stock", component: ComingSoonView },
+  { path: "/pagos", component: ComingSoonView },
+  { path: "/legal", component: ComingSoonView },
+  { path: "/login", component: ComingSoonView },
+  { path: "/signup", component: ComingSoonView },
+  { path: "/mis-apartados", component: ComingSoonView },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
 ];
 
