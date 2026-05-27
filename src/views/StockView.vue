@@ -937,7 +937,7 @@ onUnmounted(() => {
 .dot--vendido    { background: #ef4444; }
 
 /* ══ GRID ══════════════════════════════════════════════════ */
-.stock-main { padding: 48px 24px 100px; }
+.stock-main { padding: 48px 24px 150px; }
 .stock-main__inner { max-width: 1300px; margin: 0 auto; }
 
 .products-grid {
@@ -1081,7 +1081,7 @@ onUnmounted(() => {
 /* ── Empty state ── */
 .empty-state {
   grid-column: 1 / -1;
-  text-align: center; padding: 80px 20px;
+  text-align: center; padding: 150px 20px;
   display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
 .empty-state span { font-size: 4rem; opacity: 0.5; }
