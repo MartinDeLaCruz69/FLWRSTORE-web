@@ -89,7 +89,7 @@
         </div>
 
         <!-- Grid -->
-        <TransitionGroup name="grid" tag="div" class="products-grid">
+        <TransitionGroup name="grid" tag="div" class="products-grid" move-class="grid-move">
           <div
             v-for="(prod, i) in productosFiltrados"
             :key="prod.id"
@@ -960,8 +960,12 @@ onUnmounted(() => {
   position: relative;
 }
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  from { opacity: 0; transform: translateY(50px) scale(0.97); }
   to   { opacity: 1; transform: none; }
+}
+@keyframes cardOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(50px) scale(0.97); }
 }
 .product-card:hover {
   transform: translateY(-10px) scale(1.02);
@@ -1069,9 +1073,10 @@ onUnmounted(() => {
 .footer-tag--vendido  { color: var(--pink-deep); }
 
 /* Grid transition */
-.grid-enter-active, .grid-leave-active { transition: all 0.4s ease; }
-.grid-enter-from { opacity: 0; transform: scale(0.9) translateY(16px); }
-.grid-leave-to   { opacity: 0; transform: scale(0.9) translateY(-8px); }
+.grid-enter-active { animation: cardIn 0.4s ease both; }
+.grid-leave-active { animation: cardOut 0.4s ease both; }
+.grid-leave-to     { opacity: 1; }
+.grid-move         { transition: none; }
 
 /* ── Empty state ── */
 .empty-state {
