@@ -41,16 +41,17 @@
       </template>
 
       <template v-else>
-        <h1>¡Ya abrimos! 🎉</h1>
-        <p>Gracias por tu espera. Bienvenida a <strong>FLWR🌸STORE</strong>,<br>tu tienda K-Pop de confianza.</p>
+        <h1>¡Ya abrimos!</h1>
+        <p>Gracias por tu espera. Bienvenida(o) a <strong>FLWR🌸STORE</strong>,<br>tu tienda K-Pop de confianza.</p>
 
         <div class="countdown__lanzado">
           🌸 ¡La tienda ya está disponible!
         </div>
 
-        <router-link to="/home" class="btn-entrar">
+        <button @click="entrarTienda" class="btn-entrar">
           ✨ Entrar a la tienda
-        </router-link>
+        </button>
+        <br>
 
         <p class="redirigiendo" v-if="segundosRedireccion > 0">
           Redirigiendo automáticamente en {{ segundosRedireccion }}s...
@@ -64,6 +65,9 @@
       >
         📸 Síguenos en Instagram
       </a>
+      <div class="beta-badge">
+        ⚠️ Versión Beta ⚠️  <br> Este sitio estará en constante desarrollo através de actualizaciones. <br> ¡Gracias por su comprensión!
+      </div>
     </div>
   </div>
 </template>
@@ -76,36 +80,95 @@ import confetti from 'canvas-confetti'
 const router = useRouter()
 
 // ── FECHAS CLAVE ─────────────────────────────────────────────
-// Cambia solo estas dos líneas si mueves el lanzamiento
-const FECHA_LANZAMIENTO    = new Date(2026, 4, 29, 12, 0, 0) // 29 mayo 2026 12:00pm
-const FECHA_FIN_COMING_SOON = new Date(2026, 5, 1, 12, 0, 0) // 31 mayo 2026 — redirige solo al home
+const FECHA_LANZAMIENTO    = new Date(2026, 4, 29, 12, 0, 0) 
+const FECHA_FIN_COMING_SOON = new Date(2026, 5, 1, 12, 0, 0)
 
 const tiempo = ref({ dias: '00', horas: '00', minutos: '00', segundos: '00' })
 const lanzado = ref(false)
-const segundosRedireccion = ref(10)
+const segundosRedireccion = ref(20)
 let confettiLanzado = false
 let timer = null
 let timerRedireccion = null
 
 const pad = (n) => String(n).padStart(2, '0')
 
-const iniciarRedireccion = () => {
-  timerRedireccion = setInterval(() => {
-    segundosRedireccion.value--
-    if (segundosRedireccion.value <= 0) {
-      clearInterval(timerRedireccion)
-      router.push('/home')
-    }
-  }, 1000)
+let confettiInterval = null
+
+const ejecutarConfetti = () => {
+  const colores = ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff']
+
+  confetti({
+    particleCount: 120,
+    spread: 80,
+    origin: { y: 0.6 },
+    colors: colores
+  })
+
+  setTimeout(() => {
+    confetti({
+      particleCount: 80,
+      angle: 60,
+      spread: 60,
+      origin: { x: 0, y: 0.7 },
+      colors: colores
+    })
+
+    confetti({
+      particleCount: 80,
+      angle: 120,
+      spread: 60,
+      origin: { x: 1, y: 0.7 },
+      colors: colores
+    })
+  }, 400)
 }
 
 const lanzarConfetti = () => {
-  const colores = ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff']
-  confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: colores })
-  setTimeout(() => {
-    confetti({ particleCount: 80, angle: 60,  spread: 60, origin: { x: 0, y: 0.7 }, colors: colores })
-    confetti({ particleCount: 80, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: colores })
-  }, 400)
+  // Evita crear múltiples loops
+  if (confettiInterval) return
+
+  // Primera ejecución inmediata
+  ejecutarConfetti()
+
+  // Repetir cada 5 segundos
+  confettiInterval = setInterval(() => {
+    ejecutarConfetti()
+  }, 5000)
+}
+
+const detenerConfetti = () => {
+  if (confettiInterval) {
+    clearInterval(confettiInterval)
+    confettiInterval = null
+  }
+}
+
+const entrarTienda = () => {
+  detenerConfetti()
+
+  clearInterval(timerRedireccion)
+  clearInterval(timer)
+
+  router.push('/home')
+}
+
+const iniciarRedireccion = () => {
+  timerRedireccion = setInterval(() => {
+    segundosRedireccion.value--
+
+    // Detener confetti 5 segundos antes del redirect
+    if (segundosRedireccion.value === 5) {
+      detenerConfetti()
+    }
+
+    if (segundosRedireccion.value <= 0) {
+      clearInterval(timerRedireccion)
+
+      detenerConfetti()
+
+      router.push('/home')
+    }
+  }, 1000)
 }
 
 const calcular = () => {
@@ -161,6 +224,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(timer)
   clearInterval(timerRedireccion)
+  detenerConfetti()
 })
 </script>
 
@@ -176,6 +240,74 @@ onUnmounted(() => {
   overflow: hidden;
   background: #fff;
   padding: 24px;
+}
+
+.beta-badge {
+  position: relative;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(233, 30, 140, 0.12);
+  color: #c2185b;
+
+  padding: 10px 20px;
+  border-radius: 999px;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 4px 18px rgba(233, 30, 140, 0.08),
+    0 0 0 rgba(233, 30, 140, 0);
+
+  animation: betaGlow 3.5s ease-in-out infinite;
+
+  transition: box-shadow 0.3s ease;
+}
+
+.beta-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 80%
+  );
+
+  transform: translateX(-120%);
+  animation: shine 4.5s linear infinite;
+}
+
+.beta-badge:hover {
+  box-shadow:
+    0 10px 30px rgba(233, 30, 140, 0.16),
+    0 0 24px rgba(244, 143, 177, 0.22);
+}
+
+@keyframes betaGlow {
+  0%, 100% {
+    box-shadow:
+      0 4px 18px rgba(233, 30, 140, 0.08),
+      0 0 0 rgba(233, 30, 140, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 10px 28px rgba(233, 30, 140, 0.16),
+      0 0 18px rgba(244, 143, 177, 0.18);
+  }
+}
+
+@keyframes shine {
+  100% {
+    transform: translateX(120%);
+  }
 }
 
 .coming-soon__bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
