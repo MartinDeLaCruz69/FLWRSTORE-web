@@ -1,6 +1,5 @@
-import { ref } from 'vue'
-import { db, storage } from '../firebase'
-
+import { ref } from "vue";
+import { db, storage } from "../firebase";
 import {
   collection,
   addDoc,
@@ -9,89 +8,71 @@ import {
   doc,
   query,
   orderBy,
-  serverTimestamp
-} from 'firebase/firestore'
-
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   ref as storageRef,
   uploadString,
-  getDownloadURL
-} from 'firebase/storage'
+  getDownloadURL,
+} from "firebase/storage";
 
-const testimonios = ref([])
-const cargando = ref(false)
-let unsubscribe = null
+const testimonios = ref([]);
+const cargando = ref(false);
+let unsubscribe = null;
 
 export function useTestimonios() {
-
   const escucharTestimonios = () => {
-    if (unsubscribe) return
-
-    cargando.value = true
-
-    const q = query(
-      collection(db, 'testimonios'),
-      orderBy('fecha', 'asc')
-    )
-
+    if (unsubscribe) return;
+    cargando.value = true;
+    const q = query(collection(db, "testimonios"), orderBy("fecha", "asc"));
     unsubscribe = onSnapshot(
       q,
       (snap) => {
-        testimonios.value = snap.docs.map(d => ({
+        testimonios.value = snap.docs.map((d) => ({
           id: d.id,
-          ...d.data()
-        }))
+          ...d.data(),
+        }));
 
-        cargando.value = false
+        cargando.value = false;
       },
       (err) => {
-        console.error('Error escuchando testimonios:', err)
-        cargando.value = false
-      }
-    )
-  }
+        console.error("Error escuchando testimonios:", err);
+        cargando.value = false;
+      },
+    );
+  };
 
   const pararEscuchaTestimonios = () => {
-    unsubscribe?.()
-    unsubscribe = null
-  }
+    unsubscribe?.();
+    unsubscribe = null;
+  };
 
   const agregarTestimonio = async (datos, fotoBase64 = null) => {
-
-    let fotoURL = null
-
-    // SUBIR IMAGEN A STORAGE
+    let fotoURL = null;
     if (fotoBase64) {
-
-      const fileName = `testimonios/${Date.now()}.jpg`
-
-      const imageRef = storageRef(storage, fileName)
-
-      await uploadString(imageRef, fotoBase64, 'data_url')
-
-      fotoURL = await getDownloadURL(imageRef)
+      const fileName = `testimonios/${Date.now()}.jpg`;
+      const imageRef = storageRef(storage, fileName);
+      await uploadString(imageRef, fotoBase64, "data_url");
+      fotoURL = await getDownloadURL(imageRef);
     }
-
-    // GUARDAR SOLO URL EN FIRESTORE
     const docData = {
       name: datos.name.trim(),
-      location: datos.location?.trim() || 'México',
+      location: datos.location?.trim() || "México",
       text: datos.text.trim(),
-      product: datos.product?.trim() || 'Compra verificada',
-      emoji: '🌸',
+      product: datos.product?.trim() || "Compra verificada",
+      emoji: "🌸",
       fecha: serverTimestamp(),
-    }
-
+    };
     if (fotoURL) {
-      docData.foto = fotoURL
+      docData.foto = fotoURL;
     }
 
-    await addDoc(collection(db, 'testimonios'), docData)
-  }
+    await addDoc(collection(db, "testimonios"), docData);
+  };
 
   const eliminarTestimonio = async (id) => {
-    await deleteDoc(doc(db, 'testimonios', id))
-  }
+    await deleteDoc(doc(db, "testimonios", id));
+  };
 
   return {
     testimonios,
@@ -100,5 +81,5 @@ export function useTestimonios() {
     pararEscuchaTestimonios,
     agregarTestimonio,
     eliminarTestimonio,
-  }
+  };
 }

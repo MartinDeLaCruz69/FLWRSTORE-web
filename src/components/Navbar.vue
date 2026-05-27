@@ -141,6 +141,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.main-content {
+  padding-top: 70px;
+}
 .navbar {
   position: fixed;
   top: 0;
@@ -158,7 +161,6 @@ onUnmounted(() => {
   border-bottom-color: rgba(244, 143, 177, 0.25);
   box-shadow: 0 4px 32px rgba(233, 30, 140, 0.1);
 }
-
 .navbar__inner {
   max-width: 1280px;
   margin: 0 auto;
@@ -168,7 +170,6 @@ onUnmounted(() => {
   justify-content: space-between;
   gap: 16px;
 }
-
 .navbar__logo {
   font-family: "Playfair Display", serif;
   font-size: 1.3rem;
@@ -193,7 +194,6 @@ onUnmounted(() => {
 .navbar__logo:hover .navbar__logo-icon {
   transform: rotate(360deg) scale(1.3);
 }
-
 .navbar__links {
   display: flex;
   list-style: none;
@@ -247,7 +247,6 @@ onUnmounted(() => {
 .navbar__links li a.router-link-active::after {
   transform: translateX(-50%) scale(1);
 }
-
 .navbar__actions {
   display: flex;
   align-items: center;
@@ -269,6 +268,7 @@ onUnmounted(() => {
   text-overflow: ellipsis;
   animation: fadeIn 0.4s ease both;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -279,11 +279,9 @@ onUnmounted(() => {
     transform: none;
   }
 }
-
 .navbar__actions a {
   text-decoration: none;
 }
-
 .btn-ghost {
   background: transparent;
   border: 1.5px solid #f48fb1;
@@ -301,7 +299,6 @@ onUnmounted(() => {
   border-color: #e91e8c;
   transform: translateY(-1px);
 }
-
 .btn-primary {
   background: linear-gradient(135deg, #f48fb1, #e91e8c);
   border: none;
@@ -322,7 +319,6 @@ onUnmounted(() => {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(233, 30, 140, 0.4);
 }
-
 .navbar__burger {
   display: none;
   flex-direction: column;
@@ -357,7 +353,6 @@ onUnmounted(() => {
 .navbar__burger span.open:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
 }
-
 .navbar__mobile {
   display: flex;
   flex-direction: column;
@@ -368,7 +363,6 @@ onUnmounted(() => {
   border-top: 1px solid rgba(244, 143, 177, 0.2);
   box-shadow: 0 16px 40px rgba(233, 30, 140, 0.1);
 }
-
 .navbar__mobile-user {
   display: flex;
   align-items: center;
@@ -397,7 +391,6 @@ onUnmounted(() => {
   font-size: 0.75rem;
   color: #9e6e7e;
 }
-
 .navbar__mobile a {
   text-decoration: none;
   color: #3d1a26;
@@ -414,14 +407,12 @@ onUnmounted(() => {
   color: #e91e8c;
   padding-left: 22px;
 }
-
 .navbar__mobile-apartados {
   background: rgba(233, 30, 140, 0.06) !important;
   border: 1px solid rgba(233, 30, 140, 0.15) !important;
   color: #c2185b !important;
   font-weight: 600 !important;
 }
-
 .navbar__mobile-logout {
   background: none;
   border: 1.5px solid rgba(239, 68, 68, 0.25);
@@ -441,7 +432,6 @@ onUnmounted(() => {
   background: rgba(239, 68, 68, 0.06);
   border-color: #ef4444;
 }
-
 .navbar__mobile-actions {
   display: flex;
   gap: 10px;
@@ -455,7 +445,6 @@ onUnmounted(() => {
   text-align: center;
   justify-content: center;
 }
-
 .mobile-menu-enter-active {
   transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }

@@ -280,9 +280,8 @@
           </div>
 
           <div class="apartar-form">
-            <label>Tu nombre completo</label>
-            <input v-model="nombreCliente" type="text" placeholder="Ej: Valeria Rodríguez" />
-            <div v-if="errorNombre" class="form-error">{{ errorNombre }}</div>
+            <label>Este producto será apartado por: </label>
+            <span>{{ usuarioActual.displayName || usuarioActual.email?.split('@')[0] || 'Cliente' }}</span>
           </div>
 
           <div class="apartar-actions">
@@ -587,7 +586,6 @@ const abrirApartar = (prod) => {
     // Limpiar bloqueo de scroll ANTES de navegar
     document.body.style.overflow = ''
     mostrarToast('⚠️ Inicia sesión para apartar un producto.', 'error')
-    setTimeout(() => router.push('/login'), 1500)
     return
   }
   apartarProd.value   = prod

@@ -95,7 +95,7 @@
 
             <!-- Nota de políticas -->
             <p class="apartado-card__nota">
-              ⚠️ Si no se completa el pago en 24h, el producto regresa al stock automáticamente.
+              ⚠️ Si no se completa el pago en 24h, el producto puede regresar a stock.
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@
         </div>
         <div class="info-item">
           <span>🔒</span>
-          <p>No se aceptan cancelaciones una vez realizado el pago.</p>
+          <p>No se aceptan cancelaciones una vez realizado el pago. A menos que se den otras indicaciones por los administradores</p>
         </div>
         <div class="info-item">
           <span>💳</span>
@@ -220,7 +220,7 @@ const generarMensajeWhatsApp = (prod) => {
                   `- *${prod.nombre}* — ${prod.grupo}\n` +
                   `- Precio: $${prod.precio?.toLocaleString()} MXN\n` +
                   `- Categoría: ${prod.categoria}\n\n` +
-                  `¿Me pueden confirmar los datos para el pago? 🌸`
+                  `¿Me pueden confirmar los datos para el pago?`
   // Abre WhatsApp con el mensaje pre-llenado al número de Andrea
   // pero también muestra el enlace del grupo
   const numero = '524494271353'
