@@ -319,9 +319,6 @@
             class="testimonials__wrap fade-up delay-2"
             :class="{ visible: clientesVisible }"
           >
-            <button class="testimonials__nav" @click="prevTestimonial">
-              ‹
-            </button>
             <div
               class="testimonials__track"
               @touchstart="pausarCarrusel"
@@ -330,7 +327,7 @@
               <div
                 class="testimonials__inner"
                 :style="{
-                  transform: `translateX(-${activeTestimonial * testimonialesOffset}px)`,
+                  transform: `translateX(calc(-${activeTestimonial * testimonialesOffset}px + 48px))`,
                 }"
               >
                 <div
@@ -365,9 +362,6 @@
                 </div>
               </div>
             </div>
-            <button class="testimonials__nav" @click="nextTestimonial">
-              ›
-            </button>
           </div>
 
           <div class="testimonials__dots">
@@ -593,13 +587,11 @@
                 </div>
                 <span class="comment__admin-fecha">
                   {{
-                    c.fecha
-                      ?.toDate?.()
-                      ?.toLocaleDateString("es-MX", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }) || "—"
+                    c.fecha?.toDate?.()?.toLocaleDateString("es-MX", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    }) || "—"
                   }}
                 </span>
                 <span v-if="!c.leido" class="comment__admin-new-badge"
@@ -730,11 +722,12 @@ onMounted(() => window.addEventListener("resize", handleWindowResize));
 onUnmounted(() => window.removeEventListener("resize", handleWindowResize));
 
 const testimonialesOffset = computed(() => {
+  const gap = 20;
   if (windowWidth.value <= 768) {
-    const cardWidth = windowWidth.value - 80;
-    return cardWidth + 16;
+    const cardWidth = windowWidth.value - 96;
+    return cardWidth + gap;
   }
-  return 320 + 20;
+  return 320;
 });
 
 // ── Admin ────────────────────────────────────────────────────
@@ -1700,41 +1693,36 @@ const marcarLeidoHandler = async (id) => {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 40px;
+  margin-top: 30px;
+  overflow: hidden;
 }
 .testimonials__track {
   flex: 1;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
 .testimonials__inner {
   display: flex;
   gap: 20px;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.testimonials__nav {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 2px solid rgba(233, 30, 140, 0.2);
-  background: #fff;
-  color: var(--pink-accent);
-  font-size: 1.6rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(233, 30, 140, 0.1);
-  z-index: 2;
-  line-height: 1;
-}
-.testimonials__nav:hover {
-  background: var(--pink-accent);
-  color: #fff;
-  border-color: var(--pink-accent);
+  will-change: transform;
 }
 .testimonial__card {
+  width: 300px;
+  min-width: 300px;
   flex: 0 0 300px;
   background: #fff;
   border-radius: 24px;
@@ -1744,10 +1732,11 @@ const marcarLeidoHandler = async (id) => {
   transition:
     box-shadow 0.3s,
     transform 0.3s;
+  box-sizing: border-box;
 }
 .testimonial__card.active {
   border-color: var(--pink-mid);
-  box-shadow: 0 8px 32px rgba(233, 30, 140, 0.18);
+  box-shadow: 0 10px 15px rgba(233, 30, 140, 0.18);
 }
 .testimonial__img-wrap {
   width: 80px;
@@ -2590,14 +2579,10 @@ const marcarLeidoHandler = async (id) => {
     will-change: transform;
   }
   .testimonial__card {
-    flex: 0 0 calc(100vw - 80px);
-    width: calc(100vw - 80px);
-    padding: 20px;
-    min-width: 0;
+    width: calc(100vw - 96px);
+    min-width: calc(100vw - 96px);
+    flex: 0 0 calc(100vw - 96px);
     box-sizing: border-box;
-  }
-  .testimonials__nav {
-    display: none;
   }
   .testimonials__dots {
     margin-top: 16px;
