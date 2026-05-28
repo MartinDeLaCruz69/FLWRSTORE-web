@@ -307,7 +307,7 @@ onUnmounted(() => observer?.disconnect())
 /* ── Highlight ── */
 .policy__highlight {
   background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #000000; padding: 16px 20px; border-radius: 14px;
+  color: #ffffff; padding: 16px 20px; border-radius: 14px;
   font-size: 0.9rem; font-weight: 500; line-height: 1.5; margin-top: 4px;
 }
 

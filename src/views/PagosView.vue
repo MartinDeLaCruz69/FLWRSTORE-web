@@ -24,8 +24,8 @@
         </div>
         <div class="payment__card payment__card--oxxo">
           <div class="payment__icon">🏪</div>
-          <h3>Depósito OXXO</h3>
-          <p>Paga en efectivo en cualquier tienda OXXO de México. Ideal si no tienes cuenta bancaria.</p>
+          <h3>Depósito OXXO o efectivo</h3>
+          <p>Paga en efectivo en cualquier tienda OXXO de México. <br> O si lo prefieres, puedes pagar en efectivo presencialmente, sin necesidad de tener cuenta bancaria.</p>
           <span class="payment__badge payment__badge--oxxo">Efectivo</span>
         </div>
       </div>
@@ -244,7 +244,7 @@ onUnmounted(() => obs?.disconnect())
   border-radius: 24px;
   display: flex; flex-direction: column; align-items: center; gap: 20px;
 }
-.pagos__cta p { color: rgba(0, 0, 0, 0.9); font-size: 1.1rem; font-family: 'Playfair Display', serif; }
+.pagos__cta p { color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; font-family: 'Playfair Display', serif; }
 .pagos__cta-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 .btn-primary {
   background: #fff; color: var(--pink-accent); border: none;
