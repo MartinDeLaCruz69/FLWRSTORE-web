@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar" :class="{ 'navbar--scrolled': scrolled }">
     <div class="navbar__inner">
-      <router-link to="/home" class="navbar__logo">
+      <router-link to="/" class="navbar__logo">
         <span>FLWR</span>
         <span class="navbar__logo-icon">🌸</span>
         <span>STORE</span>
