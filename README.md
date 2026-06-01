@@ -1,4 +1,4 @@
-# FLWRSTORE 🌸 — Tienda Online de K-Pop
+# FLWRSTORE — Tienda Online de K-Pop
 
 Plataforma web para la gestión y venta de artículos de K-Pop: álbumes, photocards, peluches, lightsticks y más. Desarrollada con Vue 3 + Firebase para ofrecer stock en tiempo real, sistema de apartado y panel de administración completo.
 
@@ -25,28 +25,28 @@ Plataforma web para la gestión y venta de artículos de K-Pop: álbumes, photoc
 ```
 src/
 ├── components/
-│   ├── Navbar.vue
-│   ├── Footer.vue
-│   └── SplashScreen.vue
+│   ├── .vue
+│   ├── .vue
+│   └── .vue
 ├── composables/
-│   ├── useAuth.js
-│   ├── useProductos.js
-│   ├── useTestimonios.js
-│   └── useComentarios.js
+│   ├── .js
+│   ├── .js
+│   ├── .js
+│   └── .js
 ├── views/
-│   ├── ComingSoonView.vue
-│   ├── HomeView.vue
-│   ├── StockView.vue
-│   ├── MisApartadosView.vue
-│   ├── LoginView.vue
-│   ├── SignUpView.vue
-│   ├── PagosView.vue
-│   ├── LegalView.vue
-│   └── NotFoundView.vue
-├── firebase.js
-├── router.js
-├── main.js
-└── style.css
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   ├── .vue
+│   └── .vue
+├── .js
+├── .js
+├── .js
+└── .css
 ```
 
 ---
@@ -75,7 +75,7 @@ npm run dev
 # Acceder en: http://localhost
 ```
 
-> ⚠️ El archivo `.env` nunca debe subirse a GitHub. Está incluido en `.gitignore`.
+> El archivo `.env` nunca debe subirse a GitHub. Está incluido en `.gitignore`.
 
 ---
 
@@ -104,6 +104,6 @@ El código fuente, diseño y marca FLWRSTORE son propiedad de Andrea Esqueda Ros
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Proyecto privado. Todos los derechos reservados © 2026 FLWRSTORE — Andrea Esqueda Rosario.
