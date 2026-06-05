@@ -104,12 +104,11 @@ const scrolled = ref(false);
 const menuOpen = ref(false);
 
 const nombreCorto = computed(() => {
-  if (!usuarioActual.value) return "";
-  const nombre =
-    usuarioActual.value.displayName || usuarioActual.value.email || "";
-  if (nombre.includes("@")) return nombre.split("@")[0];
-  return nombre.split(" ")[0];
-});
+  if (!usuarioActual.value) return ''
+  const nombre = usuarioActual.value.displayName || usuarioActual.value.email || ''
+  if (!usuarioActual.value.displayName && nombre.includes('@')) return nombre.split('@')[0]
+  return nombre.split(' ')[0]
+})
 
 const cerrarSesion = async () => {
   await logout();
