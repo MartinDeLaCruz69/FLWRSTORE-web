@@ -380,10 +380,10 @@
           </div>
 
           <div class="apartar-form">
-            <label>Este producto será apartado por: </label>
+            <label>Este producto será apartado por:</label>
             <span>{{
-              usuarioActual.displayName ||
-              usuarioActual.email?.split("@")[0] ||
+              usuarioActual?.displayName ||
+              usuarioActual?.email?.split("@")[0] ||
               "Cliente"
             }}</span>
           </div>
