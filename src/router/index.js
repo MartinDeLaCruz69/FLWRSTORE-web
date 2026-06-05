@@ -13,7 +13,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import ComingSoonView from "../views/ComingSoonView.vue";
 
 const routes = [
-  { path: "/", redirect: "/coming-soon" },
+  { path: "/", redirect: "/" },
   { path: "/home", component: HomeView },
   { path: "/stock", component: StockView },
   { path: "/pagos", component: PagosView },
