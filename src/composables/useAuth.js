@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -27,12 +28,17 @@ onAuthStateChanged(auth, async (user) => {
 
 export const registrar = async (nombre, email, password) => {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+  await updateProfile(user, { displayName: nombre });
+
   await setDoc(doc(db, "usuarios", user.uid), {
     nombre,
     email,
     rol: "cliente",
     creadoEn: new Date(),
   });
+
+  usuarioActual.value = auth.currentUser;
 
   return user;
 };
