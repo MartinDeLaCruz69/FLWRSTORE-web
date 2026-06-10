@@ -984,9 +984,20 @@ const submitEditar = async () => {
           .map((s) => s.trim())
           .filter(Boolean)
       : [];
+
+    const datosActualizar = {
+      ...formEditar.value,
+      inclusiones,
+    };
+
+    if (datosActualizar.estado === "disponible") {
+      datosActualizar.apartadoPor = null;
+      datosActualizar.fechaApartado = null;
+    }
+
     await editarProducto(
       prodEditando.value.id,
-      { ...formEditar.value, inclusiones },
+      datosActualizar,
       imagenFileEditar.value,
       prodEditando.value.imagenPath,
       (p) => {

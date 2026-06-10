@@ -45,7 +45,26 @@ export const registrar = async (nombre, email, password) => {
 
 export const login = async (email, password) => {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
-  return user;
+
+  if (!user.displayName) {
+    const snap = await getDoc(doc(db, "usuarios", user.uid));
+
+    if (snap.exists()) {
+      const nombre = snap.data().nombre;
+
+      if (nombre) {
+        await updateProfile(user, {
+          displayName: nombre,
+        });
+
+        await user.reload();
+
+        usuarioActual.value = auth.currentUser;
+      }
+    }
+  }
+
+  return auth.currentUser;
 };
 
 export const logout = async () => {
