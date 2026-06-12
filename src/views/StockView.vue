@@ -174,9 +174,17 @@
               <div class="product-card__grupo">{{ prod.grupo }}</div>
 
               <div class="product-card__footer">
-                <span class="product-card__price"
-                  >${{ prod.precio.toLocaleString() }} MXN</span
-                >
+                <span v-if="prod.precioAnterior" class="price-old">
+                  ${{ prod.precioAnterior.toLocaleString() }} MXN
+                </span>
+                <span class="product-card__price">
+                  ${{ prod.precio.toLocaleString() }} MXN
+                </span>
+                <span v-if="prod.precioAnterior" class="price-badge">
+                  -{{
+                    Math.round((1 - prod.precio / prod.precioAnterior) * 100)
+                  }}%
+                </span>
                 <button
                   v-if="prod.estado === 'disponible'"
                   class="btn-apartar"
@@ -247,7 +255,19 @@
             <div class="modal-detail-grid">
               <div class="modal-detail-item">
                 <span class="mdi-label">💰 Precio</span>
-                <strong>${{ modalProd.precio.toLocaleString() }} MXN</strong>
+                <div class="modal-price-wrap">
+                  <span v-if="modalProd.precioAnterior" class="price-old">
+                    ${{ modalProd.precioAnterior.toLocaleString() }} MXN
+                  </span>
+                  <strong>${{ modalProd.precio.toLocaleString() }} MXN</strong>
+                  <span v-if="modalProd.precioAnterior" class="price-badge">
+                    -{{
+                      Math.round(
+                        (1 - modalProd.precio / modalProd.precioAnterior) * 100,
+                      )
+                    }}%
+                  </span>
+                </div>
               </div>
               <div class="modal-detail-item">
                 <span class="mdi-label">📦 Condición</span>
@@ -2770,4 +2790,38 @@ onUnmounted(() => {
   transform: translateY(-2px);
   filter: brightness(1.05);
 }
+
+/* ── Precio con descuento ──────────────────────────────── */
+.product-card__price-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.price-old {
+  font-size: 0.72rem;
+  color: #ef4444;
+  text-decoration: line-through;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+}
+.price-badge {
+  display: inline-block;
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 50px;
+  width: fit-content;
+}
+.modal-price-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.modal-price-wrap strong {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
 </style>

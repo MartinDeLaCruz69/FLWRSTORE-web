@@ -83,11 +83,22 @@ export function useProductos() {
     onProgress,
   ) => {
     let updates = { ...datos, precio: Number(datos.precio) };
+
+    const productoActual = productos.value.find((p) => p.id === id);
+    if (productoActual) {
+      const precioNuevo = Number(datos.precio);
+      const precioActual = Number(productoActual.precio);
+      if (precioNuevo < precioActual) {
+        updates.precioAnterior = precioActual;
+      } else {
+        updates.precioAnterior = null;
+      }
+    }
+
     if (imagenFile) {
       const result = await subirImagen(imagenFile, onProgress);
       updates.imagenUrl = result.url;
       updates.imagenPath = result.path;
-
       if (imagenPathVieja) {
         try {
           await deleteObject(storageRef(storage, imagenPathVieja));
