@@ -164,7 +164,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { login, recuperarPassword } from "../composables/useAuth";
+import { login, recuperarPassword, loginConGoogle } from "../composables/useAuth";
 
 const router = useRouter();
 const showPass = ref(false);
@@ -242,6 +242,25 @@ const forgotPassword = async () => {
     globalError.value = "No encontramos una cuenta con ese correo.";
   }
 };
+
+const isLoadingGoogle = ref(false)
+const handleGoogleLogin = async () => {
+  isLoadingGoogle.value = true
+  globalError.value = ""
+  try {
+    await loginConGoogle()
+    router.push("/")
+  } catch (e) {
+    const mensajes = {
+      "auth/popup-closed-by-user": "Cerraste la ventana de Google. Intenta de nuevo.",
+      "auth/cancelled-popup-request": "",
+      "auth/popup-blocked": "Tu navegador bloqueó el popup. Permite ventanas emergentes e intenta de nuevo.",
+    }
+    globalError.value = mensajes[e.code] || "Error al iniciar con Google. Intenta de nuevo."
+  } finally {
+    isLoadingGoogle.value = false
+  }
+}
 
 const petalStyle = (i) => ({
   "--x": `${10 + ((i * 9) % 85)}%`,
