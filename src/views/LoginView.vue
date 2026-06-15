@@ -757,15 +757,31 @@ const petalStyle = (i) => ({
   justify-content: center;
   gap: 10px;
   background: #fff;
-  border: 1.5px solid rgba(233, 30, 140, 0.15);
+  border: 1.5px solid rgba(233, 30, 140, 0.2);
   border-radius: 14px;
   padding: 13px;
   font-family: "DM Sans", sans-serif;
   font-size: 0.9rem;
-  color: var(--text-light);
-  cursor: not-allowed;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
   width: 100%;
-  transition: all 0.2s;
+  transition: all 0.25s;
+  min-height: 52px;
+}
+.btn-google:hover:not(:disabled) {
+  border-color: var(--pink-mid);
+  box-shadow: 0 4px 16px rgba(233, 30, 140, 0.12);
+  transform: translateY(-1px);
+}
+.btn-google:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.btn-google__inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .btn-google small {
   font-size: 0.75rem;
