@@ -244,6 +244,51 @@
           </Transition>
         </form>
 
+        <div class="divider"><span>o regístrate con</span></div>
+
+        <button
+          class="btn-google"
+          @click="handleGoogleLogin"
+          :disabled="isLoadingGoogle"
+          type="button"
+        >
+          <span v-if="!isLoadingGoogle" class="btn-google__inner">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 48 48"
+              style="flex-shrink: 0"
+            >
+              <path
+                fill="#EA4335"
+                d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.2 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13 17.8 9.5 24 9.5z"
+              />
+              <path
+                fill="#4285F4"
+                d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M10.6 28.6A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.7-4.6L2.3 13.3A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l8-6.1z"
+              />
+              <path
+                fill="#34A853"
+                d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.2 0-11.5-4.2-13.4-9.9l-8 6.2C6.5 42.6 14.6 48 24 48z"
+              />
+              <path fill="none" d="M0 0h48v48H0z" />
+            </svg>
+            Continuar con Google
+          </span>
+          <span
+            v-else
+            class="spinner"
+            style="
+              border-top-color: #e91e8c;
+              border-color: rgba(233, 30, 140, 0.2);
+            "
+          ></span>
+        </button>
+
         <p class="form-footer">
           Al registrarte aceptas nuestra
           <router-link to="/legal" class="link-pink"
@@ -258,7 +303,27 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
-import { registrar } from "../composables/useAuth";
+import { registrar, loginConGoogle } from "../composables/useAuth";
+
+const isLoadingGoogle = ref(false);
+const handleGoogleLogin = async () => {
+  isLoadingGoogle.value = true;
+  globalError.value = "";
+  try {
+    await loginConGoogle();
+    router.push("/");
+  } catch (e) {
+    const mensajes = {
+      "auth/popup-closed-by-user": "Cerraste la ventana de Google.",
+      "auth/popup-blocked":
+        "Tu navegador bloqueó el popup. Permite ventanas emergentes.",
+    };
+    globalError.value = mensajes[e.code] || "Error al continuar con Google.";
+    isLoadingGoogle.value = false;
+  } finally {
+    isLoadingGoogle.value = false;
+  }
+};
 
 const router = useRouter();
 const step = ref(1);
@@ -1035,5 +1100,52 @@ const petalStyle = (i) => ({
   .deco__logo {
     font-size: 1.5rem;
   }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(233, 30, 140, 0.15);
+}
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  border: 1.5px solid rgba(233, 30, 140, 0.2);
+  border-radius: 14px;
+  padding: 13px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.25s;
+  min-height: 52px;
+}
+.btn-google:hover:not(:disabled) {
+  border-color: var(--pink-mid);
+  box-shadow: 0 4px 16px rgba(233, 30, 140, 0.12);
+  transform: translateY(-1px);
+}
+.btn-google:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.btn-google__inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 </style>
