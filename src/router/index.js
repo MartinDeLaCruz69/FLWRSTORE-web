@@ -10,16 +10,20 @@ import LoginView from "../views/LoginView.vue";
 import SignUpView from "../views/SignUpView.vue";
 import MisApartadosView from "../views/MisApartadosView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
-import ComingSoonView from "../views/ComingSoonView.vue";
+import MaintenanceView from "../views/MaintenanceView.vue";
 
 const routes = [
-  { path: "/", redirect: "/" },
-  { path: "/home", component: HomeView },
-  { path: "/stock", component: StockView },
+  { path: "/", redirect: "/maintenance" },
+  { path: "/home", component: MaintenanceView },
+  { path: "/stock", component: MaintenanceView },
   { path: "/pagos", component: PagosView },
   { path: "/legal", component: LegalView },
-  { path: "/coming-soon", component: ComingSoonView },
-  { path: "/mis-apartados", component: MisApartadosView, meta: { requiereAuth: true }, },
+  { path: "/maintenance", component: MaintenanceView },
+  {
+    path: "/mis-apartados",
+    component: MisApartadosView,
+    meta: { requiereAuth: true },
+  },
   { path: "/login", component: LoginView, meta: { soloSinSesion: true } },
   { path: "/signup", component: SignUpView, meta: { soloSinSesion: true } },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
