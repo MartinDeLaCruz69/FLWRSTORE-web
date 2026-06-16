@@ -13,9 +13,9 @@ import NotFoundView from "../views/NotFoundView.vue";
 import MaintenanceView from "../views/MaintenanceView.vue";
 
 const routes = [
-  { path: "/", redirect: "/maintenance" },
-  { path: "/home", component: MaintenanceView },
-  { path: "/stock", component: MaintenanceView },
+  { path: "/", redirect: "/" },
+  { path: "/home", component: HomeView },
+  { path: "/stock", component: StockView },
   { path: "/pagos", component: PagosView },
   { path: "/legal", component: LegalView },
   { path: "/maintenance", component: MaintenanceView },
