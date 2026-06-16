@@ -381,6 +381,75 @@
             </div>
           </div>
 
+          <!-- ── SELECTOR DE ITEMS (solo si es lote) ── -->
+          <div
+            v-if="apartarProd.esLote && apartarProd.items?.length"
+            class="lote-selector"
+          >
+            <p class="lote-selector__titulo">
+              Selecciona los items que quieres apartar:
+            </p>
+            <div class="lote-selector__items">
+              <label
+                v-for="item in apartarProd.items.filter(
+                  (i) => i.estado === 'disponible',
+                )"
+                :key="item.id"
+                class="lote-item-check"
+                :class="{ selected: itemsSeleccionados.includes(item.id) }"
+              >
+                <input
+                  type="checkbox"
+                  :value="item.id"
+                  v-model="itemsSeleccionados"
+                />
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio"
+                    >${{ Number(item.precio).toLocaleString() }} MXN</span
+                  >
+                </div>
+                <span class="lote-item-check__icon">{{
+                  itemsSeleccionados.includes(item.id) ? "✅" : "⬜"
+                }}</span>
+              </label>
+
+              <!-- Items ya apartados -->
+              <div
+                v-for="item in apartarProd.items.filter(
+                  (i) => i.estado !== 'disponible',
+                )"
+                :key="'ap-' + item.id"
+                class="lote-item-check lote-item-check--apartado"
+              >
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio"
+                    >${{ Number(item.precio).toLocaleString() }} MXN</span
+                  >
+                </div>
+                <span class="lote-item-check__tag">⏳ Apartado</span>
+              </div>
+            </div>
+
+            <!-- Total seleccionado -->
+            <div
+              class="lote-selector__total"
+              v-if="itemsSeleccionados.length > 0"
+            >
+              <span
+                >{{ itemsSeleccionados.length }} item{{
+                  itemsSeleccionados.length > 1 ? "s" : ""
+                }}
+                seleccionado{{ itemsSeleccionados.length > 1 ? "s" : "" }}</span
+              >
+              <strong>${{ totalSeleccionado.toLocaleString() }} MXN</strong>
+            </div>
+            <p v-else class="lote-selector__hint">
+              Selecciona al menos un item para continuar
+            </p>
+          </div>
+
           <div class="apartar-info">
             <div class="apartar-info__item">
               ⏱️ Tienes <strong>24 horas</strong> para completar el pago.
@@ -389,11 +458,11 @@
               💬 El pago se coordina por <strong>WhatsApp oficial</strong>.
             </div>
             <div
-              v-if="apartarProd.precio >= 550"
+              v-if="precioApartar >= 550"
               class="apartar-info__item apartar-info__item--highlight"
             >
               💰 Puedes dar un anticipo del <strong>20%</strong> (${{
-                Math.ceil(apartarProd.precio * 0.2).toLocaleString()
+                Math.ceil(precioApartar * 0.2).toLocaleString()
               }}
               MXN) para facilidades de pago.
             </div>
@@ -415,113 +484,14 @@
             <button
               class="btn-apartar btn-apartar--lg"
               @click="confirmarApartado"
+              :disabled="apartarProd.esLote && itemsSeleccionados.length === 0"
             >
               Confirmar apartado 🌸
             </button>
           </div>
-
-    <!-- ══ MODAL APARTAR ══ -->
-<Transition name="modal">
-  <div
-    v-if="apartarProd"
-    class="modal-backdrop"
-    @click.self="apartarProd = null"
-  >
-    <div class="modal-card modal-card--apartar">
-      <button class="modal-close" @click="apartarProd = null">✕</button>
-      <div class="apartar-header">
-        <span>{{ catEmoji[apartarProd.categoria] || "🌸" }}</span>
-        <div>
-          <h3>Apartar producto</h3>
-          <p>{{ apartarProd.nombre }} · {{ apartarProd.grupo }}</p>
         </div>
       </div>
-
-      <!-- ── SELECTOR DE ITEMS (solo si es lote) ── -->
-      <div v-if="apartarProd.esLote && apartarProd.items?.length" class="lote-selector">
-        <p class="lote-selector__titulo">Selecciona los items que quieres apartar:</p>
-        <div class="lote-selector__items">
-          <label
-            v-for="item in apartarProd.items.filter(i => i.estado === 'disponible')"
-            :key="item.id"
-            class="lote-item-check"
-            :class="{ selected: itemsSeleccionados.includes(item.id) }"
-          >
-            <input
-              type="checkbox"
-              :value="item.id"
-              v-model="itemsSeleccionados"
-            />
-            <div class="lote-item-check__info">
-              <span class="lote-item-check__nombre">{{ item.nombre }}</span>
-              <span class="lote-item-check__precio">${{ Number(item.precio).toLocaleString() }} MXN</span>
-            </div>
-            <span class="lote-item-check__icon">{{ itemsSeleccionados.includes(item.id) ? '✅' : '⬜' }}</span>
-          </label>
-
-          <!-- Items ya apartados -->
-          <div
-            v-for="item in apartarProd.items.filter(i => i.estado !== 'disponible')"
-            :key="'ap-' + item.id"
-            class="lote-item-check lote-item-check--apartado"
-          >
-            <div class="lote-item-check__info">
-              <span class="lote-item-check__nombre">{{ item.nombre }}</span>
-              <span class="lote-item-check__precio">${{ Number(item.precio).toLocaleString() }} MXN</span>
-            </div>
-            <span class="lote-item-check__tag">⏳ Apartado</span>
-          </div>
-        </div>
-
-        <!-- Total seleccionado -->
-        <div class="lote-selector__total" v-if="itemsSeleccionados.length > 0">
-          <span>{{ itemsSeleccionados.length }} item{{ itemsSeleccionados.length > 1 ? 's' : '' }} seleccionado{{ itemsSeleccionados.length > 1 ? 's' : '' }}</span>
-          <strong>${{ totalSeleccionado.toLocaleString() }} MXN</strong>
-        </div>
-        <p v-else class="lote-selector__hint">Selecciona al menos un item para continuar</p>
-      </div>
-
-      <div class="apartar-info">
-        <div class="apartar-info__item">
-          ⏱️ Tienes <strong>24 horas</strong> para completar el pago.
-        </div>
-        <div class="apartar-info__item">
-          💬 El pago se coordina por <strong>WhatsApp oficial</strong>.
-        </div>
-        <div
-          v-if="precioApartar >= 550"
-          class="apartar-info__item apartar-info__item--highlight"
-        >
-          💰 Puedes dar un anticipo del <strong>20%</strong>
-          (${{ Math.ceil(precioApartar * 0.2).toLocaleString() }} MXN)
-          para facilidades de pago.
-        </div>
-      </div>
-
-      <div class="apartar-form">
-        <label>Este producto será apartado por:</label>
-        <span>{{
-          usuarioActual?.displayName ||
-          usuarioActual?.email?.split("@")[0] ||
-          "Cliente"
-        }}</span>
-      </div>
-
-      <div class="apartar-actions">
-        <button class="btn-ghost-sm" @click="apartarProd = null">
-          Cancelar
-        </button>
-        <button
-          class="btn-apartar btn-apartar--lg"
-          @click="confirmarApartado"
-          :disabled="apartarProd.esLote && itemsSeleccionados.length === 0"
-        >
-          Confirmar apartado 🌸
-        </button>
-      </div>
-    </div>
-  </div>
-</Transition>
+    </Transition>
 
     <!-- ══ TOAST ══ -->
     <Transition name="toast">
@@ -961,7 +931,7 @@ const estadoLabel = {
   disponible: "🟢 Disponible",
   apartado: "🟡 Apartado",
   vendido: "🔴 Vendido",
-    parcial:    '🟠 Parcialmente apartado',
+  parcial: "🟠 Parcialmente apartado",
 };
 
 const estados = [
@@ -1003,47 +973,49 @@ const abrirModal = (prod) => {
 };
 
 // ── Modal apartar ────────────────────────────────────────────
-const apartarProd   = ref(null)
-const nombreCliente = ref('')
-const errorNombre   = ref('')
-const itemsSeleccionados = ref([])
-const router = useRouter()
+const apartarProd = ref(null);
+const nombreCliente = ref("");
+const errorNombre = ref("");
+const itemsSeleccionados = ref([]);
+const router = useRouter();
 
 const precioApartar = computed(() => {
-  if (!apartarProd.value) return 0
+  if (!apartarProd.value) return 0;
   if (apartarProd.value.esLote && itemsSeleccionados.value.length > 0) {
     return apartarProd.value.items
-      .filter(i => itemsSeleccionados.value.includes(i.id))
-      .reduce((a, i) => a + Number(i.precio), 0)
+      .filter((i) => itemsSeleccionados.value.includes(i.id))
+      .reduce((a, i) => a + Number(i.precio), 0);
   }
-  return apartarProd.value.precio || 0
-})
+  return apartarProd.value.precio || 0;
+});
 
-const totalSeleccionado = computed(() => precioApartar.value)
+const totalSeleccionado = computed(() => precioApartar.value);
 
 const abrirApartar = (prod) => {
   if (!usuarioActual.value) {
-    document.body.style.overflow = ''
-    mostrarToast('⚠️ Inicia sesión para apartar un producto.', 'error')
-    return
+    document.body.style.overflow = "";
+    mostrarToast("⚠️ Inicia sesión para apartar un producto.", "error");
+    return;
   }
-  apartarProd.value    = prod
-  modalProd.value      = null
-  itemsSeleccionados.value = []
-  nombreCliente.value  = usuarioActual.value.displayName ||
-                         usuarioActual.value.email?.split('@')[0] || ''
-  errorNombre.value    = ''
-}
+  apartarProd.value = prod;
+  modalProd.value = null;
+  itemsSeleccionados.value = [];
+  nombreCliente.value =
+    usuarioActual.value.displayName ||
+    usuarioActual.value.email?.split("@")[0] ||
+    "";
+  errorNombre.value = "";
+};
 
 const confirmarApartado = async () => {
   if (!nombreCliente.value.trim()) {
-    errorNombre.value = 'Por favor escribe tu nombre completo.'
-    return
+    errorNombre.value = "Por favor escribe tu nombre completo.";
+    return;
   }
 
   if (apartarProd.value.esLote && itemsSeleccionados.value.length === 0) {
-    mostrarToast('⚠️ Selecciona al menos un item.', 'error')
-    return
+    mostrarToast("⚠️ Selecciona al menos un item.", "error");
+    return;
   }
 
   try {
@@ -1051,36 +1023,54 @@ const confirmarApartado = async () => {
       await apartarItemsLote(
         apartarProd.value.id,
         nombreCliente.value.trim(),
-        itemsSeleccionados.value
-      )
+        itemsSeleccionados.value,
+      );
     } else {
-      await apartarProducto(apartarProd.value.id, nombreCliente.value.trim())
+      await apartarProducto(apartarProd.value.id, nombreCliente.value.trim());
     }
 
     const nombreItems = apartarProd.value.esLote
       ? `${itemsSeleccionados.value.length} item(s) de ${apartarProd.value.nombre}`
-      : apartarProd.value.nombre
+      : apartarProd.value.nombre;
 
-    mostrarToast(`✅ ¡${nombreItems} apartado a nombre de ${nombreCliente.value.trim()}!`, 'success')
-    apartarProd.value = null
+    mostrarToast(
+      `✅ ¡${nombreItems} apartado a nombre de ${nombreCliente.value.trim()}!`,
+      "success",
+    );
+    apartarProd.value = null;
 
     if (!esAdmin.value) {
       setTimeout(() => {
         confetti({
-          particleCount: 80, spread: 70, origin: { y: 0.6 },
-          colors: ['#f48fb1', '#e91e8c', '#fce4ec', '#c2185b', '#fff'],
-          shapes: ['circle'], scalar: 1.1,
-        })
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#f48fb1", "#e91e8c", "#fce4ec", "#c2185b", "#fff"],
+          shapes: ["circle"],
+          scalar: 1.1,
+        });
         setTimeout(() => {
-          confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0, y: 0.7 }, colors: ['#f48fb1', '#e91e8c', '#fce4ec'] })
-          confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1, y: 0.7 }, colors: ['#f48fb1', '#e91e8c', '#fce4ec'] })
-        }, 300)
-      }, 400)
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.7 },
+            colors: ["#f48fb1", "#e91e8c", "#fce4ec"],
+          });
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.7 },
+            colors: ["#f48fb1", "#e91e8c", "#fce4ec"],
+          });
+        }, 300);
+      }, 400);
     }
   } catch {
-    mostrarToast('⚠️ Error al apartar. Intenta de nuevo.', 'error')
+    mostrarToast("⚠️ Error al apartar. Intenta de nuevo.", "error");
   }
-}
+};
 
 // ── Toast ────────────────────────────────────────────────────
 const toast = ref({ show: false, msg: "", type: "success" });
@@ -3276,7 +3266,11 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(233,30,140,.08), rgba(244,143,177,.1));
+  background: linear-gradient(
+    135deg,
+    rgba(233, 30, 140, 0.08),
+    rgba(244, 143, 177, 0.1)
+  );
   border: 1.5px solid rgba(233, 30, 140, 0.2);
   border-radius: 12px;
   padding: 10px 14px;
@@ -3286,7 +3280,7 @@ onUnmounted(() => {
 .lote-selector__total strong {
   font-size: 1rem;
   color: var(--pink-accent);
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 .lote-selector__hint {
   font-size: 0.78rem;
