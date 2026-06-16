@@ -143,5 +143,28 @@ export function useProductos() {
     apartarProducto,
     liberarProducto,
     marcarVendido,
+    apartarItemsLote,
   };
+
+  const apartarItemsLote = (id, nombre, itemsSeleccionados) => {
+  const productoActual = productos.value.find(p => p.id === id)
+  if (!productoActual) return
+
+  const itemsActualizados = productoActual.items.map(item => ({
+    ...item,
+    apartadoPor: itemsSeleccionados.includes(item.id) ? nombre : item.apartadoPor || null,
+    estado: itemsSeleccionados.includes(item.id) ? 'apartado' : (item.estado || 'disponible'),
+  }))
+
+  const todosApartados = itemsActualizados.every(i => i.estado !== 'disponible')
+  const algunoApartado = itemsActualizados.some(i => i.estado === 'apartado')
+
+  return updateDoc(doc(db, 'productos', id), {
+    items: itemsActualizados,
+    estado: todosApartados ? 'apartado' : algunoApartado ? 'parcial' : 'disponible',
+    apartadoPor: todosApartados ? nombre : null,
+    fechaApartado: serverTimestamp(),
+  })
+}
+
 }
