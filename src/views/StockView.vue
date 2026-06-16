@@ -514,6 +514,104 @@
                 />
               </div>
 
+              <!-- Toggle lote -->
+              <div class="admin-field admin-field--full">
+                <div class="lote-toggle">
+                  <label class="lote-toggle__label">
+                    <input
+                      type="checkbox"
+                      v-model="formNuevo.esLote"
+                      @change="
+                        formNuevo.items = formNuevo.esLote
+                          ? [
+                              {
+                                id: Date.now().toString(),
+                                nombre: '',
+                                precio: '',
+                                estado: 'disponible',
+                              },
+                            ]
+                          : []
+                      "
+                    />
+                    <span>📦 ¿Es un lote de varios productos?</span>
+                  </label>
+                  <small
+                    >Activa esto si el producto contiene varios items que se
+                    pueden comprar por separado</small
+                  >
+                </div>
+              </div>
+
+              <!-- Items del lote -->
+              <div
+                v-if="formNuevo.esLote"
+                class="admin-field admin-field--full"
+              >
+                <label>Items del lote *</label>
+                <div class="lote-items">
+                  <div
+                    v-for="(item, idx) in formNuevo.items"
+                    :key="item.id"
+                    class="lote-item"
+                  >
+                    <span class="lote-item__num">{{ idx + 1 }}</span>
+                    <input
+                      v-model="item.nombre"
+                      placeholder="Nombre del item (ej: Llavero Jin)"
+                      class="lote-item__input"
+                    />
+                    <div class="lote-item__price-wrap">
+                      <span>$</span>
+                      <input
+                        v-model.number="item.precio"
+                        type="number"
+                        placeholder="Precio"
+                        class="lote-item__price"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      class="lote-item__remove"
+                      @click="formNuevo.items.splice(idx, 1)"
+                      :disabled="formNuevo.items.length === 1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="lote-add-btn"
+                    @click="
+                      formNuevo.items.push({
+                        id: Date.now().toString(),
+                        nombre: '',
+                        precio: '',
+                        estado: 'disponible',
+                      })
+                    "
+                  >
+                    ➕ Agregar otro item
+                  </button>
+
+                  <div
+                    class="lote-total"
+                    v-if="formNuevo.items.some((i) => i.precio)"
+                  >
+                    Total del lote:
+                    <strong
+                      >${{
+                        formNuevo.items
+                          .reduce((a, i) => a + (Number(i.precio) || 0), 0)
+                          .toLocaleString()
+                      }}
+                      MXN</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
               <!-- Foto -->
               <div class="admin-field admin-field--full">
                 <label>Foto del producto *</label>
@@ -895,6 +993,8 @@ const formNuevo = ref({
   condicion: "nuevo",
   estado: "disponible",
   inclusiones: "",
+  esLote: false,
+  items: [],
 });
 const imagenFileNuevo = ref(null);
 const imagenPreviewNuevo = ref(null);
@@ -918,6 +1018,8 @@ const limpiarFormNuevo = () => {
     condicion: "nuevo",
     estado: "disponible",
     inclusiones: "",
+    esLote: false,
+    items: [],
   };
   limpiarImagenNuevo();
   uploadProgress.value = 0;
@@ -942,6 +1044,21 @@ const submitNuevo = async () => {
           .map((s) => s.trim())
           .filter(Boolean)
       : [];
+    if (formNuevo.value.esLote) {
+      if (
+        formNuevo.value.items.length === 0 ||
+        formNuevo.value.items.some((i) => !i.nombre || !i.precio)
+      ) {
+        return mostrarToast(
+          "⚠️ Agrega nombre y precio a todos los items del lote.",
+          "error",
+        );
+      }
+      formNuevo.value.precio = formNuevo.value.items.reduce(
+        (a, i) => a + Number(i.precio),
+        0,
+      );
+    }
     await agregarProducto(
       { ...formNuevo.value, inclusiones },
       imagenFileNuevo.value,
@@ -2801,7 +2918,7 @@ onUnmounted(() => {
   font-size: 0.72rem;
   color: #ef4444;
   text-decoration: line-through;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-weight: 500;
 }
 .price-badge {
@@ -2824,4 +2941,134 @@ onUnmounted(() => {
   color: var(--text);
 }
 
+/* ── Lote toggle ─────────────────────────────────────────── */
+.lote-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.lote-toggle__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+.lote-toggle__label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--pink-accent);
+  cursor: pointer;
+}
+.lote-toggle small {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  padding-left: 24px;
+}
+
+/* ── Items del lote ──────────────────────────────────────── */
+.lote-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lote-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(233, 30, 140, 0.03);
+  border: 1.5px solid rgba(233, 30, 140, 0.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.lote-item__num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--pink-accent);
+  min-width: 18px;
+  text-align: center;
+}
+.lote-item__input {
+  flex: 1;
+  border: 1px solid rgba(233, 30, 140, 0.15);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text);
+  outline: none;
+  background: #fff;
+}
+.lote-item__input:focus {
+  border-color: var(--pink-accent);
+}
+.lote-item__price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid rgba(233, 30, 140, 0.15);
+  border-radius: 8px;
+  padding: 7px 10px;
+  min-width: 90px;
+  font-size: 0.82rem;
+  color: var(--text-light);
+}
+.lote-item__price {
+  border: none;
+  outline: none;
+  width: 60px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: transparent;
+}
+.lote-item__remove {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.lote-item__remove:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+}
+.lote-item__remove:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.lote-add-btn {
+  background: rgba(233, 30, 140, 0.06);
+  border: 1.5px dashed rgba(233, 30, 140, 0.25);
+  color: var(--pink-deep);
+  border-radius: 12px;
+  padding: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.lote-add-btn:hover {
+  background: rgba(233, 30, 140, 0.1);
+  border-color: var(--pink-accent);
+}
+.lote-total {
+  text-align: right;
+  font-size: 0.82rem;
+  color: var(--text-light);
+  padding: 4px 8px;
+}
+.lote-total strong {
+  color: var(--pink-accent);
+  font-size: 0.95rem;
+}
 </style>
