@@ -321,8 +321,9 @@
           >
             <div
               class="testimonials__track"
-              @touchstart="pausarCarrusel"
-              @touchend="reanudarCarrusel"
+              @touchstart.passive="onTouchStart"
+              @touchmove.passive="onTouchMove"
+              @touchend="onTouchEnd"
             >
               <div
                 class="testimonials__inner"
@@ -917,13 +918,33 @@ const iniciarTimer = () => {
   testimonialTimer = setInterval(nextTestimonial, 4500);
 };
 
-const pausarCarrusel = () => {
+// ── Swipe táctil ─────────────────────────────────────────────
+let touchStartX = 0;
+let touchDeltaX = 0;
+const SWIPE_THRESHOLD = 50;
+const onTouchStart = (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchDeltaX = 0;
   clearInterval(testimonialTimer);
 };
 
-const reanudarCarrusel = () => {
+const onTouchMove = (e) => {
+  touchDeltaX = e.touches[0].clientX - touchStartX;
+};
+
+const onTouchEnd = () => {
+  if (Math.abs(touchDeltaX) >= SWIPE_THRESHOLD) {
+    if (touchDeltaX < 0) {
+      nextTestimonial();
+    } else {
+      prevTestimonial();
+    }
+  }
   iniciarTimer();
 };
+
+const pausarCarrusel = () => clearInterval(testimonialTimer);
+const reanudarCarrusel = () => iniciarTimer();
 
 onMounted(() => {
   iniciarTimer();

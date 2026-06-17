@@ -535,7 +535,7 @@ onUnmounted(() => {
   color: #fff;
 }
 .session-toast--info {
-  background: #1A1B2F;
+  background: #1a1b2f;
   color: #fff;
 }
 .session-toast-enter-active {
