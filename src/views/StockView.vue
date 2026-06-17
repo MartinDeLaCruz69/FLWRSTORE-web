@@ -981,7 +981,8 @@ const router = useRouter();
 
 const precioApartar = computed(() => {
   if (!apartarProd.value) return 0;
-  if (apartarProd.value.esLote && itemsSeleccionados.value.length > 0) {
+  if (apartarProd.value.esLote) {
+    if (itemsSeleccionados.value.length === 0) return 0;
     return apartarProd.value.items
       .filter((i) => itemsSeleccionados.value.includes(i.id))
       .reduce((a, i) => a + Number(i.precio), 0);
@@ -990,6 +991,21 @@ const precioApartar = computed(() => {
 });
 
 const totalSeleccionado = computed(() => precioApartar.value);
+
+const todosItemsDisponibles = computed(() => {
+  if (!apartarProd.value?.esLote) return [];
+  return (
+    apartarProd.value.items?.filter((i) => i.estado === "disponible") || []
+  );
+});
+
+const seleccionarTodos = () => {
+  itemsSeleccionados.value = todosItemsDisponibles.value.map((i) => i.id);
+};
+
+const deseleccionarTodos = () => {
+  itemsSeleccionados.value = [];
+};
 
 const abrirApartar = (prod) => {
   if (!usuarioActual.value) {
@@ -1008,11 +1024,11 @@ const abrirApartar = (prod) => {
 };
 
 const confirmarApartado = async () => {
-  if (!nombreCliente.value.trim()) {
+  const nombre = nombreCliente.value.trim();
+  if (!nombre) {
     errorNombre.value = "Por favor escribe tu nombre completo.";
     return;
   }
-
   if (apartarProd.value.esLote && itemsSeleccionados.value.length === 0) {
     mostrarToast("⚠️ Selecciona al menos un item.", "error");
     return;
@@ -1022,21 +1038,18 @@ const confirmarApartado = async () => {
     if (apartarProd.value.esLote) {
       await apartarItemsLote(
         apartarProd.value.id,
-        nombreCliente.value.trim(),
+        nombre,
         itemsSeleccionados.value,
       );
     } else {
-      await apartarProducto(apartarProd.value.id, nombreCliente.value.trim());
+      await apartarProducto(apartarProd.value.id, nombre);
     }
 
-    const nombreItems = apartarProd.value.esLote
-      ? `${itemsSeleccionados.value.length} item(s) de ${apartarProd.value.nombre}`
-      : apartarProd.value.nombre;
+    const resumen = apartarProd.value.esLote
+      ? `${itemsSeleccionados.value.length} item(s) de "${apartarProd.value.nombre}"`
+      : `"${apartarProd.value.nombre}"`;
 
-    mostrarToast(
-      `✅ ¡${nombreItems} apartado a nombre de ${nombreCliente.value.trim()}!`,
-      "success",
-    );
+    mostrarToast(`✅ ¡${resumen} apartado a nombre de ${nombre}!`, "success");
     apartarProd.value = null;
 
     if (!esAdmin.value) {
@@ -1067,7 +1080,8 @@ const confirmarApartado = async () => {
         }, 300);
       }, 400);
     }
-  } catch {
+  } catch (e) {
+    console.error(e);
     mostrarToast("⚠️ Error al apartar. Intenta de nuevo.", "error");
   }
 };
@@ -1135,11 +1149,37 @@ const submitNuevo = async () => {
     mostrarToast("⚠️ No tienes permisos para esta acción.", "error");
     return;
   }
-  const { nombre, grupo, precio } = formNuevo.value;
-  if (!nombre || !grupo || !precio)
-    return mostrarToast("⚠️ Nombre, grupo y precio son obligatorios.", "error");
+
+  const { nombre, grupo } = formNuevo.value;
+
+  if (!nombre || !grupo)
+    return mostrarToast("⚠️ Nombre y grupo son obligatorios.", "error");
   if (!imagenFileNuevo.value)
     return mostrarToast("⚠️ Agrega una foto del producto.", "error");
+
+  // Calcular precio según si es lote o no
+  let precioFinal = Number(formNuevo.value.precio);
+
+  if (formNuevo.value.esLote) {
+    if (
+      formNuevo.value.items.length === 0 ||
+      formNuevo.value.items.some((i) => !i.nombre || !i.precio)
+    ) {
+      return mostrarToast(
+        "⚠️ Agrega nombre y precio a todos los items del lote.",
+        "error",
+      );
+    }
+    const precioLote = formNuevo.value.items.reduce(
+      (a, i) => a + Number(i.precio),
+      0,
+    );
+    // Si no pusieron precio general, usa el total del lote
+    if (!precioFinal || precioFinal <= 0) precioFinal = precioLote;
+  } else {
+    if (!precioFinal || precioFinal <= 0)
+      return mostrarToast("⚠️ El precio es obligatorio.", "error");
+  }
 
   guardando.value = true;
   try {
@@ -1149,23 +1189,9 @@ const submitNuevo = async () => {
           .map((s) => s.trim())
           .filter(Boolean)
       : [];
-    if (formNuevo.value.esLote) {
-      if (
-        formNuevo.value.items.length === 0 ||
-        formNuevo.value.items.some((i) => !i.nombre || !i.precio)
-      ) {
-        return mostrarToast(
-          "⚠️ Agrega nombre y precio a todos los items del lote.",
-          "error",
-        );
-      }
-      formNuevo.value.precio = formNuevo.value.items.reduce(
-        (a, i) => a + Number(i.precio),
-        0,
-      );
-    }
+
     await agregarProducto(
-      { ...formNuevo.value, inclusiones },
+      { ...formNuevo.value, precio: precioFinal, inclusiones },
       imagenFileNuevo.value,
       (p) => {
         uploadProgress.value = p;

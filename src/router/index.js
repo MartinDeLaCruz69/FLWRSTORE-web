@@ -13,7 +13,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import MaintenanceView from "../views/MaintenanceView.vue";
 
 const routes = [
-  { path: "/", redirect: "/" },
+  { path: "/", redirect: "/home" },
   { path: "/home", component: HomeView },
   { path: "/stock", component: StockView },
   { path: "/pagos", component: PagosView },
