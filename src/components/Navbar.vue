@@ -91,11 +91,20 @@
         </div>
       </div>
     </Transition>
+    <Transition name="session-toast">
+      <div
+        v-if="sessionToast.show"
+        class="session-toast"
+        :class="'session-toast--' + sessionToast.type"
+      >
+        {{ sessionToast.msg }}
+      </div>
+    </Transition>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { usuarioActual, logout } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 
@@ -104,11 +113,13 @@ const scrolled = ref(false);
 const menuOpen = ref(false);
 
 const nombreCorto = computed(() => {
-  if (!usuarioActual.value) return ''
-  const nombre = usuarioActual.value.displayName || usuarioActual.value.email || ''
-  if (!usuarioActual.value.displayName && nombre.includes('@')) return nombre.split('@')[0]
-  return nombre.split(' ')[0]
-})
+  if (!usuarioActual.value) return "";
+  const nombre =
+    usuarioActual.value.displayName || usuarioActual.value.email || "";
+  if (!usuarioActual.value.displayName && nombre.includes("@"))
+    return nombre.split("@")[0];
+  return nombre.split(" ")[0];
+});
 
 const cerrarSesion = async () => {
   await logout();
@@ -128,6 +139,33 @@ const handleScroll = () => {
 const handleResize = () => {
   if (window.innerWidth > 768) menuOpen.value = false;
 };
+
+const sessionToast = ref({ show: false, msg: "", type: "" });
+let sessionToastTimer = null;
+
+const mostrarSessionToast = (msg, type) => {
+  clearTimeout(sessionToastTimer);
+  sessionToast.value = { show: true, msg, type };
+  sessionToastTimer = setTimeout(() => {
+    sessionToast.value.show = false;
+  }, 3000);
+};
+
+let prevUsuario = null;
+watch(
+  usuarioActual,
+  (nuevo, viejo) => {
+    if (viejo === undefined) return;
+    if (nuevo && !viejo) {
+      const nombre =
+        nuevo.displayName || nuevo.email?.split("@")[0] || "Usuario";
+      mostrarSessionToast(`👋 ¡Bienvenida/o, ${nombre}!`, "success");
+    } else if (!nuevo && viejo) {
+      mostrarSessionToast("👋 Has cerrado sesión. ¡Adiós!", "info");
+    }
+  },
+  { immediate: false },
+);
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
@@ -476,6 +514,52 @@ onUnmounted(() => {
   .navbar__logo {
     font-size: 1.1rem;
     letter-spacing: 2px;
+  }
+}
+
+.session-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 300;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-width: 280px;
+}
+.session-toast--success {
+  background: linear-gradient(135deg, #f48fb1, #d84797);
+  color: #fff;
+}
+.session-toast--info {
+  background: #1A1B2F;
+  color: #fff;
+}
+.session-toast-enter-active {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.session-toast-leave-active {
+  transition: all 0.3s ease;
+}
+.session-toast-enter-from {
+  opacity: 0;
+  transform: translateX(20px) scale(0.95);
+}
+.session-toast-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+@media (max-width: 768px) {
+  .session-toast {
+    top: 70px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    text-align: center;
   }
 }
 </style>
