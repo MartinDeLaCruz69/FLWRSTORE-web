@@ -382,61 +382,99 @@
           </div>
 
           <!-- ── SELECTOR DE ITEMS (solo si es lote) ── -->
-<div v-if="apartarProd.esLote && apartarProd.items?.length" class="lote-selector">
-  <div class="lote-selector__header">
-    <p class="lote-selector__titulo">Selecciona los items que quieres apartar:</p>
-    <div class="lote-selector__acciones" v-if="todosItemsDisponibles.length > 1">
-      <button type="button" class="lote-sel-btn" @click="seleccionarTodos">
-        Todos ✅
-      </button>
-      <button type="button" class="lote-sel-btn lote-sel-btn--clear" @click="deseleccionarTodos"
-        v-if="itemsSeleccionados.length > 0">
-        Limpiar ✕
-      </button>
-    </div>
-  </div>
+          <div
+            v-if="apartarProd.esLote && apartarProd.items?.length"
+            class="lote-selector"
+          >
+            <div class="lote-selector__header">
+              <p class="lote-selector__titulo">
+                Selecciona los items que quieres apartar:
+              </p>
+              <div
+                class="lote-selector__acciones"
+                v-if="todosItemsDisponibles.length > 1"
+              >
+                <button
+                  type="button"
+                  class="lote-sel-btn"
+                  @click="seleccionarTodos"
+                >
+                  Todos ✅
+                </button>
+                <button
+                  type="button"
+                  class="lote-sel-btn lote-sel-btn--clear"
+                  @click="deseleccionarTodos"
+                  v-if="itemsSeleccionados.length > 0"
+                >
+                  Limpiar ✕
+                </button>
+              </div>
+            </div>
 
-  <!-- Precio general del lote completo -->
-  <div class="lote-precio-completo">
-    <span>💰 Precio si llevas el lote completo:</span>
-    <strong>${{ apartarProd.precio?.toLocaleString() }} MXN</strong>
-  </div>
+            <!-- Precio general del lote completo -->
+            <div class="lote-precio-completo">
+              <span>💰 Precio si llevas el lote completo:</span>
+              <strong>${{ apartarProd.precio?.toLocaleString() }} MXN</strong>
+            </div>
 
-  <div class="lote-selector__items">
-    <label
-      v-for="item in todosItemsDisponibles"
-      :key="item.id"
-      class="lote-item-check"
-      :class="{ selected: itemsSeleccionados.includes(item.id) }"
-    >
-      <input type="checkbox" :value="item.id" v-model="itemsSeleccionados" />
-      <div class="lote-item-check__info">
-        <span class="lote-item-check__nombre">{{ item.nombre }}</span>
-        <span class="lote-item-check__precio">${{ Number(item.precio).toLocaleString() }} MXN</span>
-      </div>
-      <span class="lote-item-check__icon">{{ itemsSeleccionados.includes(item.id) ? '✅' : '⬜' }}</span>
-    </label>
+            <div class="lote-selector__items">
+              <label
+                v-for="item in todosItemsDisponibles"
+                :key="item.id"
+                class="lote-item-check"
+                :class="{ selected: itemsSeleccionados.includes(item.id) }"
+              >
+                <input
+                  type="checkbox"
+                  :value="item.id"
+                  v-model="itemsSeleccionados"
+                />
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio"
+                    >${{ Number(item.precio).toLocaleString() }} MXN</span
+                  >
+                </div>
+                <span class="lote-item-check__icon">{{
+                  itemsSeleccionados.includes(item.id) ? "✅" : "⬜"
+                }}</span>
+              </label>
 
-    <!-- Items ya apartados -->
-    <div
-      v-for="item in apartarProd.items.filter(i => i.estado !== 'disponible')"
-      :key="'ap-' + item.id"
-      class="lote-item-check lote-item-check--apartado"
-    >
-      <div class="lote-item-check__info">
-        <span class="lote-item-check__nombre">{{ item.nombre }}</span>
-        <span class="lote-item-check__precio">${{ Number(item.precio).toLocaleString() }} MXN</span>
-      </div>
-      <span class="lote-item-check__tag">⏳ Apartado</span>
-    </div>
-  </div>
+              <!-- Items ya apartados -->
+              <div
+                v-for="item in apartarProd.items.filter(
+                  (i) => i.estado !== 'disponible',
+                )"
+                :key="'ap-' + item.id"
+                class="lote-item-check lote-item-check--apartado"
+              >
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio"
+                    >${{ Number(item.precio).toLocaleString() }} MXN</span
+                  >
+                </div>
+                <span class="lote-item-check__tag">⏳ Apartado</span>
+              </div>
+            </div>
 
-  <div class="lote-selector__total" v-if="itemsSeleccionados.length > 0">
-    <span>{{ itemsSeleccionados.length }} item{{ itemsSeleccionados.length > 1 ? 's' : '' }} seleccionado{{ itemsSeleccionados.length > 1 ? 's' : '' }}</span>
-    <strong>${{ totalSeleccionado.toLocaleString() }} MXN</strong>
-  </div>
-  <p v-else class="lote-selector__hint">Selecciona al menos un item para continuar</p>
-</div>
+            <div
+              class="lote-selector__total"
+              v-if="itemsSeleccionados.length > 0"
+            >
+              <span
+                >{{ itemsSeleccionados.length }} item{{
+                  itemsSeleccionados.length > 1 ? "s" : ""
+                }}
+                seleccionado{{ itemsSeleccionados.length > 1 ? "s" : "" }}</span
+              >
+              <strong>${{ totalSeleccionado.toLocaleString() }} MXN</strong>
+            </div>
+            <p v-else class="lote-selector__hint">
+              Selecciona al menos un item para continuar
+            </p>
+          </div>
 
           <div class="apartar-info">
             <div class="apartar-info__item">
@@ -583,7 +621,7 @@
                         formNuevo.items = formNuevo.esLote
                           ? [
                               {
-                                id: Date.now().toString(),
+                                id: 'item_' + Date.now(),
                                 nombre: '',
                                 precio: '',
                                 estado: 'disponible',
@@ -643,7 +681,7 @@
                     class="lote-add-btn"
                     @click="
                       formNuevo.items.push({
-                        id: Date.now().toString(),
+                        id: 'item_' + Date.now(),
                         nombre: '',
                         precio: '',
                         estado: 'disponible',
@@ -1158,6 +1196,7 @@ const submitNuevo = async () => {
         "error",
       );
     }
+
     const precioLote = formNuevo.value.items.reduce(
       (a, i) => a + Number(i.precio),
       0,
@@ -3327,7 +3366,7 @@ onUnmounted(() => {
   background: rgba(233, 30, 140, 0.08);
   border: 1px solid rgba(233, 30, 140, 0.2);
   color: var(--pink-deep);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   padding: 4px 10px;
@@ -3360,6 +3399,6 @@ onUnmounted(() => {
 .lote-precio-completo strong {
   color: var(--pink-accent);
   font-size: 0.9rem;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 </style>

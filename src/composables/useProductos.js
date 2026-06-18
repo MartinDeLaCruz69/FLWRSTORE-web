@@ -136,17 +136,21 @@ export function useProductos() {
 
   const apartarItemsLote = (id, nombre, itemsSeleccionados) => {
     const productoActual = productos.value.find((p) => p.id === id);
-    if (!productoActual) return;
+    if (!productoActual)
+      return Promise.reject(new Error("Producto no encontrado"));
+    if (!productoActual.items?.length)
+      return Promise.reject(new Error("Producto sin items"));
 
-    const itemsActualizados = productoActual.items.map((item) => ({
-      ...item,
-      apartadoPor: itemsSeleccionados.includes(item.id)
-        ? nombre
-        : item.apartadoPor || null,
-      estado: itemsSeleccionados.includes(item.id)
-        ? "apartado"
-        : item.estado || "disponible",
-    }));
+    const itemsActualizados = productoActual.items.map((item) => {
+      const esteSeleccionado = itemsSeleccionados.includes(String(item.id));
+      return {
+        id: String(item.id),
+        nombre: item.nombre || "",
+        precio: Number(item.precio) || 0,
+        estado: esteSeleccionado ? "apartado" : item.estado || "disponible",
+        apartadoPor: esteSeleccionado ? nombre : item.apartadoPor || null,
+      };
+    });
 
     const todosApartados = itemsActualizados.every(
       (i) => i.estado !== "disponible",
