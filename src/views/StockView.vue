@@ -25,7 +25,9 @@
           <div class="sh-stat-div"></div>
           <div class="sh-stat">
             <strong>{{
-              productos.filter((p) => p.estado === "apartado").length
+              productos.filter((p) =>
+                ["apartado", "parcial"].includes(p.estado),
+              ).length
             }}</strong>
             <span>Apartados</span>
           </div>
@@ -186,21 +188,35 @@
                   }}%
                 </span>
                 <button
-                  v-if="prod.estado === 'disponible'"
+                  v-if="
+                    prod.estado === 'disponible' || prod.estado === 'parcial'
+                  "
                   class="btn-apartar"
                   @click.stop="abrirApartar(prod)"
                 >
                   Apartar 🌸
                 </button>
+
                 <span
                   v-else-if="prod.estado === 'apartado'"
                   class="footer-tag footer-tag--apartado"
                 >
-                  Apartado por {{ prod.apartadoPor }}
+                  Totalmente apartado
                 </span>
-                <span v-else class="footer-tag footer-tag--vendido"
-                  >Vendido 💖</span
+
+                <span
+                  v-else-if="prod.estado === 'parcial'"
+                  class="footer-tag footer-tag--parcial"
                 >
+                  Parcialmente apartado
+                </span>
+
+                <span
+                  v-else-if="prod.estado === 'vendido'"
+                  class="footer-tag footer-tag--vendido"
+                >
+                  Vendido 💖
+                </span>
               </div>
             </div>
           </div>
@@ -336,23 +352,28 @@
               </div>
               <br />
               <button
-                v-if="modalProd.estado === 'disponible'"
+                v-if="
+                  modalProd.estado === 'disponible' ||
+                  modalProd.estado === 'parcial'
+                "
                 class="btn-apartar btn-apartar--lg"
                 @click="abrirApartar(modalProd)"
               >
                 🌸 Quiero apartar este producto
               </button>
+
               <div
                 v-else-if="modalProd.estado === 'apartado'"
                 class="modal-apartado-msg"
               >
                 <span>⏳</span>
-                <p>
-                  Este producto ya fue apartado. Si el pago no se completa en
-                  24h, regresará a stock.
-                </p>
+                <p>Este lote ya fue apartado por completo.</p>
               </div>
-              <div v-else class="modal-vendido-msg">
+
+              <div
+                v-else-if="modalProd.estado === 'vendido'"
+                class="modal-vendido-msg"
+              >
                 <span>💖</span>
                 <p>
                   Este producto ya fue vendido. ¡Sigue al pendiente del stock!
@@ -570,11 +591,17 @@
               <div class="admin-form__row">
                 <div class="admin-field">
                   <label>Categoría</label>
-                  <select v-model="formNuevo.categoria">
+                  <select
+                    v-model="formNuevo.categoria"
+                    :disabled="formNuevo.esLote"
+                  >
                     <option v-for="cat in categorias" :key="cat" :value="cat">
                       {{ catEmoji[cat] }} {{ cat }}
                     </option>
                   </select>
+                  <small v-if="formNuevo.esLote" class="field-hint">
+                    📦 Los lotes se categorizan automáticamente
+                  </small>
                 </div>
                 <div class="admin-field">
                   <label>Precio (MXN) *</label>
@@ -618,16 +645,22 @@
                       type="checkbox"
                       v-model="formNuevo.esLote"
                       @change="
-                        formNuevo.items = formNuevo.esLote
-                          ? [
+                        () => {
+                          if (formNuevo.esLote) {
+                            formNuevo.categoria = 'Lote';
+                            formNuevo.items = [
                               {
                                 id: 'item_' + Date.now(),
                                 nombre: '',
                                 precio: '',
                                 estado: 'disponible',
                               },
-                            ]
-                          : []
+                            ];
+                          } else {
+                            formNuevo.categoria = 'Álbumes';
+                            formNuevo.items = [];
+                          }
+                        }
                       "
                     />
                     <span>📦 ¿Es un lote de varios productos?</span>
@@ -941,6 +974,7 @@ const categorias = [
   "Lightsticks",
   "Revistas",
   "LLaveros",
+  "Lote",
 ];
 
 const catEmoji = {
@@ -951,6 +985,7 @@ const catEmoji = {
   Lightsticks: "✨",
   Revistas: "📖",
   LLaveros: "🔑",
+  Lote: "📦",
 };
 
 const estadoLabel = {
@@ -3400,5 +3435,10 @@ onUnmounted(() => {
   color: var(--pink-accent);
   font-size: 0.9rem;
   font-family: "Playfair Display", serif;
+}
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--pink-accent);
+  margin-top: 2px;
 }
 </style>
