@@ -626,6 +626,7 @@
                     <option value="disponible">🟢 Disponible</option>
                     <option value="apartado">🟡 Apartado</option>
                     <option value="vendido">🔴 Vendido</option>
+                    <option value="parcial">🟠 Parcialmente apartado</option>
                   </select>
                 </div>
               </div>
@@ -842,6 +843,7 @@
                     <option value="disponible">🟢 Disponible</option>
                     <option value="apartado">🟡 Apartado</option>
                     <option value="vendido">🔴 Vendido</option>
+                    <option value="parcial">🟠 Parcialmente apartado</option>
                   </select>
                 </div>
               </div>
@@ -999,6 +1001,7 @@ const estados = [
   { val: "disponible", label: "Disponibles" },
   { val: "apartado", label: "Apartados" },
   { val: "vendido", label: "Vendidos" },
+  { val: "parcial", label: "Parcialmente apartados" },
 ];
 
 // ── Filtros ──────────────────────────────────────────────────
@@ -1672,10 +1675,13 @@ onUnmounted(() => {
   background: #22c55e;
 }
 .dot--apartado {
-  background: #f59e0b;
+  background: #e6be0a;
 }
 .dot--vendido {
   background: #ef4444;
+}
+.dot--parcial {
+  background: #e67f0b;
 }
 
 /* ══ GRID ══════════════════════════════════════════════════ */
@@ -1768,7 +1774,7 @@ onUnmounted(() => {
 }
 .badge--apartado {
   background: rgba(245, 158, 11, 0.15);
-  color: #d0e60a;
+  color: #e6be0a;
 }
 .badge--vendido {
   background: rgba(239, 68, 68, 0.12);
@@ -1776,7 +1782,7 @@ onUnmounted(() => {
 }
 .badge--parcial {
   background: rgba(249, 115, 22, 0.15);
-  color: #c2410c;
+  color: #e67f0b;
 }
 .badge--new {
   background: rgba(233, 30, 140, 0.12);
