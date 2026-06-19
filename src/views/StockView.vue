@@ -2442,6 +2442,8 @@ onUnmounted(() => {
 }
 .admin-panel__body {
   padding: 20px 24px;
+  max-height: calc(85vh - 70px);
+  overflow-y: auto;
 }
 .admin-panel__body h4 {
   font-size: 0.82rem;
@@ -2450,6 +2452,16 @@ onUnmounted(() => {
   letter-spacing: 1px;
   color: var(--text-light);
   margin-bottom: 16px;
+}
+.admin-panel__body::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-panel__body::-webkit-scrollbar-thumb {
+  background: rgba(233, 30, 140, 0.25);
+  border-radius: 10px;
+}
+.admin-panel__body::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .admin-form {
