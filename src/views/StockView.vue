@@ -316,6 +316,47 @@
               </div>
             </div>
 
+            <!-- ÚLTIMO bloque antes de modal-actions, dentro de modal-card__body -->
+            <div
+              v-if="modalProd.esLote && modalProd.items?.length"
+              class="modal-lote-items"
+            >
+              <span class="mdi-label"
+                >📦 Items del lote ({{ modalProd.items.length }})</span
+              >
+              <div class="modal-lote-list">
+                <div
+                  v-for="item in modalProd.items"
+                  :key="item.id"
+                  class="modal-lote-item"
+                  :class="'modal-lote-item--' + item.estado"
+                >
+                  <div class="modal-lote-item__info">
+                    <span class="modal-lote-item__nombre">{{
+                      item.nombre
+                    }}</span>
+                    <span class="modal-lote-item__precio"
+                      >${{ Number(item.precio).toLocaleString() }} MXN</span
+                    >
+                  </div>
+                  <div class="modal-lote-item__estado">
+                    <span
+                      v-if="item.estado === 'disponible'"
+                      class="lote-estado-tag lote-estado-tag--disponible"
+                    >
+                      🟢 Disponible
+                    </span>
+                    <span
+                      v-else
+                      class="lote-estado-tag lote-estado-tag--apartado"
+                    >
+                      ⏳ {{ item.apartadoPor }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Acciones -->
             <div class="modal-actions">
               <!-- Acciones admin dentro del modal -->
@@ -3458,5 +3499,75 @@ onUnmounted(() => {
   font-size: 0.72rem;
   color: var(--pink-accent);
   margin-top: 2px;
+}
+/* ── Items del lote en modal detalle ─────────────────────── */
+.modal-lote-items {
+  margin-bottom: 24px;
+}
+.modal-lote-items .mdi-label {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 10px;
+}
+.modal-lote-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.modal-lote-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(233, 30, 140, 0.1);
+  background: #fff;
+}
+.modal-lote-item--apartado {
+  background: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.modal-lote-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.modal-lote-item__nombre {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal-lote-item__precio {
+  font-size: 0.75rem;
+  color: var(--pink-accent);
+}
+.lote-estado-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.lote-estado-tag--disponible {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+.lote-estado-tag--apartado {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+@media (max-width: 768px) {
+  .modal-lote-item__nombre {
+    max-width: 140px;
+  }
 }
 </style>
