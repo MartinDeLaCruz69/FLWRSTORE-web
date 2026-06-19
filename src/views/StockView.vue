@@ -316,7 +316,7 @@
               </div>
             </div>
 
-            <!-- ÚLTIMO bloque antes de modal-actions, dentro de modal-card__body -->
+            <!-- ÚLTIMO bloque antes de modal-actions -->
             <div
               v-if="modalProd.esLote && modalProd.items?.length"
               class="modal-lote-items"
@@ -371,7 +371,10 @@
                   ✏️ Editar
                 </button>
                 <button
-                  v-if="modalProd.estado === 'apartado'"
+                  v-if="
+                    modalProd.estado === 'apartado' ||
+                    modalProd.estado === 'parcial'
+                  "
                   class="btn-admin-action btn-liberar"
                   @click="accionRapida('liberar', modalProd)"
                 >
@@ -1005,6 +1008,7 @@ const {
   eliminarProducto,
   apartarProducto,
   liberarProducto,
+  liberarItemsLote,
   marcarVendido,
   apartarItemsLote,
 } = useProductos();
@@ -1414,16 +1418,28 @@ const confirmarEliminar = async (prod) => {
 // ── Acciones rápidas admin desde modal ───────────────────────
 const accionRapida = async (accion, prod) => {
   try {
-    if (accion === "liberar") await liberarProducto(prod.id);
-    if (accion === "vendido") await marcarVendido(prod.id);
+    if (accion === "liberar") {
+      if (prod.esLote) {
+        await liberarItemsLote(prod.id);
+      } else {
+        await liberarProducto(prod.id);
+      }
+    }
+
+    if (accion === "vendido") {
+      await marcarVendido(prod.id);
+    }
+
     modalProd.value = null;
+
     mostrarToast(
       accion === "liberar"
         ? "🟢 Producto disponible de nuevo."
         : "✅ Marcado como vendido.",
       "success",
     );
-  } catch {
+  } catch (e) {
+    console.error(e);
     mostrarToast("⚠️ Error. Intenta de nuevo.", "error");
   }
 };

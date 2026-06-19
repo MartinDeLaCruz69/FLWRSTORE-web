@@ -131,6 +131,24 @@ export function useProductos() {
       fechaApartado: null,
     });
 
+  const liberarItemsLote = (id) => {
+    const productoActual = productos.value.find((p) => p.id === id);
+    if (!productoActual?.items?.length) {
+      return liberarProducto(id);
+    }
+    const itemsLiberados = productoActual.items.map((item) => ({
+      ...item,
+      estado: "disponible",
+      apartadoPor: null,
+    }));
+    return updateDoc(doc(db, "productos", id), {
+      items: itemsLiberados,
+      estado: "disponible",
+      apartadoPor: null,
+      fechaApartado: null,
+    });
+  };
+
   const marcarVendido = (id) =>
     updateDoc(doc(db, "productos", id), { estado: "vendido" });
 
@@ -179,6 +197,7 @@ export function useProductos() {
     eliminarProducto,
     apartarProducto,
     liberarProducto,
+    liberarItemsLote,
     marcarVendido,
     apartarItemsLote,
   };
