@@ -67,8 +67,11 @@
         <div class="footer__contact-item">
           <span>📩</span>
           <div>
-            <strong>¿Encontraste algún error o tienes alguna pregunta? <br>Escribenos:</strong>
-            <p>Correo: matindelacruz169@gmail.com </p>
+            <strong
+              >¿Encontraste algún error o tienes alguna pregunta?
+              <br />Escribenos:</strong
+            >
+            <p>Correo: matindelacruz169@gmail.com</p>
             <p>Teléfono: +52 449 110 9105</p>
           </div>
         </div>
@@ -78,7 +81,7 @@
     <div class="footer__bottom">
       <p>© {{ currentYear }} FLWRSTORE · Todos los derechos reservados.</p>
       <div class="footer__bottom-right">
-        <span class="footer__version">v1.1.0</span>
+        <span class="footer__version">v1.1.1</span>
         <p>
           Diseño y Desarrollo completo por
           <strong>Ing. Juan Martín Esparza de la Cruz</strong>

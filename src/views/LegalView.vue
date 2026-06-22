@@ -470,7 +470,7 @@
             <p>
               La versión vigente siempre estará disponible en esta página.
               <br />
-              La fecha de última actualización es: <strong>Mayo 2026</strong>.
+              La fecha de última actualización es: <strong>Junio 2026</strong>.
             </p>
           </div>
           <div class="policy-item">
@@ -486,7 +486,7 @@
       <div class="legal-block fade-up" :class="{ visible: vis[8] }" ref="el8">
         <div class="legal-block__header">
           <span class="legal-block__icon">🔜</span>
-          <h2>Próxima Versión: v1.1.1</h2>
+          <h2>Próxima Versión: v1.1.2</h2>
         </div>
       </div>
 
