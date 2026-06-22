@@ -57,14 +57,31 @@
 
             <div class="apartado-card__details">
               <div class="detail-item">
-                <span class="detail-label">💰 Precio</span>
-                <strong>${{ prod.precio?.toLocaleString() }} MXN</strong>
+                <span class="detail-label">💰 Tu total</span>
+                <strong>${{ prod.miPrecio?.toLocaleString() }} MXN</strong>
               </div>
               <div class="detail-item">
                 <span class="detail-label">📦 Condición</span>
                 <strong>{{
                   prod.condicion === "nuevo" ? "✨ Nuevo" : "📦 2da mano"
                 }}</strong>
+              </div>
+            </div>
+
+            <!-- Mis items del lote -->
+            <div v-if="prod.misItems" class="apartado-card__mis-items">
+              <span class="detail-label">📦 Tus items en este lote</span>
+              <div class="mis-items-list">
+                <span
+                  v-for="item in prod.misItems"
+                  :key="item.id"
+                  class="mi-item-tag"
+                >
+                  {{ item.nombre }} — ${{
+                    Number(item.precio).toLocaleString()
+                  }}
+                  MXN
+                </span>
               </div>
             </div>
 
@@ -99,10 +116,10 @@
             </div>
 
             <!-- Anticipo si aplica -->
-            <div v-if="prod.precio >= 550" class="apartado-card__anticipo">
+            <div v-if="prod.miPrecio >= 550" class="apartado-card__anticipo">
               💰 Anticipo mínimo disponible:
               <strong
-                >${{ Math.ceil(prod.precio * 0.2).toLocaleString() }} MXN
+                >${{ Math.ceil(prod.miPrecio * 0.2).toLocaleString() }} MXN
                 (20%)</strong
               >
             </div>
@@ -166,7 +183,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { usuarioActual, authCargando } from "../composables/useAuth";
 
 const cargando = ref(true);
-const productos = ref([]);
+const productosRaw = ref([]);
 let unsubscribe = null;
 
 const catEmoji = {
@@ -176,32 +193,29 @@ const catEmoji = {
   Lightsticks: "✨",
   Revistas: "📖",
   LLaveros: "🔑",
+  Lote: "📦",
 };
 
-// ── Espera a que auth termine de cargar, luego suscribe ──────
+// ── Escucha ampliada: apartado + parcial ──────────────────────
 const iniciarEscucha = (usuario) => {
   unsubscribe?.();
   unsubscribe = null;
 
   if (!usuario) {
-    productos.value = [];
+    productosRaw.value = [];
     cargando.value = false;
     return;
   }
 
-  const nombreUsuario =
-    usuario.displayName || usuario.email?.split("@")[0] || "";
-
   const q = query(
     collection(db, "productos"),
-    where("estado", "==", "apartado"),
-    where("apartadoPor", "==", nombreUsuario),
+    where("estado", "in", ["apartado", "parcial"]),
   );
 
   unsubscribe = onSnapshot(
     q,
     (snap) => {
-      productos.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      productosRaw.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       cargando.value = false;
     },
     () => {
@@ -210,7 +224,6 @@ const iniciarEscucha = (usuario) => {
   );
 };
 
-// ── Watch ─────────────────────────────────────────────────
 watch(
   [usuarioActual, authCargando],
   ([usuario, cargandoAuth]) => {
@@ -225,7 +238,42 @@ onUnmounted(() => {
   clearInterval(tickTimer);
 });
 
-const misApartados = computed(() => productos.value);
+// ── Filtrar y transformar para el usuario actual ──────────────
+const nombreUsuario = computed(
+  () =>
+    usuarioActual.value?.displayName ||
+    usuarioActual.value?.email?.split("@")[0] ||
+    "",
+);
+
+const misApartados = computed(() => {
+  if (!nombreUsuario.value) return [];
+
+  const resultado = [];
+
+  for (const prod of productosRaw.value) {
+    if (prod.esLote && prod.items?.length) {
+      const misItems = prod.items.filter(
+        (i) => i.estado === "apartado" && i.apartadoPor === nombreUsuario.value,
+      );
+      if (misItems.length > 0) {
+        resultado.push({
+          ...prod,
+          misItems,
+          miPrecio: misItems.reduce((a, i) => a + Number(i.precio), 0),
+        });
+      }
+    } else if (prod.apartadoPor === nombreUsuario.value) {
+      resultado.push({
+        ...prod,
+        misItems: null,
+        miPrecio: prod.precio,
+      });
+    }
+  }
+
+  return resultado;
+});
 
 // ── Countdown ────────────────────────────────────────────────
 const ahora = ref(Date.now());
@@ -262,15 +310,24 @@ const timerClass = (fechaApartado) => {
 
 // ── WhatsApp ─────────────────────────────────────────────────
 const generarMensajeWhatsApp = (prod) => {
-  const grupoUrl = "https://chat.whatsapp.com/Le9ZLZRUiT02x0MbJh86mW";
-  const nombre =
-    usuarioActual.value?.displayName ||
-    usuarioActual.value?.email?.split("@")[0] ||
-    "Cliente";
+  const nombre = nombreUsuario.value || "Cliente";
+  let detalleProductos = "";
+
+  if (prod.misItems) {
+    detalleProductos = prod.misItems
+      .map(
+        (i) => `   • ${i.nombre} — $${Number(i.precio).toLocaleString()} MXN`,
+      )
+      .join("\n");
+    detalleProductos = `- *${prod.nombre}* (lote) — ${prod.grupo}\n${detalleProductos}`;
+  } else {
+    detalleProductos = `- *${prod.nombre}* — ${prod.grupo}\n   Precio: $${prod.precio?.toLocaleString()} MXN`;
+  }
+
   const mensaje =
     `Hola! Soy ${nombre} y quiero coordinar el pago de mi apartado:\n\n` +
-    `- *${prod.nombre}* — ${prod.grupo}\n` +
-    `- Precio: $${prod.precio?.toLocaleString()} MXN\n` +
+    `${detalleProductos}\n\n` +
+    `- Total: $${prod.miPrecio?.toLocaleString()} MXN\n` +
     `- Categoría: ${prod.categoria}\n\n` +
     `¿Me pueden confirmar los datos para el pago?`;
 
@@ -787,5 +844,26 @@ const generarMensajeWhatsApp = (prod) => {
   .page-hero {
     padding: 70px 12px 32px;
   }
+}
+
+/* ── Mis items del lote ──────────────────────────────────── */
+.apartado-card__mis-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mis-items-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mi-item-tag {
+  background: rgba(233, 30, 140, 0.08);
+  border: 1px solid rgba(233, 30, 140, 0.18);
+  color: #c2185b;
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 </style>
