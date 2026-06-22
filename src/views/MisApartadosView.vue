@@ -257,10 +257,12 @@ const misApartados = computed(() => {
         (i) => i.estado === "apartado" && i.apartadoPor === nombreUsuario.value,
       );
       if (misItems.length > 0) {
+        const fechaItem = misItems[0].fechaApartado || prod.fechaApartado;
         resultado.push({
           ...prod,
           misItems,
           miPrecio: misItems.reduce((a, i) => a + Number(i.precio), 0),
+          fechaApartado: fechaItem,
         });
       }
     } else if (prod.apartadoPor === nombreUsuario.value) {
@@ -284,9 +286,20 @@ onMounted(() => {
   }, 1000);
 });
 
+const resolverFecha = (fechaApartado) => {
+  if (!fechaApartado) return null;
+  if (typeof fechaApartado?.toDate === "function") {
+    return fechaApartado.toDate().getTime();
+  }
+  if (typeof fechaApartado === "string") {
+    return new Date(fechaApartado).getTime();
+  }
+  return fechaApartado;
+};
+
 const calcularTiempoRestante = (fechaApartado) => {
-  if (!fechaApartado) return "Sin fecha registrada";
-  const fechaMs = fechaApartado?.toDate?.()?.getTime() || fechaApartado;
+  const fechaMs = resolverFecha(fechaApartado);
+  if (!fechaMs) return "Sin fecha registrada";
   const limite = fechaMs + 24 * 60 * 60 * 1000;
   const restante = limite - ahora.value;
   if (restante <= 0) return "⚠️ Tiempo vencido — contacta a la tienda";
@@ -297,8 +310,8 @@ const calcularTiempoRestante = (fechaApartado) => {
 };
 
 const timerClass = (fechaApartado) => {
-  if (!fechaApartado) return "";
-  const fechaMs = fechaApartado?.toDate?.()?.getTime() || fechaApartado;
+  const fechaMs = resolverFecha(fechaApartado);
+  if (!fechaMs) return "";
   const limite = fechaMs + 24 * 60 * 60 * 1000;
   const restante = limite - ahora.value;
   const horas = restante / (1000 * 60 * 60);

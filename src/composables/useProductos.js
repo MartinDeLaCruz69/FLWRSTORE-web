@@ -137,9 +137,12 @@ export function useProductos() {
       return liberarProducto(id);
     }
     const itemsLiberados = productoActual.items.map((item) => ({
-      ...item,
+      id: String(item.id),
+      nombre: item.nombre || "",
+      precio: Number(item.precio) || 0,
       estado: "disponible",
       apartadoPor: null,
+      fechaApartado: null,
     }));
     return updateDoc(doc(db, "productos", id), {
       items: itemsLiberados,
@@ -167,6 +170,9 @@ export function useProductos() {
         precio: Number(item.precio) || 0,
         estado: esteSeleccionado ? "apartado" : item.estado || "disponible",
         apartadoPor: esteSeleccionado ? nombre : item.apartadoPor || null,
+        fechaApartado: esteSeleccionado
+          ? new Date().toISOString()
+          : item.fechaApartado || null,
       };
     });
 
