@@ -896,6 +896,134 @@
                 <input v-model="formEditar.inclusiones" />
               </div>
 
+              <!-- Toggle lote en editar -->
+              <div class="admin-field admin-field--full">
+                <div class="lote-toggle">
+                  <label class="lote-toggle__label">
+                    <input
+                      type="checkbox"
+                      v-model="formEditar.esLote"
+                      @change="
+                        () => {
+                          if (formEditar.esLote) {
+                            formEditar.categoria = 'Lote';
+                            if (formEditar.items.length === 0) {
+                              formEditar.items = [
+                                {
+                                  id: 'item_' + Date.now(),
+                                  nombre: '',
+                                  precio: '',
+                                  estado: 'disponible',
+                                },
+                              ];
+                            }
+                          } else {
+                            formEditar.items = [];
+                          }
+                        }
+                      "
+                    />
+                    <span>📦 ¿Es un lote de varios productos?</span>
+                  </label>
+                  <small
+                    v-if="
+                      formEditar.esLote &&
+                      prodEditando?.items?.some(
+                        (i) => i.estado !== 'disponible',
+                      )
+                    "
+                    class="field-hint field-hint--warning"
+                  >
+                    ⚠️ Este lote tiene items ya apartados. Edita con cuidado
+                    para no perder esa información.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Items del lote en editar -->
+              <div
+                v-if="formEditar.esLote"
+                class="admin-field admin-field--full"
+              >
+                <label>Items del lote *</label>
+                <div class="lote-items">
+                  <div
+                    v-for="(item, idx) in formEditar.items"
+                    :key="item.id"
+                    class="lote-item"
+                  >
+                    <span class="lote-item__num">{{ idx + 1 }}</span>
+                    <input
+                      v-model="item.nombre"
+                      placeholder="Nombre del item"
+                      class="lote-item__input"
+                    />
+                    <div class="lote-item__price-wrap">
+                      <span>$</span>
+                      <input
+                        v-model.number="item.precio"
+                        type="number"
+                        placeholder="Precio"
+                        class="lote-item__price"
+                      />
+                    </div>
+                    <span
+                      v-if="item.estado !== 'disponible'"
+                      class="lote-item__estado-tag"
+                      :title="'Apartado por ' + item.apartadoPor"
+                    >
+                      ⏳
+                    </span>
+                    <button
+                      type="button"
+                      class="lote-item__remove"
+                      @click="formEditar.items.splice(idx, 1)"
+                      :disabled="
+                        formEditar.items.length === 1 ||
+                        item.estado !== 'disponible'
+                      "
+                      :title="
+                        item.estado !== 'disponible'
+                          ? 'No puedes eliminar un item ya apartado'
+                          : 'Eliminar'
+                      "
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="lote-add-btn"
+                    @click="
+                      formEditar.items.push({
+                        id: 'item_' + Date.now(),
+                        nombre: '',
+                        precio: '',
+                        estado: 'disponible',
+                      })
+                    "
+                  >
+                    ➕ Agregar otro item
+                  </button>
+
+                  <div
+                    class="lote-total"
+                    v-if="formEditar.items.some((i) => i.precio)"
+                  >
+                    Total del lote:
+                    <strong
+                      >${{
+                        formEditar.items
+                          .reduce((a, i) => a + (Number(i.precio) || 0), 0)
+                          .toLocaleString()
+                      }}
+                      MXN</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
               <!-- Foto editar -->
               <div class="admin-field admin-field--full">
                 <label>Foto del producto</label>
@@ -1333,6 +1461,8 @@ const abrirEditar = (prod) => {
     condicion: prod.condicion,
     estado: prod.estado,
     inclusiones: prod.inclusiones?.join(", ") || "",
+    esLote: prod.esLote || false,
+    items: prod.esLote && prod.items ? prod.items.map((i) => ({ ...i })) : [],
   };
   imagenFileEditar.value = null;
   imagenPreviewEditar.value = prod.imagenUrl || null;
@@ -1352,8 +1482,21 @@ const submitEditar = async () => {
     mostrarToast("⚠️ No tienes permisos para esta acción.", "error");
     return;
   }
-
   if (!prodEditando.value) return;
+
+  // Validar lote
+  if (formEditar.value.esLote) {
+    if (
+      formEditar.value.items.length === 0 ||
+      formEditar.value.items.some((i) => !i.nombre || !i.precio)
+    ) {
+      return mostrarToast(
+        "⚠️ Agrega nombre y precio a todos los items del lote.",
+        "error",
+      );
+    }
+  }
+
   guardando.value = true;
   try {
     const inclusiones = formEditar.value.inclusiones
@@ -1363,10 +1506,36 @@ const submitEditar = async () => {
           .filter(Boolean)
       : [];
 
+    let precioFinal = Number(formEditar.value.precio);
+
     const datosActualizar = {
       ...formEditar.value,
       inclusiones,
+      precio: precioFinal,
     };
+
+    if (formEditar.value.esLote) {
+      const precioLote = formEditar.value.items.reduce(
+        (a, i) => a + Number(i.precio),
+        0,
+      );
+      if (!precioFinal || precioFinal <= 0) {
+        datosActualizar.precio = precioLote;
+      }
+      const todosApartados = formEditar.value.items.every(
+        (i) => i.estado !== "disponible",
+      );
+      const algunoApartado = formEditar.value.items.some(
+        (i) => i.estado === "apartado",
+      );
+      datosActualizar.estado = todosApartados
+        ? "apartado"
+        : algunoApartado
+          ? "parcial"
+          : "disponible";
+    } else {
+      datosActualizar.items = [];
+    }
 
     if (datosActualizar.estado === "disponible") {
       datosActualizar.apartadoPor = null;
@@ -3585,5 +3754,13 @@ onUnmounted(() => {
   .modal-lote-item__nombre {
     max-width: 140px;
   }
+}
+
+.lote-item__estado-tag {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.field-hint--warning {
+  color: #b45309;
 }
 </style>
