@@ -133,7 +133,7 @@
                   <input
                     v-model="form.password"
                     :type="showPass ? 'text' : 'password'"
-                    placeholder="Mínimo 6 caracteres"
+                    placeholder="Mínimo 8 caracteres"
                     @blur="validatePassword"
                   />
                   <button
@@ -144,6 +144,7 @@
                     {{ showPass ? "🙈" : "👁️" }}
                   </button>
                 </div>
+
                 <!-- Barra de fuerza -->
                 <div class="password-strength">
                   <div
@@ -162,6 +163,35 @@
                     {{ errors.password }}
                   </p></Transition
                 >
+              </div>
+
+              <!-- Requisitos de contraseña -->
+              <div v-if="form.password" class="pw-requirements">
+                <span
+                  :class="[
+                    'pw-req',
+                    form.password.length >= 8 ? 'pw-req--ok' : 'pw-req--no',
+                  ]"
+                >
+                  {{ form.password.length >= 8 ? "✓" : "✕" }} Mínimo 8
+                  caracteres
+                </span>
+                <span
+                  :class="[
+                    'pw-req',
+                    /[A-Z]/.test(form.password) ? 'pw-req--ok' : 'pw-req--no',
+                  ]"
+                >
+                  {{ /[A-Z]/.test(form.password) ? "✓" : "✕" }} Una mayúscula
+                </span>
+                <span
+                  :class="[
+                    'pw-req',
+                    /[0-9]/.test(form.password) ? 'pw-req--ok' : 'pw-req--no',
+                  ]"
+                >
+                  {{ /[0-9]/.test(form.password) ? "✓" : "✕" }} Un número
+                </span>
               </div>
 
               <div
@@ -386,8 +416,16 @@ const validatePassword = () => {
     errors.password = "La contraseña es obligatoria.";
     return;
   }
-  if (form.password.length < 6) {
-    errors.password = "Mínimo 6 caracteres.";
+  if (form.password.length < 8) {
+    errors.password = "Mínimo 8 caracteres.";
+    return;
+  }
+  if (!/[A-Z]/.test(form.password)) {
+    errors.password = "Incluye al menos una letra mayúscula.";
+    return;
+  }
+  if (!/[0-9]/.test(form.password)) {
+    errors.password = "Incluye al menos un número.";
     return;
   }
   fieldOk.password = true;
@@ -409,11 +447,21 @@ const validateConfirm = () => {
 const passwordStrength = computed(() => {
   const p = form.password;
   if (!p) return { level: "", pct: 0, label: "" };
-  if (p.length < 6) return { level: "weak", pct: 25, label: "🔴 Débil" };
-  if (p.length < 10) return { level: "fair", pct: 55, label: "🟡 Regular" };
-  if (/[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p))
-    return { level: "strong", pct: 100, label: "🟢 Fuerte" };
-  return { level: "good", pct: 80, label: "🔵 Buena" };
+
+  const tieneMinimo = p.length >= 8;
+  const tieneMayuscula = /[A-Z]/.test(p);
+  const tieneNumero = /[0-9]/.test(p);
+  const tieneSimbolo = /[^A-Za-z0-9]/.test(p);
+
+  const score = [tieneMinimo, tieneMayuscula, tieneNumero, tieneSimbolo].filter(
+    Boolean,
+  ).length;
+
+  if (p.length < 6) return { level: "weak", pct: 20, label: "🔴 Muy débil" };
+  if (score === 1) return { level: "weak", pct: 30, label: "🔴 Débil" };
+  if (score === 2) return { level: "fair", pct: 55, label: "🟡 Regular" };
+  if (score === 3) return { level: "good", pct: 80, label: "🔵 Buena" };
+  return { level: "strong", pct: 100, label: "🟢 Fuerte" };
 });
 
 const goStep2 = () => {
@@ -1147,5 +1195,24 @@ const petalStyle = (i) => ({
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* ── Requisitos de contraseña ──────────────────────────────── */
+.pw-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.pw-req {
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.pw-req--ok {
+  color: #22c55e;
+}
+.pw-req--no {
+  color: var(--text-light);
 }
 </style>
