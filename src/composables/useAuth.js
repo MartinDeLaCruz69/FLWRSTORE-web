@@ -18,7 +18,19 @@ export const authCargando = ref(true);
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    usuarioActual.value = user;
+    if (!user.displayName) {
+      const snap = await getDoc(doc(db, "usuarios", user.uid));
+      if (snap.exists() && snap.data().nombre) {
+        await updateProfile(user, { displayName: snap.data().nombre });
+        await user.reload();
+        usuarioActual.value = auth.currentUser;
+      } else {
+        usuarioActual.value = user;
+      }
+    } else {
+      usuarioActual.value = user;
+    }
+
     const snap = await getDoc(doc(db, "usuarios", user.uid));
     rolActual.value = snap.exists() ? snap.data().rol : "cliente";
   } else {
@@ -37,8 +49,9 @@ export const registrar = async (nombre, email, password) => {
     rol: "cliente",
     creadoEn: new Date(),
   });
+  await user.reload();
   usuarioActual.value = auth.currentUser;
-  return user;
+  return auth.currentUser;
 };
 
 export const login = async (email, password) => {
