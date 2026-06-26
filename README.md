@@ -33,6 +33,8 @@ src/
 │   ├── .js
 │   ├── .js
 │   └── .js
+├── router/
+│   ├── .js
 ├── views/
 │   ├── .vue
 │   ├── .vue
@@ -43,6 +45,7 @@ src/
 │   ├── .vue
 │   ├── .vue
 │   └── .vue
+├── .vue
 ├── .js
 ├── .js
 ├── .js
