@@ -161,8 +161,9 @@
           <div class="policy-item">
             <span>👤</span>
             <p>
-              Cada usuario puede tener activo un máximo de
-              <strong>3 apartados simultáneos</strong>.
+              No existe un limite de apartados por cliente, pero cada apartado
+              debe ser
+              <strong>confirmado</strong>.
             </p>
           </div>
         </div>
@@ -483,14 +484,18 @@
         </div>
       </div>
 
-      <div class="legal-block fade-up" :class="{ visible: vis[8] }" ref="el8">
+      <div class="legal-block fade-up" :class="{ visible: vis[9] }" ref="el9">
         <div class="legal-block__header">
           <span class="legal-block__icon">🔜</span>
           <h2>Próxima Versión: v1.1.2</h2>
         </div>
       </div>
 
-      <div class="legal__footer fade-up" :class="{ visible: vis[9] }" ref="el9">
+      <div
+        class="legal__footer fade-up"
+        :class="{ visible: vis[10] }"
+        ref="el10"
+      >
         <span>🌸</span>
         <p>
           Agradecemos profundamente tu confianza y por ser parte de esta
@@ -515,11 +520,12 @@ const el3 = ref(null),
 const el6 = ref(null),
   el7 = ref(null),
   el8 = ref(null);
-const el9 = ref(null);
+const el9 = ref(null),
+  el10 = ref(null);
 
 let observer;
 onMounted(() => {
-  const els = [el0, el1, el2, el3, el4, el5, el6, el7, el8, el9];
+  const els = [el0, el1, el2, el3, el4, el5, el6, el7, el8, el9, el10];
 
   observer = new IntersectionObserver(
     (entries) => {
