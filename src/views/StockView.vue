@@ -198,10 +198,17 @@
                 </button>
 
                 <span
-                  v-else-if="prod.estado === 'apartado'"
+                  v-else-if="prod.estado === 'apartado' && prod.esLote"
                   class="footer-tag footer-tag--apartado"
                 >
                   Totalmente apartado
+                </span>
+
+                <span
+                  v-else-if="prod.estado === 'apartado' && !prod.esLote"
+                  class="footer-tag footer-tag--apartado"
+                >
+                  Apartado ⏰
                 </span>
 
                 <span
@@ -411,7 +418,13 @@
                 class="modal-apartado-msg"
               >
                 <span>⏳</span>
-                <p>Este lote ya fue apartado por completo.</p>
+                <p>
+                  {{
+                    modalProd.esLote
+                      ? "Este lote ya fue apartado por completo."
+                      : "Este producto ya fue apartado."
+                  }}
+                </p>
               </div>
 
               <div
@@ -562,9 +575,7 @@
           <div class="apartar-form">
             <label>Este producto será apartado por:</label>
             <span>{{
-              usuarioActual?.displayName ||
-              usuarioActual?.email?.split("@")[0] ||
-              "Cliente"
+              usuarioActual?.displayName || usuarioActual?.email || "Cliente"
             }}</span>
           </div>
 
@@ -1254,9 +1265,7 @@ const abrirApartar = (prod) => {
   modalProd.value = null;
   itemsSeleccionados.value = [];
   nombreCliente.value =
-    usuarioActual.value.displayName ||
-    usuarioActual.value.email?.split("@")[0] ||
-    "";
+    usuarioActual.value.displayName || usuarioActual.value.email || "";
   errorNombre.value = "";
 };
 

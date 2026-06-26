@@ -17,27 +17,33 @@ export const rolActual = ref(null);
 export const authCargando = ref(true);
 
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    if (!user.displayName) {
+  try {
+    if (user) {
       const snap = await getDoc(doc(db, "usuarios", user.uid));
-      if (snap.exists() && snap.data().nombre) {
-        await updateProfile(user, { displayName: snap.data().nombre });
-        await user.reload();
-        usuarioActual.value = auth.currentUser;
-      } else {
-        usuarioActual.value = user;
-      }
-    } else {
-      usuarioActual.value = user;
-    }
+      const datosFirestore = snap.exists() ? snap.data() : null;
 
-    const snap = await getDoc(doc(db, "usuarios", user.uid));
-    rolActual.value = snap.exists() ? snap.data().rol : "cliente";
-  } else {
-    usuarioActual.value = null;
+      if (!user.displayName && datosFirestore?.nombre) {
+        await updateProfile(user, {
+          displayName: datosFirestore.nombre,
+        });
+
+        await user.reload();
+      }
+
+      usuarioActual.value = auth.currentUser;
+      rolActual.value = datosFirestore?.rol ?? "cliente";
+    } else {
+      usuarioActual.value = null;
+      rolActual.value = null;
+    }
+  } catch (error) {
+    console.error("Error en onAuthStateChanged:", error);
+
+    usuarioActual.value = user ?? null;
     rolActual.value = null;
+  } finally {
+    authCargando.value = false;
   }
-  authCargando.value = false;
 });
 
 export const registrar = async (nombre, email, password) => {
