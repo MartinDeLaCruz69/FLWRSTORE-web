@@ -152,8 +152,94 @@ export function useProductos() {
     });
   };
 
-  const marcarVendido = (id) =>
-    updateDoc(doc(db, "productos", id), { estado: "vendido" });
+  const marcarVendido = async (id, datosVenta = null) => {
+    await updateDoc(doc(db, "productos", id), { estado: "vendido" });
+
+    if (datosVenta) {
+      await addDoc(collection(db, "ventas"), {
+        productoId: id,
+        nombreProducto: datosVenta.nombreProducto || "",
+        grupo: datosVenta.grupo || "",
+        categoria: datosVenta.categoria || "",
+        imagenUrl: datosVenta.imagenUrl || null,
+        esLote: false,
+        itemsComprados: null,
+        nombreCliente: datosVenta.nombreCliente || "Sin asignar",
+        emailCliente: datosVenta.emailCliente || "",
+        uid: datosVenta.uid || null,
+        precioFinal: Number(datosVenta.precioFinal) || 0,
+        notas: datosVenta.notas || "",
+        asignadoPorAdmin: true,
+        fechaVenta: serverTimestamp(),
+      });
+    }
+  };
+
+  const marcarItemsLoteVendidos = async (id, itemIds, datosVenta = null) => {
+    const productoActual = productos.value.find((p) => p.id === id);
+    if (!productoActual?.items?.length) return;
+
+    const itemsActualizados = productoActual.items.map((item) => ({
+      ...item,
+      estado: itemIds.includes(String(item.id)) ? "vendido" : item.estado,
+    }));
+
+    const todosVendidos = itemsActualizados.every(
+      (i) => i.estado === "vendido",
+    );
+    const algunoDisponible = itemsActualizados.some(
+      (i) => i.estado === "disponible",
+    );
+    const algunoApartado = itemsActualizados.some(
+      (i) => i.estado === "apartado",
+    );
+
+    const nuevoEstado = todosVendidos
+      ? "vendido"
+      : algunoDisponible
+        ? algunoApartado
+          ? "parcial"
+          : "disponible"
+        : algunoApartado
+          ? "apartado"
+          : "vendido";
+
+    await updateDoc(doc(db, "productos", id), {
+      items: itemsActualizados,
+      estado: nuevoEstado,
+    });
+
+    if (datosVenta) {
+      const itemsVendidos = productoActual.items.filter((i) =>
+        itemIds.includes(String(i.id)),
+      );
+      const precioTotal = itemsVendidos.reduce(
+        (a, i) => a + Number(i.precio),
+        0,
+      );
+
+      await addDoc(collection(db, "ventas"), {
+        productoId: id,
+        nombreProducto: datosVenta.nombreProducto || productoActual.nombre,
+        grupo: datosVenta.grupo || productoActual.grupo,
+        categoria: datosVenta.categoria || productoActual.categoria,
+        imagenUrl: datosVenta.imagenUrl || productoActual.imagenUrl || null,
+        esLote: true,
+        itemsComprados: itemsVendidos.map((i) => ({
+          id: i.id,
+          nombre: i.nombre,
+          precio: Number(i.precio),
+        })),
+        nombreCliente: datosVenta.nombreCliente || "Sin asignar",
+        emailCliente: datosVenta.emailCliente || "",
+        uid: datosVenta.uid || null,
+        precioFinal: Number(datosVenta.precioFinal) || precioTotal,
+        notas: datosVenta.notas || "",
+        asignadoPorAdmin: true,
+        fechaVenta: serverTimestamp(),
+      });
+    }
+  };
 
   const apartarItemsLote = (id, nombre, itemsSeleccionados) => {
     const productoActual = productos.value.find((p) => p.id === id);
@@ -205,6 +291,7 @@ export function useProductos() {
     liberarProducto,
     liberarItemsLote,
     marcarVendido,
+    marcarItemsLoteVendidos,
     apartarItemsLote,
   };
 }
