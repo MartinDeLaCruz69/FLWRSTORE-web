@@ -390,7 +390,7 @@
                 <button
                   v-if="modalProd.estado !== 'vendido'"
                   class="btn-admin-action btn-vendido"
-                  @click="accionRapida('vendido', modalProd)"
+                  @click="abrirModalVenta(modalProd)"
                 >
                   ✅ Marcar vendido
                 </button>
@@ -1875,9 +1875,9 @@ const confirmarVenta = async () => {
 let scrollY = 0;
 
 watch(
-  [modalProd, apartarProd, fotoFullscreen, adminPanelOpen],
+  [modalProd, apartarProd, fotoFullscreen, adminPanelOpen, modalVenta],
   ([modal, apartar, fullscreen, panel]) => {
-    const hayModal = modal || apartar || fullscreen;
+    const hayModal = modal || apartar || fullscreen || modalVenta.value;
 
     if (hayModal) {
       scrollY = window.scrollY;
