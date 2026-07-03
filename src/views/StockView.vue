@@ -1106,6 +1106,164 @@
       </button>
     </div>
 
+    <!-- ══ MODAL MARCAR VENDIDO ══ -->
+    <Transition name="modal">
+      <div
+        v-if="modalVenta"
+        class="modal-backdrop"
+        @click.self="modalVenta = null"
+      >
+        <div class="modal-card modal-card--apartar">
+          <button class="modal-close" @click="modalVenta = null">✕</button>
+
+          <div class="apartar-header">
+            <span>💚</span>
+            <div>
+              <h3>Registrar venta</h3>
+              <p>{{ modalVenta.nombre }} · {{ modalVenta.grupo }}</p>
+            </div>
+          </div>
+
+          <!-- Items del lote a marcar vendidos -->
+          <div
+            v-if="modalVenta.esLote && modalVenta.items?.length"
+            class="lote-selector"
+          >
+            <div class="lote-selector__header">
+              <p class="lote-selector__titulo">Items vendidos en este lote:</p>
+              <div
+                class="lote-selector__acciones"
+                v-if="itemsVentaDisponibles.length > 1"
+              >
+                <button
+                  type="button"
+                  class="lote-sel-btn"
+                  @click="seleccionarTodosVenta"
+                >
+                  Todos ✅
+                </button>
+                <button
+                  type="button"
+                  class="lote-sel-btn lote-sel-btn--clear"
+                  @click="itemsVentaSeleccionados = []"
+                  v-if="itemsVentaSeleccionados.length > 0"
+                >
+                  Limpiar ✕
+                </button>
+              </div>
+            </div>
+
+            <div class="lote-selector__items">
+              <!-- Items disponibles o apartados (se pueden vender) -->
+              <label
+                v-for="item in itemsVentaDisponibles"
+                :key="item.id"
+                class="lote-item-check"
+                :class="{ selected: itemsVentaSeleccionados.includes(item.id) }"
+              >
+                <input
+                  type="checkbox"
+                  :value="item.id"
+                  v-model="itemsVentaSeleccionados"
+                />
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio">
+                    ${{ Number(item.precio).toLocaleString() }} MXN
+                    <span
+                      v-if="item.estado === 'apartado'"
+                      style="color: #b45309; font-size: 0.7rem"
+                    >
+                      — apartado por {{ item.apartadoPor }}
+                    </span>
+                  </span>
+                </div>
+                <span class="lote-item-check__icon">
+                  {{ itemsVentaSeleccionados.includes(item.id) ? "✅" : "⬜" }}
+                </span>
+              </label>
+
+              <!-- Ya vendidos -->
+              <div
+                v-for="item in modalVenta.items.filter(
+                  (i) => i.estado === 'vendido',
+                )"
+                :key="'v-' + item.id"
+                class="lote-item-check lote-item-check--apartado"
+              >
+                <div class="lote-item-check__info">
+                  <span class="lote-item-check__nombre">{{ item.nombre }}</span>
+                  <span class="lote-item-check__precio"
+                    >${{ Number(item.precio).toLocaleString() }} MXN</span
+                  >
+                </div>
+                <span
+                  class="lote-item-check__tag"
+                  style="background: rgba(34, 197, 94, 0.12); color: #15803d"
+                >
+                  ✅ Vendido
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="lote-selector__total"
+              v-if="itemsVentaSeleccionados.length > 0"
+            >
+              <span
+                >{{ itemsVentaSeleccionados.length }} item(s)
+                seleccionado(s)</span
+              >
+              <strong>${{ totalVenta.toLocaleString() }} MXN</strong>
+            </div>
+          </div>
+
+          <!-- Datos del cliente -->
+          <div class="apartar-form" style="padding: 20px 28px 8px">
+            <label>Cliente que pagó</label>
+            <input
+              v-model="formVenta.nombreCliente"
+              placeholder="Nombre completo del cliente"
+              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+            />
+            <label style="margin-top: 12px; display: block"
+              >Precio final cobrado (MXN)</label
+            >
+            <input
+              v-model.number="formVenta.precioFinal"
+              type="number"
+              placeholder="Ej: 350"
+              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+            />
+            <label style="margin-top: 12px; display: block"
+              >Notas (opcional)</label
+            >
+            <input
+              v-model="formVenta.notas"
+              placeholder="Ej: pagó por transferencia, envío incluido..."
+              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+            />
+          </div>
+
+          <div class="apartar-actions">
+            <button class="btn-ghost-sm" @click="modalVenta = null">
+              Cancelar
+            </button>
+            <button
+              class="btn-apartar btn-apartar--lg"
+              style="background: linear-gradient(135deg, #22c55e, #15803d)"
+              @click="confirmarVenta"
+              :disabled="
+                modalVenta.esLote && itemsVentaSeleccionados.length === 0
+              "
+            >
+              ✅ Confirmar venta
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- ══ VISOR FULLSCREEN ══ -->
     <Transition name="modal">
       <div
