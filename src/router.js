@@ -8,6 +8,7 @@ import SignUpView from "./views/SignUpView.vue";
 import MisApartadosView from "./views/MisApartadosView.vue";
 import NotFoundView from "./views/NotFoundView.vue";
 import MaintenanceView from "./views/MaintenanceView.vue";
+import VentasView from "./views/VentasView.vue";
 
 const routes = [
   { path: "/", redirect: "/home" },
@@ -20,6 +21,7 @@ const routes = [
   { path: "/mis-apartados", component: MisApartadosView },
   { path: "/maintenance", component: MaintenanceView },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
+  { path: "/Ventas", component: VentasView },
 ];
 
 const router = createRouter({

@@ -11,6 +11,7 @@ import SignUpView from "../views/SignUpView.vue";
 import MisApartadosView from "../views/MisApartadosView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import MaintenanceView from "../views/MaintenanceView.vue";
+import VentasView from "../views/VentasView.vue";
 
 const routes = [
   { path: "/", redirect: "/home" },
@@ -27,6 +28,11 @@ const routes = [
   { path: "/login", component: LoginView, meta: { soloSinSesion: true } },
   { path: "/signup", component: SignUpView, meta: { soloSinSesion: true } },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
+  {
+    path: "/Ventas",
+    component: VentasView,
+    meta: { requiereAuth: true },
+  },
 ];
 
 const router = createRouter({
