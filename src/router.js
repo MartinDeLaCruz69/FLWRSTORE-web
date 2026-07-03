@@ -12,7 +12,7 @@ import MaintenanceView from "./views/MaintenanceView.vue";
 const routes = [
   { path: "/", redirect: "/home" },
   { path: "/home", component: HomeView },
-  { path: "/stock", component: MaintenanceView },
+  { path: "/stock", component: StockView },
   { path: "/pagos", component: PagosView },
   { path: "/legal", component: LegalView },
   { path: "/login", component: LoginView },

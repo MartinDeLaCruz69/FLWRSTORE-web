@@ -1224,7 +1224,17 @@
             <input
               v-model="formVenta.nombreCliente"
               placeholder="Nombre completo del cliente"
-              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+              style="
+                display: block;
+                width: 100%;
+                margin-top: 8px;
+                padding: 12px 16px;
+                border-radius: 14px;
+                border: 1.5px solid rgba(233, 30, 140, 0.2);
+                font-family: 'DM Sans', sans-serif;
+                font-size: 0.92rem;
+                outline: none;
+              "
             />
             <label style="margin-top: 12px; display: block"
               >Precio final cobrado (MXN)</label
@@ -1233,7 +1243,17 @@
               v-model.number="formVenta.precioFinal"
               type="number"
               placeholder="Ej: 350"
-              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+              style="
+                display: block;
+                width: 100%;
+                margin-top: 8px;
+                padding: 12px 16px;
+                border-radius: 14px;
+                border: 1.5px solid rgba(233, 30, 140, 0.2);
+                font-family: 'DM Sans', sans-serif;
+                font-size: 0.92rem;
+                outline: none;
+              "
             />
             <label style="margin-top: 12px; display: block"
               >Notas (opcional)</label
@@ -1241,7 +1261,17 @@
             <input
               v-model="formVenta.notas"
               placeholder="Ej: pagó por transferencia, envío incluido..."
-              style="display:block;width:100%;margin-top:8px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(233,30,140,0.2);font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;"
+              style="
+                display: block;
+                width: 100%;
+                margin-top: 8px;
+                padding: 12px 16px;
+                border-radius: 14px;
+                border: 1.5px solid rgba(233, 30, 140, 0.2);
+                font-family: 'DM Sans', sans-serif;
+                font-size: 0.92rem;
+                outline: none;
+              "
             />
           </div>
 
@@ -1561,7 +1591,6 @@ const submitNuevo = async () => {
   if (!imagenFileNuevo.value)
     return mostrarToast("⚠️ Agrega una foto del producto.", "error");
 
-  // Calcular precio según si es lote o no
   let precioFinal = Number(formNuevo.value.precio);
 
   if (formNuevo.value.esLote) {
@@ -1579,7 +1608,6 @@ const submitNuevo = async () => {
       (a, i) => a + Number(i.precio),
       0,
     );
-    // Si no pusieron precio general, usa el total del lote
     if (!precioFinal || precioFinal <= 0) precioFinal = precioLote;
   } else {
     if (!precioFinal || precioFinal <= 0)
@@ -1651,7 +1679,6 @@ const submitEditar = async () => {
   }
   if (!prodEditando.value) return;
 
-  // Validar lote
   if (formEditar.value.esLote) {
     if (
       formEditar.value.items.length === 0 ||
@@ -1777,6 +1804,70 @@ const accionRapida = async (accion, prod) => {
   } catch (e) {
     console.error(e);
     mostrarToast("⚠️ Error. Intenta de nuevo.", "error");
+  }
+};
+
+// ── Modal de venta ────────────────────────────────────────────
+const { marcarItemsLoteVendidos } = useProductos();
+
+const modalVenta = ref(null);
+const itemsVentaSeleccionados = ref([]);
+const formVenta = ref({ nombreCliente: "", precioFinal: "", notas: "" });
+
+const itemsVentaDisponibles = computed(() => {
+  if (!modalVenta.value?.esLote) return [];
+  return modalVenta.value.items?.filter((i) => i.estado !== "vendido") || [];
+});
+
+const totalVenta = computed(() => {
+  if (!modalVenta.value?.esLote) return 0;
+  return (modalVenta.value.items || [])
+    .filter((i) => itemsVentaSeleccionados.value.includes(i.id))
+    .reduce((a, i) => a + Number(i.precio), 0);
+});
+
+const seleccionarTodosVenta = () => {
+  itemsVentaSeleccionados.value = itemsVentaDisponibles.value.map((i) => i.id);
+};
+
+const abrirModalVenta = (prod) => {
+  modalVenta.value = prod;
+  modalProd.value = null;
+  itemsVentaSeleccionados.value = [];
+  formVenta.value = {
+    nombreCliente: prod.apartadoPor || "",
+    precioFinal: prod.precio || "",
+    notas: "",
+  };
+};
+
+const confirmarVenta = async () => {
+  try {
+    const datosVenta = {
+      nombreProducto: modalVenta.value.nombre,
+      grupo: modalVenta.value.grupo,
+      categoria: modalVenta.value.categoria,
+      imagenUrl: modalVenta.value.imagenUrl,
+      nombreCliente: formVenta.value.nombreCliente || "Sin asignar",
+      precioFinal: formVenta.value.precioFinal || 0,
+      notas: formVenta.value.notas,
+    };
+
+    if (modalVenta.value.esLote) {
+      await marcarItemsLoteVendidos(
+        modalVenta.value.id,
+        itemsVentaSeleccionados.value,
+        datosVenta,
+      );
+    } else {
+      await marcarVendido(modalVenta.value.id, datosVenta);
+    }
+
+    mostrarToast("✅ Venta registrada correctamente.", "success");
+    modalVenta.value = null;
+  } catch (e) {
+    console.error(e);
+    mostrarToast("⚠️ Error al registrar la venta.", "error");
   }
 };
 
