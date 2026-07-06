@@ -1,25 +1,24 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { auth, db } from "../firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase";
 
-import HomeView from "../views/HomeView.vue";
-import StockView from "../views/StockView.vue";
-import LegalView from "../views/LegalView.vue";
-import PagosView from "../views/PagosView.vue";
-import LoginView from "../views/LoginView.vue";
-import SignUpView from "../views/SignUpView.vue";
+import HomeView        from "../views/HomeView.vue";
+import StockView       from "../views/StockView.vue";
+import LegalView       from "../views/LegalView.vue";
+import PagosView       from "../views/PagosView.vue";
+import LoginView       from "../views/LoginView.vue";
+import SignUpView      from "../views/SignUpView.vue";
 import MisApartadosView from "../views/MisApartadosView.vue";
-import NotFoundView from "../views/NotFoundView.vue";
+import VentasView      from "../views/VentasView.vue";
+import NotFoundView    from "../views/NotFoundView.vue";
 import MaintenanceView from "../views/MaintenanceView.vue";
-import VentasView from "../views/VentasView.vue";
 
 const routes = [
-  { path: "/", redirect: "/home" },
-  { path: "/home", component: HomeView },
-  { path: "/stock", component: StockView },
-  { path: "/pagos", component: PagosView },
-  { path: "/legal", component: LegalView },
-  { path: "/maintenance", component: MaintenanceView },
+  { path: "/",             redirect: "/home" },
+  { path: "/home",         component: HomeView },
+  { path: "/stock",        component: StockView },
+  { path: "/pagos",        component: PagosView },
+  { path: "/legal",        component: LegalView },
+  { path: "/maintenance",  component: MaintenanceView },
   {
     path: "/mis-apartados",
     component: MisApartadosView,
@@ -31,11 +30,11 @@ const routes = [
     meta: { requiereAuth: true },
   },
   {
-    path: "/Ventas",
+    path: "/ventas",        
     component: VentasView,
     meta: { requiereAuth: true },
   },
-  { path: "/login", component: LoginView, meta: { soloSinSesion: true } },
+  { path: "/login",  component: LoginView,  meta: { soloSinSesion: true } },
   { path: "/signup", component: SignUpView, meta: { soloSinSesion: true } },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
 ];
@@ -46,14 +45,24 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0, behavior: "smooth" }),
 });
 
-router.beforeEach((to, from, next) => {
-  const usuario = auth.currentUser;
-  if (to.meta.soloSinSesion && usuario) {
-    return next("/home");
-  }
-  if (to.meta.requiereAuth && !usuario) {
-    return next("/login");
-  }
+// ── Guard con espera a Firebase Auth ─────────────────────────
+let authListo = false;
+
+const esperarAuth = () =>
+  new Promise((resolve) => {
+    if (authListo) return resolve(auth.currentUser);
+    const unsub = auth.onAuthStateChanged((user) => {
+      authListo = true;
+      unsub();
+      resolve(user);
+    });
+  });
+
+router.beforeEach(async (to, from, next) => {
+  const usuario = await esperarAuth();
+
+  if (to.meta.soloSinSesion && usuario) return next("/home");
+  if (to.meta.requiereAuth  && !usuario) return next("/login");
   next();
 });
 
