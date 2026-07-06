@@ -16,9 +16,13 @@
 
       <div class="navbar__actions">
         <template v-if="usuarioActual">
-          <router-link to="/mis-apartados" class="navbar__user">
-            👋 {{ nombreCorto }}
-          </router-link>
+          <div class="navbar__user-menu">
+            <span class="navbar__user">👋 {{ nombreCorto }}</span>
+            <div class="navbar__dropdown">
+              <router-link to="/mis-apartados">⏳ Mis apartados</router-link>
+              <router-link to="/mis-compras">💖 Mis compras</router-link>
+            </div>
+          </div>
           <button class="btn-ghost" @click="cerrarSesion">Cerrar sesión</button>
         </template>
         <template v-else>
@@ -72,6 +76,13 @@
             @click="menuOpen = false"
           >
             ⏳ Mis apartados
+          </router-link>
+          <router-link
+            to="/mis-compras"
+            class="navbar__mobile-apartados"
+            @click="menuOpen = false"
+          >
+            💖 Mis compras
           </router-link>
           <button class="navbar__mobile-logout" @click="cerrarSesionMobile">
             🚪 Cerrar sesión
@@ -561,5 +572,46 @@ onUnmounted(() => {
     max-width: none;
     text-align: center;
   }
+}
+
+.navbar__user-menu {
+  position: relative;
+}
+.navbar__user {
+  cursor: pointer;
+  user-select: none;
+}
+.navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border: 1.5px solid rgba(233, 30, 140, 0.15);
+  border-radius: 16px;
+  padding: 8px;
+  min-width: 180px;
+  box-shadow: 0 12px 40px rgba(233, 30, 140, 0.15);
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 200;
+}
+.navbar__user-menu:hover .navbar__dropdown {
+  display: flex;
+}
+.navbar__dropdown a {
+  text-decoration: none;
+  color: #3d1a26;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.navbar__dropdown a:hover,
+.navbar__dropdown a.router-link-active {
+  background: rgba(233, 30, 140, 0.08);
+  color: #e91e8c;
 }
 </style>

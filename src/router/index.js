@@ -25,14 +25,19 @@ const routes = [
     component: MisApartadosView,
     meta: { requiereAuth: true },
   },
-  { path: "/login", component: LoginView, meta: { soloSinSesion: true } },
-  { path: "/signup", component: SignUpView, meta: { soloSinSesion: true } },
-  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
+  {
+    path: "/mis-compras",
+    component: VentasView,
+    meta: { requiereAuth: true },
+  },
   {
     path: "/Ventas",
     component: VentasView,
     meta: { requiereAuth: true },
   },
+  { path: "/login", component: LoginView, meta: { soloSinSesion: true } },
+  { path: "/signup", component: SignUpView, meta: { soloSinSesion: true } },
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
 ];
 
 const router = createRouter({

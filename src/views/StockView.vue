@@ -1474,9 +1474,14 @@ const confirmarApartado = async () => {
         apartarProd.value.id,
         nombre,
         itemsSeleccionados.value,
+        usuarioActual.value?.uid || null,
       );
     } else {
-      await apartarProducto(apartarProd.value.id, nombre);
+      await apartarProducto(
+        apartarProd.value.id,
+        nombre,
+        usuarioActual.value?.uid || null,
+      );
     }
 
     const resumen = apartarProd.value.esLote

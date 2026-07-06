@@ -237,6 +237,11 @@ export function useProductos() {
         nombreCliente: datosVenta.nombreCliente || "Sin asignar",
         emailCliente: datosVenta.emailCliente || "",
         uid: datosVenta.uid || itemsVendidos[0]?.apartadoPorUid || null,
+        uid: datosVenta.uid || productoActual.apartadoPorUid || null,
+        uid:
+          datosVenta.uid ||
+          productos.value.find((p) => p.id === id)?.apartadoPorUid ||
+          null,
         precioFinal: Number(datosVenta.precioFinal) || precioTotal,
         notas: datosVenta.notas || "",
         asignadoPorAdmin: true,

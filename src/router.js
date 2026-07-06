@@ -19,9 +19,10 @@ const routes = [
   { path: "/login", component: LoginView },
   { path: "/signup", component: SignUpView },
   { path: "/mis-apartados", component: MisApartadosView },
+  { path: "/mis-compras", component: VentasView },
+  { path: "/Ventas", component: VentasView },
   { path: "/maintenance", component: MaintenanceView },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundView },
-  { path: "/Ventas", component: VentasView },
 ];
 
 const router = createRouter({
