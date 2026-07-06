@@ -71,6 +71,7 @@ export function useProductos() {
       imagenPath,
       apartadoPor: null,
       fechaApartado: null,
+      apartadoPorUid: null,
       fechaCreacion: serverTimestamp(),
     });
   };
@@ -117,10 +118,11 @@ export function useProductos() {
     return deleteDoc(doc(db, "productos", id));
   };
 
-  const apartarProducto = (id, nombre) =>
+  const apartarProducto = (id, nombre, uid = null) =>
     updateDoc(doc(db, "productos", id), {
       estado: "apartado",
       apartadoPor: nombre,
+      apartadoPorUid: uid,
       fechaApartado: serverTimestamp(),
     });
 
@@ -142,12 +144,14 @@ export function useProductos() {
       precio: Number(item.precio) || 0,
       estado: "disponible",
       apartadoPor: null,
+      apartadoPorUid: null,
       fechaApartado: null,
     }));
     return updateDoc(doc(db, "productos", id), {
       items: itemsLiberados,
       estado: "disponible",
       apartadoPor: null,
+      apartadoPorUid: null,
       fechaApartado: null,
     });
   };
@@ -232,7 +236,7 @@ export function useProductos() {
         })),
         nombreCliente: datosVenta.nombreCliente || "Sin asignar",
         emailCliente: datosVenta.emailCliente || "",
-        uid: datosVenta.uid || null,
+        uid: datosVenta.uid || itemsVendidos[0]?.apartadoPorUid || null,
         precioFinal: Number(datosVenta.precioFinal) || precioTotal,
         notas: datosVenta.notas || "",
         asignadoPorAdmin: true,
@@ -241,7 +245,7 @@ export function useProductos() {
     }
   };
 
-  const apartarItemsLote = (id, nombre, itemsSeleccionados) => {
+  const apartarItemsLote = (id, nombre, itemsSeleccionados, uid = null) => {
     const productoActual = productos.value.find((p) => p.id === id);
     if (!productoActual)
       return Promise.reject(new Error("Producto no encontrado"));
@@ -256,6 +260,7 @@ export function useProductos() {
         precio: Number(item.precio) || 0,
         estado: esteSeleccionado ? "apartado" : item.estado || "disponible",
         apartadoPor: esteSeleccionado ? nombre : item.apartadoPor || null,
+        apartadoPorUid: esteSeleccionado ? uid : item.apartadoPorUid || null,
         fechaApartado: esteSeleccionado
           ? new Date().toISOString()
           : item.fechaApartado || null,
@@ -277,21 +282,22 @@ export function useProductos() {
           ? "parcial"
           : "disponible",
       apartadoPor: todosApartados ? nombre : null,
+      apartadoPorUid: todosApartados ? uid : null,
       fechaApartado: serverTimestamp(),
     });
-  };
 
-  return {
-    productos,
-    cargando,
-    agregarProducto,
-    editarProducto,
-    eliminarProducto,
-    apartarProducto,
-    liberarProducto,
-    liberarItemsLote,
-    marcarVendido,
-    marcarItemsLoteVendidos,
-    apartarItemsLote,
+    return {
+      productos,
+      cargando,
+      agregarProducto,
+      editarProducto,
+      eliminarProducto,
+      apartarProducto,
+      liberarProducto,
+      liberarItemsLote,
+      marcarVendido,
+      marcarItemsLoteVendidos,
+      apartarItemsLote,
+    };
   };
 }
