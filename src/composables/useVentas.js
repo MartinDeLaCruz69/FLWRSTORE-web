@@ -1,4 +1,4 @@
-import { ref, onUnmounted } from "vue";
+import { ref, watch, isRef, onUnmounted } from "vue";
 import { db } from "../firebase";
 import {
   collection,
@@ -17,30 +17,47 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
   const ventas = ref([]);
   const cargando = ref(true);
 
-  const q =
-    soloMias && uid
-      ? query(
-          collection(db, "ventas"),
-          where("uid", "==", uid),
-          orderBy("fechaVenta", "desc"),
-        )
-      : query(collection(db, "ventas"), orderBy("fechaVenta", "desc"));
+  let unsub = () => {};
 
-  const unsub = onSnapshot(
-    q,
-    (snap) => {
-      ventas.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      cargando.value = false;
-    },
-    (err) => {
-      console.error("useVentas error:", err);
-      cargando.value = false;
-    },
-  );
+  const iniciarQuery = (uidReal) => {
+    unsub();
+
+    const q =
+      soloMias && uidReal
+        ? query(
+            collection(db, "ventas"),
+            where("uid", "==", uidReal),
+            orderBy("fechaVenta", "desc"),
+          )
+        : query(collection(db, "ventas"), orderBy("fechaVenta", "desc"));
+
+    unsub = onSnapshot(
+      q,
+      (snap) => {
+        ventas.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        cargando.value = false;
+      },
+      (err) => {
+        console.error("useVentas error:", err);
+        cargando.value = false;
+      },
+    );
+  };
+
+  if (isRef(uid)) {
+    watch(
+      uid,
+      (val) => {
+        if (val) iniciarQuery(val);
+      },
+      { immediate: true },
+    );
+  } else {
+    iniciarQuery(uid);
+  }
 
   onUnmounted(() => unsub());
 
-  // ── Registrar venta (admin asigna manualmente o se llama al marcar vendido) ──
   const registrarVenta = async (datos) => {
     return addDoc(collection(db, "ventas"), {
       uid: datos.uid || null,
@@ -60,13 +77,9 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
     });
   };
 
-  // ── Editar notas o datos de una venta (solo admin) ──
   const editarVenta = async (id, cambios) => {
-    return updateDoc(doc(db, "ventas", id), {
-      ...cambios,
-      fechaVenta: undefined,
-      uid: undefined,
-    });
+    const { fechaVenta, uid: _uid, productoId, ...camposPermitidos } = cambios;
+    return updateDoc(doc(db, "ventas", id), camposPermitidos);
   };
 
   const eliminarVenta = async (id) => {

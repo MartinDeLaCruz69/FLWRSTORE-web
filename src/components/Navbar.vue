@@ -631,16 +631,20 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 2px;
   z-index: 200;
-  display: none;
+  display: flex;
+  visibility: hidden;
   opacity: 0;
+  pointer-events: none;
   transform: translateY(-6px);
   transition:
     opacity 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    visibility 0.2s ease;
 }
 .navbar__dropdown.visible {
-  display: flex;
+  visibility: visible;
   opacity: 1;
+  pointer-events: all;
   transform: translateY(0);
 }
 .navbar__user-arrow {
@@ -651,9 +655,6 @@ onUnmounted(() => {
 }
 .navbar__user-arrow.open {
   transform: rotate(180deg);
-}
-.navbar__user-menu:hover .navbar__dropdown {
-  display: flex;
 }
 .navbar__dropdown a {
   text-decoration: none;

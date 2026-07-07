@@ -1104,6 +1104,14 @@
       >
         <span class="fab-admin__icon">{{ adminPanelOpen ? "✕" : "🛠️" }}</span>
       </button>
+      <!-- BOTÓN TEMPORAL DE MIGRACIÓN - BORRAR DESPUÉS -->
+<button
+  v-if="esAdmin"
+  @click="migrarVentas"
+  style="position:fixed;bottom:100px;right:24px;z-index:999;background:#e91e8c;color:#fff;border:none;padding:12px 20px;border-radius:50px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(233,30,140,0.4);"
+>
+  🛠️ Migrar ventas
+</button>
     </div>
 
     <!-- ══ MODAL MARCAR VENDIDO ══ -->
@@ -1313,11 +1321,19 @@
 
 <script setup>
 import { ref, computed, watch, onUnmounted } from "vue";
-import { rolActual } from "../composables/useAuth";
+import { rolActual, usuarioActual } from "../composables/useAuth";
 import { useProductos } from "../composables/useProductos";
-import { usuarioActual } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 import confetti from "canvas-confetti";
+import { db } from "../firebase";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const fotoFullscreen = ref(null);
 
@@ -1334,10 +1350,11 @@ const {
   editarProducto,
   eliminarProducto,
   apartarProducto,
+  apartarItemsLote,
   liberarProducto,
   liberarItemsLote,
   marcarVendido,
-  apartarItemsLote,
+  marcarItemsLoteVendidos,
 } = useProductos();
 
 // ── Catálogos ────────────────────────────────────────────────
@@ -1812,9 +1829,6 @@ const accionRapida = async (accion, prod) => {
   }
 };
 
-// ── Modal de venta ────────────────────────────────────────────
-const { marcarItemsLoteVendidos } = useProductos();
-
 const modalVenta = ref(null);
 const itemsVentaSeleccionados = ref([]);
 const formVenta = ref({ nombreCliente: "", precioFinal: "", notas: "" });
@@ -1903,6 +1917,48 @@ watch(
 onUnmounted(() => {
   document.body.style.overflow = "";
 });
+
+const migrarVentas = async () => {
+  if (!confirm("¿Migrar todos los productos vendidos a la colección ventas?")) return;
+  
+  const { collection, getDocs, addDoc, query, where } = await import("firebase/firestore");
+  const snap = await getDocs(
+    query(collection(db, "productos"), where("estado", "==", "vendido"))
+  );
+  
+  console.log(`Productos vendidos: ${snap.size}`);
+  let creados = 0;
+  let sinDueño = 0;
+
+  for (const d of snap.docs) {
+    const p = d.data();
+    await addDoc(collection(db, "ventas"), {
+      productoId:       d.id,
+      nombreProducto:   p.nombre || "Sin nombre",
+      grupo:            p.grupo || "",
+      categoria:        p.categoria || "",
+      imagenUrl:        p.imagenUrl || null,
+      esLote:           p.esLote || false,
+      itemsComprados:   p.esLote && p.items
+                          ? p.items.map(i => ({ id: i.id, nombre: i.nombre, precio: Number(i.precio) }))
+                          : null,
+      nombreCliente:    p.apartadoPor || "Sin asignar",
+      emailCliente:     "",
+      uid:              p.apartadoPorUid || null,
+      precioFinal:      Number(p.precio) || 0,
+      notas:            "Migrado automáticamente",
+      asignadoPorAdmin: true,
+      fechaVenta:       serverTimestamp(),
+    });
+    creados++;
+    if (!p.apartadoPor) sinDueño++;
+    console.log(`✅ ${p.nombre} → ${p.apartadoPor || "⚠️ SIN DUEÑO"}`);
+  }
+
+  mostrarToast(`✅ ${creados} ventas migradas. Sin dueño: ${sinDueño}`, "success");
+  console.log(`Migración completa: ${creados} creadas, ${sinDueño} sin dueño`);
+};
+
 </script>
 
 <style scoped>

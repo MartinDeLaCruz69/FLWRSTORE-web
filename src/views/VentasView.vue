@@ -293,7 +293,7 @@ const esAdmin = computed(
 const uid = computed(() => usuarioActual.value?.uid || null);
 
 const ventasAdmin = useVentas({ soloMias: false });
-const ventasCliente = useVentas({ soloMias: true, uid: uid.value });
+const ventasCliente = useVentas({ soloMias: true, uid });
 
 const ventas = computed(() =>
   esAdmin.value ? ventasAdmin.ventas.value : ventasCliente.ventas.value,
@@ -467,7 +467,7 @@ watch(modalEditar, (val) => {
 /* ══ HERO ══════════════════════════════════════════════════ */
 .page-hero {
   position: relative;
-  padding: 120px 5vw 70px;
+  padding: 84px 5vw 40px;
   text-align: center;
   overflow: hidden;
 }
@@ -1084,7 +1084,7 @@ watch(modalEditar, (val) => {
 /* ══ RESPONSIVE ════════════════════════════════════════════ */
 @media (max-width: 768px) {
   .page-hero {
-    padding: 80px 16px 40px;
+    padding: 74px 16px 28px;
   }
   .page-hero h1 {
     font-size: clamp(1.8rem, 7vw, 2.8rem);
