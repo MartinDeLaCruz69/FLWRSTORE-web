@@ -70,8 +70,8 @@
 
     <!-- ══ CONTENIDO ══ -->
     <div class="ventas-content">
-      <!-- Cargando -->
-      <div v-if="cargando" class="loading-state">
+      <!-- Cargando auth o ventas -->
+      <div v-if="!listoPararender || cargando" class="loading-state">
         <div class="loading-spinner"></div>
         <p>Cargando {{ esAdmin ? "ventas" : "tus compras" }}... 🌸</p>
       </div>
@@ -86,7 +86,7 @@
           {{
             esAdmin
               ? "Cuando marques un producto como vendido aparecerá aquí."
-              : "Cuando confirmes un pago con el equipo de FLWRSTORE, tu compra aparecerá aquí."
+              : "Cuando confirmes un pago con el equipo de FLWRSTORE, tu compra aparecerá aquí. Si ya compraste algo, el equipo puede asignarlo a tu cuenta desde el historial admin."
           }}
         </p>
         <router-link v-if="!esAdmin" to="/stock" class="btn-primary">
@@ -301,6 +301,7 @@ const ventas = computed(() =>
 const cargando = computed(() =>
   esAdmin.value ? ventasAdmin.cargando.value : ventasCliente.cargando.value,
 );
+const listoPararender = computed(() => !authCargando.value);
 
 const { editarVenta, eliminarVenta } = ventasAdmin;
 
@@ -322,7 +323,7 @@ const filtrosTipo = [
   { val: "todos", label: "Todos" },
   { val: "producto", label: "🎁 Productos" },
   { val: "lote", label: "📦 Lotes" },
-  { val: "admin", label: "🛠️ Asignados" },
+  { val: "sinAsignar", label: "⚠️ Sin asignar" },
 ];
 
 const ventasFiltradas = computed(() => {
@@ -330,8 +331,8 @@ const ventasFiltradas = computed(() => {
 
   if (filtroTipo.value === "producto") lista = lista.filter((v) => !v.esLote);
   if (filtroTipo.value === "lote") lista = lista.filter((v) => v.esLote);
-  if (filtroTipo.value === "admin")
-    lista = lista.filter((v) => v.asignadoPorAdmin);
+  if (filtroTipo.value === "sinAsignar")
+    lista = lista.filter((v) => v.nombreCliente === "Sin asignar");
 
   if (busqueda.value.trim()) {
     const b = busqueda.value.toLowerCase().trim();
