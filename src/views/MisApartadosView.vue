@@ -324,7 +324,7 @@ const timerClass = (fechaApartado) => {
 
 // ── WhatsApp ─────────────────────────────────────────────────
 const generarMensajeWhatsApp = (prod) => {
-  const nombre = nombreUsuario.value || "Cliente";
+  const nombre = usuarioActual.value?.displayName || "Cliente";
   let detalleProductos = "";
 
   if (prod.misItems) {
