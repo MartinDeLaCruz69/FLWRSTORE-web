@@ -327,7 +327,7 @@ const filtrosTipo = [
 ];
 
 const ventasFiltradas = computed(() => {
-  let lista = ventas.value;
+  let lista = ventas.value.filter((v) => !v.eliminada);
 
   if (filtroTipo.value === "producto") lista = lista.filter((v) => !v.esLote);
   if (filtroTipo.value === "lote") lista = lista.filter((v) => v.esLote);

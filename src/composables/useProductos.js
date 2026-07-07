@@ -130,6 +130,7 @@ export function useProductos() {
     updateDoc(doc(db, "productos", id), {
       estado: "disponible",
       apartadoPor: null,
+      apartadoPorUid: null,
       fechaApartado: null,
     });
 
