@@ -10,6 +10,8 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  getDocs,
+  where,
 } from "firebase/firestore";
 import {
   ref as storageRef,
@@ -94,6 +96,47 @@ export function useProductos() {
       } else {
         updates.precioAnterior = null;
       }
+
+      const estadoAnterior = productoActual.estado;
+      const estadoNuevo = datos.estado;
+
+      if (estadoNuevo === "disponible" && estadoAnterior !== "disponible") {
+        updates.apartadoPor = null;
+        updates.apartadoPorUid = null;
+        updates.fechaApartado = null;
+        updates.precioAnterior = null;
+
+        if (estadoAnterior === "vendido") {
+          try {
+            const ventasSnap = await getDocs(
+              query(collection(db, "ventas"), where("productoId", "==", id)),
+            );
+            for (const ventaDoc of ventasSnap.docs) {
+              const data = ventaDoc.data();
+              if (!data.eliminada) {
+                await updateDoc(doc(db, "ventas", ventaDoc.id), {
+                  eliminada: true,
+                  eliminadaEn: serverTimestamp(),
+                  motivoEliminacion:
+                    "Estado cambiado a disponible desde panel de edición",
+                });
+              }
+            }
+          } catch (e) {
+            console.warn("No se pudieron limpiar ventas al editar:", e);
+          }
+        }
+
+        if (productoActual.esLote && productoActual.items?.length) {
+          updates.items = productoActual.items.map((item) => ({
+            ...item,
+            estado: "disponible",
+            apartadoPor: null,
+            apartadoPorUid: null,
+            fechaApartado: null,
+          }));
+        }
+      }
     }
 
     if (imagenFile) {
@@ -106,6 +149,7 @@ export function useProductos() {
         } catch (_) {}
       }
     }
+
     return updateDoc(doc(db, "productos", id), updates);
   };
 
@@ -126,19 +170,44 @@ export function useProductos() {
       fechaApartado: serverTimestamp(),
     });
 
-  const liberarProducto = (id) =>
-    updateDoc(doc(db, "productos", id), {
+  const liberarProducto = async (id) => {
+    const productoActual = productos.value.find((p) => p.id === id);
+
+    const eraVendido = productoActual?.estado === "vendido";
+
+    await updateDoc(doc(db, "productos", id), {
       estado: "disponible",
       apartadoPor: null,
       apartadoPorUid: null,
       fechaApartado: null,
+      ...(eraVendido ? { precioAnterior: null } : {}),
     });
 
-  const liberarItemsLote = (id) => {
+    try {
+      const ventasSnap = await getDocs(
+        query(collection(db, "ventas"), where("productoId", "==", id)),
+      );
+      for (const ventaDoc of ventasSnap.docs) {
+        const data = ventaDoc.data();
+        if (!data.eliminada) {
+          await updateDoc(doc(db, "ventas", ventaDoc.id), {
+            eliminada: true,
+            eliminadaEn: serverTimestamp(),
+            motivoEliminacion: "Producto regresado a disponible por admin",
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("No se pudo limpiar venta asociada:", e);
+    }
+  };
+
+  const liberarItemsLote = async (id) => {
     const productoActual = productos.value.find((p) => p.id === id);
     if (!productoActual?.items?.length) {
       return liberarProducto(id);
     }
+
     const itemsLiberados = productoActual.items.map((item) => ({
       id: String(item.id),
       nombre: item.nombre || "",
@@ -148,13 +217,35 @@ export function useProductos() {
       apartadoPorUid: null,
       fechaApartado: null,
     }));
-    return updateDoc(doc(db, "productos", id), {
+
+    const eraVendido = productoActual?.estado === "vendido";
+
+    await updateDoc(doc(db, "productos", id), {
       items: itemsLiberados,
       estado: "disponible",
       apartadoPor: null,
       apartadoPorUid: null,
       fechaApartado: null,
+      ...(eraVendido ? { precioAnterior: null } : {}),
     });
+
+    try {
+      const ventasSnap = await getDocs(
+        query(collection(db, "ventas"), where("productoId", "==", id)),
+      );
+      for (const ventaDoc of ventasSnap.docs) {
+        const data = ventaDoc.data();
+        if (!data.eliminada) {
+          await updateDoc(doc(db, "ventas", ventaDoc.id), {
+            eliminada: true,
+            eliminadaEn: serverTimestamp(),
+            motivoEliminacion: "Lote regresado a disponible por admin",
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("No se pudo limpiar venta del lote:", e);
+    }
   };
 
   const marcarVendido = async (id, datosVenta = null) => {

@@ -48,12 +48,24 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
     watch(
       uid,
       (val) => {
-        if (val) iniciarQuery(val);
+        if (val) {
+          iniciarQuery(val);
+        } else if (!soloMias) {
+          iniciarQuery(null);
+        } else {
+          unsub();
+          ventas.value = [];
+          cargando.value = false;
+        }
       },
       { immediate: true },
     );
   } else {
-    iniciarQuery(uid);
+    if (uid || !soloMias) {
+      iniciarQuery(uid);
+    } else {
+      cargando.value = false;
+    }
   }
 
   onUnmounted(() => unsub());
