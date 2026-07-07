@@ -17,10 +17,27 @@
       <div class="navbar__actions">
         <template v-if="usuarioActual">
           <div class="navbar__user-menu">
-            <span class="navbar__user">👋 {{ nombreCorto }}</span>
-            <div class="navbar__dropdown">
-              <router-link to="/mis-apartados">⏳ Mis apartados</router-link>
-              <router-link to="/mis-compras">💖 Mis compras</router-link>
+            <span class="navbar__user" @click="toggleDropdown">
+              👋 {{ nombreCorto }}
+              <span class="navbar__user-arrow" :class="{ open: dropdownOpen }"
+                >▾</span
+              >
+            </span>
+            <div class="navbar__dropdown" :class="{ visible: dropdownOpen }">
+              <router-link to="/mis-apartados" @click="dropdownOpen = false">
+                ⏳ Mis apartados
+              </router-link>
+              <router-link to="/mis-compras" @click="dropdownOpen = false">
+                💖 Mis compras
+              </router-link>
+              <template
+                v-if="rolActual === 'admin' || rolActual === 'subadmin'"
+              >
+                <div class="navbar__dropdown-divider"></div>
+                <router-link to="/ventas" @click="dropdownOpen = false">
+                  🛠️ Historial admin
+                </router-link>
+              </template>
             </div>
           </div>
           <button class="btn-ghost" @click="cerrarSesion">Cerrar sesión</button>
@@ -84,6 +101,14 @@
           >
             💖 Mis compras
           </router-link>
+          <router-link
+            v-if="rolActual === 'admin' || rolActual === 'subadmin'"
+            to="/ventas"
+            class="navbar__mobile-apartados"
+            @click="menuOpen = false"
+          >
+            🛠️ Historial admin
+          </router-link>
           <button class="navbar__mobile-logout" @click="cerrarSesionMobile">
             🚪 Cerrar sesión
           </button>
@@ -116,7 +141,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
-import { usuarioActual, logout } from "../composables/useAuth";
+import { usuarioActual, rolActual, logout } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -127,8 +152,6 @@ const nombreCorto = computed(() => {
   if (!usuarioActual.value) return "";
   const nombre =
     usuarioActual.value.displayName || usuarioActual.value.email || "";
-  if (!usuarioActual.value.displayName && nombre.includes("@"))
-    return nombre.split("@")[0];
   return nombre.split(" ")[0];
 });
 
@@ -178,13 +201,27 @@ watch(
   { immediate: false },
 );
 
+const dropdownOpen = ref(false);
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+const cerrarDropdown = (e) => {
+  if (!e.target.closest(".navbar__user-menu")) {
+    dropdownOpen.value = false;
+  }
+};
+
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
   window.addEventListener("resize", handleResize);
+  document.addEventListener("click", cerrarDropdown);
 });
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
   window.removeEventListener("resize", handleResize);
+  document.removeEventListener("click", cerrarDropdown);
 });
 </script>
 
@@ -591,10 +628,29 @@ onUnmounted(() => {
   padding: 8px;
   min-width: 180px;
   box-shadow: 0 12px 40px rgba(233, 30, 140, 0.15);
-  display: none;
   flex-direction: column;
   gap: 2px;
   z-index: 200;
+  display: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.navbar__dropdown.visible {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbar__user-arrow {
+  font-size: 0.7rem;
+  margin-left: 3px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.navbar__user-arrow.open {
+  transform: rotate(180deg);
 }
 .navbar__user-menu:hover .navbar__dropdown {
   display: flex;
@@ -613,5 +669,10 @@ onUnmounted(() => {
 .navbar__dropdown a.router-link-active {
   background: rgba(233, 30, 140, 0.08);
   color: #e91e8c;
+}
+.navbar__dropdown-divider {
+  height: 1px;
+  background: rgba(233, 30, 140, 0.1);
+  margin: 4px 0;
 }
 </style>
