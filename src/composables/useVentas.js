@@ -77,16 +77,17 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
     });
   };
 
+  const editarVenta = async (id, cambios) => {
+    const { fechaVenta, uid: _uid, productoId, ...camposPermitidos } = cambios;
+    return updateDoc(doc(db, "ventas", id), camposPermitidos);
+  };
+
   const eliminarVenta = async (id, motivo = "") => {
     return updateDoc(doc(db, "ventas", id), {
       eliminada: true,
       eliminadaEn: serverTimestamp(),
       motivoEliminacion: motivo || "Eliminada por admin",
     });
-  };
-
-  const eliminarVenta = async (id) => {
-    return deleteDoc(doc(db, "ventas", id));
   };
 
   return {
