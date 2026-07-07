@@ -239,22 +239,20 @@ onUnmounted(() => {
 });
 
 // ── Filtrar y transformar para el usuario actual ──────────────
-const nombreUsuario = computed(
-  () =>
-    usuarioActual.value?.displayName ||
-    usuarioActual.value?.email?.split("@")[0] ||
-    "",
-);
+const uidUsuario = computed(() => usuarioActual.value?.uid || null);
 
 const misApartados = computed(() => {
-  if (!nombreUsuario.value) return [];
+  if (!uidUsuario.value) return [];
 
   const resultado = [];
 
   for (const prod of productosRaw.value) {
     if (prod.esLote && prod.items?.length) {
       const misItems = prod.items.filter(
-        (i) => i.estado === "apartado" && i.apartadoPor === nombreUsuario.value,
+        (i) =>
+          i.estado === "apartado" &&
+          (i.apartadoPorUid === uidUsuario.value ||
+            i.apartadoPor === usuarioActual.value?.displayName),
       );
       if (misItems.length > 0) {
         const fechaItem = misItems[0].fechaApartado || prod.fechaApartado;
@@ -265,7 +263,10 @@ const misApartados = computed(() => {
           fechaApartado: fechaItem,
         });
       }
-    } else if (prod.apartadoPor === nombreUsuario.value) {
+    } else if (
+      prod.apartadoPorUid === uidUsuario.value ||
+      prod.apartadoPor === usuarioActual.value?.displayName
+    ) {
       resultado.push({
         ...prod,
         misItems: null,
