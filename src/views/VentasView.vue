@@ -22,7 +22,7 @@
         <!-- Stats solo admin -->
         <div v-if="esAdmin && !cargando" class="hero-stats">
           <div class="hero-stat">
-            <strong>{{ ventas.length }}</strong>
+            <strong>{{ ventasActivas.length }}</strong>
             <span>Ventas</span>
           </div>
           <div class="hero-stat-div"></div>
@@ -349,12 +349,19 @@ const ventasFiltradas = computed(() => {
 });
 
 // ── Stats admin ──────────────────────────────────────────────
+const ventasActivas = computed(() => ventas.value.filter((v) => !v.eliminada));
+
 const totalIngresos = computed(() =>
-  ventas.value.reduce((a, v) => a + Number(v.precioFinal || 0), 0),
+  ventasActivas.value.reduce((a, v) => a + Number(v.precioFinal || 0), 0),
 );
 
 const clientesUnicos = computed(
-  () => new Set(ventas.value.map((v) => v.nombreCliente).filter(Boolean)).size,
+  () =>
+    new Set(
+      ventasActivas.value
+        .map((v) => v.nombreCliente)
+        .filter((n) => n && n !== "Sin asignar"),
+    ).size,
 );
 
 // ── Formatear fecha ──────────────────────────────────────────
