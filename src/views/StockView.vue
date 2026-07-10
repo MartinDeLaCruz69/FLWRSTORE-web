@@ -159,13 +159,14 @@
                   <span class="overlay-text">Ver detalle</span>
                 </div>
               </div>
-              <!-- Shimmer apartado/vendido -->
+              <!-- Shimmer apartado/vendido/parcial -->
               <div
                 v-if="prod.estado !== 'disponible'"
                 class="product-card__veil"
               >
                 <span v-if="prod.estado === 'apartado'">⏳ Apartado</span>
                 <span v-if="prod.estado === 'vendido'">✅ Vendido</span>
+                <span v-if="prod.estado === 'parcial'">💭 Parcial</span>
               </div>
             </div>
 
@@ -352,6 +353,12 @@
                       class="lote-estado-tag lote-estado-tag--disponible"
                     >
                       🟢 Disponible
+                    </span>
+                    <span
+                      v-else-if="item.estado === 'vendido'"
+                      class="lote-estado-tag lote-estado-tag--vendido"
+                    >
+                      🔴 Vendido
                     </span>
                     <span
                       v-else
@@ -1363,11 +1370,7 @@ const productosFiltrados = computed(() =>
       p.categoria === categoriaActiva.value;
 
     const matchEst =
-      estadoFiltro.value === "todos"
-        ? true
-        : estadoFiltro.value === "apartado"
-          ? p.estado === "apartado" || p.estado === "parcial"
-          : p.estado === estadoFiltro.value;
+      estadoFiltro.value === "todos" || p.estado === estadoFiltro.value;
 
     const matchSearch =
       !busqueda.value ||
@@ -2343,9 +2346,12 @@ onUnmounted(() => {
   letter-spacing: 1px;
 }
 .product-card--apartado .product-card__veil {
-  background: rgba(245, 158, 11, 0.45);
+  background: rgba(0, 0, 0, 0.35);
 }
 .product-card--vendido .product-card__veil {
+  background: rgba(0, 0, 0, 0.35);
+}
+.product-card--parcial .product-card__veil {
   background: rgba(0, 0, 0, 0.35);
 }
 
@@ -2409,12 +2415,11 @@ onUnmounted(() => {
   width: 100%;
   justify-content: center;
 }
-.footer-tag {
-  font-size: 0.75rem;
-  font-weight: 500;
-}
 .footer-tag--apartado {
-  color: #b45309;
+  color: var(--pink-deep);
+}
+.footer-tag--parcial {
+  color: var(--pink-deep);
 }
 .footer-tag--vendido {
   color: var(--pink-deep);
@@ -3994,6 +3999,11 @@ onUnmounted(() => {
 .lote-estado-tag--disponible {
   background: rgba(34, 197, 94, 0.1);
   color: #15803d;
+}
+.lote-estado-tag--vendido {
+  background: rgba(197, 34, 34, 0.12);
+  color: #801515;
+  border: 1px solid rgba(197, 34, 34, 0.25);
 }
 .lote-estado-tag--apartado {
   background: rgba(245, 158, 11, 0.12);

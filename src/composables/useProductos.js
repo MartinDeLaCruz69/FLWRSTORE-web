@@ -304,26 +304,30 @@ export function useProductos() {
     const todosVendidos = itemsActualizados.every(
       (i) => i.estado === "vendido",
     );
-    const algunoDisponible = itemsActualizados.some(
+    const algunoDisponibleV = itemsActualizados.some(
       (i) => i.estado === "disponible",
     );
-    const algunoApartado = itemsActualizados.some(
+    const algunoApartadoV = itemsActualizados.some(
       (i) => i.estado === "apartado",
     );
+    const algunoVendidoV = itemsActualizados.some(
+      (i) => i.estado === "vendido",
+    );
 
-    const algunoVendido = itemsActualizados.some((i) => i.estado === "vendido");
-
-    const nuevoEstado = todosVendidos
-      ? "vendido"
-      : algunoDisponible && algunoApartado
-        ? "parcial"
-        : algunoDisponible
-          ? "disponible"
-          : algunoApartado && algunoVendido
-            ? "parcial"
-            : algunoApartado
-              ? "apartado"
-              : "vendido";
+    let nuevoEstado;
+    if (todosVendidos) {
+      nuevoEstado = "vendido";
+    } else if (!algunoDisponibleV && !algunoApartadoV) {
+      nuevoEstado = "vendido";
+    } else if (algunoApartadoV && !algunoDisponibleV && !algunoVendidoV) {
+      nuevoEstado = "apartado";
+    } else if (algunoApartadoV) {
+      nuevoEstado = "parcial";
+    } else if (algunoVendidoV && algunoDisponibleV) {
+      nuevoEstado = "parcial";
+    } else {
+      nuevoEstado = "disponible";
+    }
 
     await updateDoc(doc(db, "productos", id), {
       items: itemsActualizados,
@@ -384,20 +388,33 @@ export function useProductos() {
       };
     });
 
-    const todosApartados = itemsActualizados.every(
-      (i) => i.estado !== "disponible",
+    const algunoDisponible = itemsActualizados.some(
+      (i) => i.estado === "disponible",
     );
     const algunoApartado = itemsActualizados.some(
       (i) => i.estado === "apartado",
     );
+    const algunoVendido = itemsActualizados.some((i) => i.estado === "vendido");
+    const todosNoDisponibles = !algunoDisponible;
+
+    let nuevoEstadoLote;
+    if (!algunoDisponible && !algunoApartado) {
+      nuevoEstadoLote = "vendido";
+    } else if (algunoApartado && !algunoDisponible && !algunoVendido) {
+      nuevoEstadoLote = "apartado";
+    } else if (algunoApartado) {
+      nuevoEstadoLote = "parcial";
+    } else if (algunoVendido && algunoDisponible) {
+      nuevoEstadoLote = "parcial";
+    } else {
+      nuevoEstadoLote = "disponible";
+    }
+
+    const todosApartados = nuevoEstadoLote === "apartado";
 
     return updateDoc(doc(db, "productos", id), {
       items: itemsActualizados,
-      estado: todosApartados
-        ? "apartado"
-        : algunoApartado
-          ? "parcial"
-          : "disponible",
+      estado: nuevoEstadoLote,
       apartadoPor: todosApartados ? nombre : null,
       apartadoPorUid: todosApartados ? uid : null,
       fechaApartado: serverTimestamp(),
