@@ -1219,59 +1219,25 @@
           </div>
 
           <!-- Datos del cliente -->
-          <div class="apartar-form" style="padding: 20px 28px 8px">
+          <div class="apartar-form venta-form-body">
             <label>Cliente que pagó</label>
             <input
               v-model="formVenta.nombreCliente"
               placeholder="Nombre completo del cliente"
-              style="
-                display: block;
-                width: 100%;
-                margin-top: 8px;
-                padding: 12px 16px;
-                border-radius: 14px;
-                border: 1.5px solid rgba(233, 30, 140, 0.2);
-                font-family: 'DM Sans', sans-serif;
-                font-size: 0.92rem;
-                outline: none;
-              "
+              class="venta-form-input"
             />
-            <label style="margin-top: 12px; display: block"
-              >Precio final cobrado (MXN)</label
-            >
+            <label class="venta-form-label">Precio final cobrado (MXN)</label>
             <input
               v-model.number="formVenta.precioFinal"
               type="number"
               placeholder="Ej: 350"
-              style="
-                display: block;
-                width: 100%;
-                margin-top: 8px;
-                padding: 12px 16px;
-                border-radius: 14px;
-                border: 1.5px solid rgba(233, 30, 140, 0.2);
-                font-family: 'DM Sans', sans-serif;
-                font-size: 0.92rem;
-                outline: none;
-              "
+              class="venta-form-input"
             />
-            <label style="margin-top: 12px; display: block"
-              >Notas (opcional)</label
-            >
+            <label class="venta-form-label">Notas (opcional)</label>
             <input
               v-model="formVenta.notas"
               placeholder="Ej: pagó por transferencia, envío incluido..."
-              style="
-                display: block;
-                width: 100%;
-                margin-top: 8px;
-                padding: 12px 16px;
-                border-radius: 14px;
-                border: 1.5px solid rgba(233, 30, 140, 0.2);
-                font-family: 'DM Sans', sans-serif;
-                font-size: 0.92rem;
-                outline: none;
-              "
+              class="venta-form-input"
             />
           </div>
 
@@ -1395,12 +1361,19 @@ const productosFiltrados = computed(() =>
     const matchCat =
       categoriaActiva.value === "Todos" ||
       p.categoria === categoriaActiva.value;
+
     const matchEst =
-      estadoFiltro.value === "todos" || p.estado === estadoFiltro.value;
+      estadoFiltro.value === "todos"
+        ? true
+        : estadoFiltro.value === "apartado"
+          ? p.estado === "apartado" || p.estado === "parcial"
+          : p.estado === estadoFiltro.value;
+
     const matchSearch =
       !busqueda.value ||
       p.nombre?.toLowerCase().includes(busqueda.value.toLowerCase()) ||
       p.grupo?.toLowerCase().includes(busqueda.value.toLowerCase());
+
     return matchCat && matchEst && matchSearch;
   }),
 );
@@ -1827,7 +1800,7 @@ const formVenta = ref({ nombreCliente: "", precioFinal: "", notas: "" });
 
 const itemsVentaDisponibles = computed(() => {
   if (!modalVenta.value?.esLote) return [];
-  return modalVenta.value.items?.filter((i) => i.estado !== "vendido") || [];
+  return (modalVenta.value.items || []).filter((i) => i.estado !== "vendido");
 });
 
 const totalVenta = computed(() => {
@@ -1845,8 +1818,15 @@ const abrirModalVenta = (prod) => {
   modalVenta.value = prod;
   modalProd.value = null;
   itemsVentaSeleccionados.value = [];
+
+  let nombrePreLlenado = prod.apartadoPor || "";
+  if (prod.esLote && prod.items?.length && !nombrePreLlenado) {
+    const itemApartado = prod.items.find((i) => i.estado === "apartado");
+    nombrePreLlenado = itemApartado?.apartadoPor || "";
+  }
+
   formVenta.value = {
-    nombreCliente: prod.apartadoPor || "",
+    nombreCliente: nombrePreLlenado,
     precioFinal: prod.precio || "",
     notas: "",
   };
@@ -1910,7 +1890,6 @@ watch(
 onUnmounted(() => {
   document.body.style.overflow = "";
 });
-
 </script>
 
 <style scoped>
@@ -4033,5 +4012,33 @@ onUnmounted(() => {
 }
 .field-hint--warning {
   color: #b45309;
+}
+
+/* ── Modal venta inputs ── */
+.venta-form-input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(233, 30, 140, 0.2);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.92rem;
+  outline: none;
+  box-sizing: border-box;
+}
+.venta-form-input:focus {
+  border-color: #e91e8c;
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.08);
+}
+.venta-form-label {
+  margin-top: 12px;
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+}
+.venta-form-body {
+  padding: 20px 28px 8px;
 }
 </style>

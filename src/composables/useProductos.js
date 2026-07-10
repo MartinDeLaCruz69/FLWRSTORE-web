@@ -128,13 +128,15 @@ export function useProductos() {
         }
 
         if (productoActual.esLote && productoActual.items?.length) {
-          updates.items = productoActual.items.map((item) => ({
-            ...item,
-            estado: "disponible",
-            apartadoPor: null,
-            apartadoPorUid: null,
-            fechaApartado: null,
-          }));
+          if (estadoAnterior === "vendido") {
+            updates.items = productoActual.items.map((item) => ({
+              ...item,
+              estado: "disponible",
+              apartadoPor: null,
+              apartadoPorUid: null,
+              fechaApartado: null,
+            }));
+          }
         }
       }
     }
@@ -147,6 +149,22 @@ export function useProductos() {
         try {
           await deleteObject(storageRef(storage, imagenPathVieja));
         } catch (_) {}
+      }
+    }
+
+    if (
+      updates.estado === "parcial" &&
+      productoActual?.esLote &&
+      productoActual.items?.length
+    ) {
+      const tieneApartados = productoActual.items.some(
+        (i) => i.estado === "apartado",
+      );
+      const tieneDisponibles = productoActual.items.some(
+        (i) => i.estado === "disponible",
+      );
+      if (!tieneApartados) {
+        updates.estado = tieneDisponibles ? "disponible" : "vendido";
       }
     }
 
@@ -212,17 +230,20 @@ export function useProductos() {
       id: String(item.id),
       nombre: item.nombre || "",
       precio: Number(item.precio) || 0,
-      estado: "disponible",
-      apartadoPor: null,
-      apartadoPorUid: null,
-      fechaApartado: null,
+      estado: item.estado === "vendido" ? "vendido" : "disponible",
+      apartadoPor: item.estado === "vendido" ? item.apartadoPor : null,
+      apartadoPorUid: item.estado === "vendido" ? item.apartadoPorUid : null,
+      fechaApartado: item.estado === "vendido" ? item.fechaApartado : null,
     }));
+
+    const quedanVendidos = itemsLiberados.some((i) => i.estado === "vendido");
+    const estadoLote = quedanVendidos ? "parcial" : "disponible";
 
     const eraVendido = productoActual?.estado === "vendido";
 
     await updateDoc(doc(db, "productos", id), {
       items: itemsLiberados,
-      estado: "disponible",
+      estado: estadoLote,
       apartadoPor: null,
       apartadoPorUid: null,
       fechaApartado: null,
@@ -290,15 +311,19 @@ export function useProductos() {
       (i) => i.estado === "apartado",
     );
 
+    const algunoVendido = itemsActualizados.some((i) => i.estado === "vendido");
+
     const nuevoEstado = todosVendidos
       ? "vendido"
-      : algunoDisponible
-        ? algunoApartado
-          ? "parcial"
-          : "disponible"
-        : algunoApartado
-          ? "apartado"
-          : "vendido";
+      : algunoDisponible && algunoApartado
+        ? "parcial"
+        : algunoDisponible
+          ? "disponible"
+          : algunoApartado && algunoVendido
+            ? "parcial"
+            : algunoApartado
+              ? "apartado"
+              : "vendido";
 
     await updateDoc(doc(db, "productos", id), {
       items: itemsActualizados,
