@@ -292,18 +292,15 @@ const esAdmin = computed(
 // ── Instancia de useVentas según rol ─────────────────────────
 const uid = computed(() => usuarioActual.value?.uid || null);
 
-const ventasAdmin = useVentas({ soloMias: false });
-const ventasCliente = useVentas({ soloMias: true, uid });
+const instancia = esAdmin.value
+  ? useVentas({ soloMias: false })
+  : useVentas({ soloMias: true, uid });
 
-const ventas = computed(() =>
-  esAdmin.value ? ventasAdmin.ventas.value : ventasCliente.ventas.value,
-);
-const cargando = computed(() =>
-  esAdmin.value ? ventasAdmin.cargando.value : ventasCliente.cargando.value,
-);
+const ventas = computed(() => instancia.ventas.value);
+const cargando = computed(() => instancia.cargando.value);
+const { editarVenta, eliminarVenta } = instancia;
+
 const listoPararender = computed(() => !authCargando.value);
-
-const { editarVenta, eliminarVenta } = ventasAdmin;
 
 // ── Catálogo emojis ──────────────────────────────────────────
 const catEmoji = {

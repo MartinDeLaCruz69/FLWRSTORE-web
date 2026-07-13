@@ -105,7 +105,6 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
   return {
     ventas,
     cargando,
-    registrarVenta,
     editarVenta,
     eliminarVenta,
   };

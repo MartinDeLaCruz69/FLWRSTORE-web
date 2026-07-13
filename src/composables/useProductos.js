@@ -68,7 +68,7 @@ export function useProductos() {
 
     return addDoc(collection(db, "productos"), {
       ...datos,
-      precio: Number(datos.precio),
+      precio: Math.max(0, Number(datos.precio) || 0),
       imagenUrl,
       imagenPath,
       apartadoPor: null,
@@ -85,7 +85,7 @@ export function useProductos() {
     imagenPathVieja,
     onProgress,
   ) => {
-    let updates = { ...datos, precio: Number(datos.precio) };
+    let updates = { ...datos, precio: Math.max(0, Number(datos.precio) || 0) };
 
     const productoActual = productos.value.find((p) => p.id === id);
     if (productoActual) {
@@ -395,7 +395,6 @@ export function useProductos() {
       (i) => i.estado === "apartado",
     );
     const algunoVendido = itemsActualizados.some((i) => i.estado === "vendido");
-    const todosNoDisponibles = !algunoDisponible;
 
     let nuevoEstadoLote;
     if (!algunoDisponible && !algunoApartado) {
