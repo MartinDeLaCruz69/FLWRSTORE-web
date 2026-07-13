@@ -292,13 +292,18 @@ const esAdmin = computed(
 // ── Instancia de useVentas según rol ─────────────────────────
 const uid = computed(() => usuarioActual.value?.uid || null);
 
-const instancia = esAdmin.value
-  ? useVentas({ soloMias: false })
-  : useVentas({ soloMias: true, uid });
+const instanciaAdmin = useVentas({ soloMias: false });
+const instanciaCliente = useVentas({ soloMias: true, uid });
 
-const ventas = computed(() => instancia.ventas.value);
-const cargando = computed(() => instancia.cargando.value);
-const { editarVenta, eliminarVenta } = instancia;
+const ventas = computed(() =>
+  esAdmin.value ? instanciaAdmin.ventas.value : instanciaCliente.ventas.value,
+);
+const cargando = computed(() =>
+  esAdmin.value
+    ? instanciaAdmin.cargando.value
+    : instanciaCliente.cargando.value,
+);
+const { editarVenta, eliminarVenta } = instanciaAdmin;
 
 const listoPararender = computed(() => !authCargando.value);
 

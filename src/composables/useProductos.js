@@ -201,22 +201,24 @@ export function useProductos() {
       ...(eraVendido ? { precioAnterior: null } : {}),
     });
 
-    try {
-      const ventasSnap = await getDocs(
-        query(collection(db, "ventas"), where("productoId", "==", id)),
-      );
-      for (const ventaDoc of ventasSnap.docs) {
-        const data = ventaDoc.data();
-        if (!data.eliminada) {
-          await updateDoc(doc(db, "ventas", ventaDoc.id), {
-            eliminada: true,
-            eliminadaEn: serverTimestamp(),
-            motivoEliminacion: "Producto regresado a disponible por admin",
-          });
+    if (eraVendido) {
+      try {
+        const ventasSnap = await getDocs(
+          query(collection(db, "ventas"), where("productoId", "==", id)),
+        );
+        for (const ventaDoc of ventasSnap.docs) {
+          const data = ventaDoc.data();
+          if (!data.eliminada) {
+            await updateDoc(doc(db, "ventas", ventaDoc.id), {
+              eliminada: true,
+              eliminadaEn: serverTimestamp(),
+              motivoEliminacion: "Producto regresado a disponible por admin",
+            });
+          }
         }
+      } catch (e) {
+        console.warn("No se pudo limpiar venta asociada:", e);
       }
-    } catch (e) {
-      console.warn("No se pudo limpiar venta asociada:", e);
     }
   };
 
@@ -250,22 +252,24 @@ export function useProductos() {
       ...(eraVendido ? { precioAnterior: null } : {}),
     });
 
-    try {
-      const ventasSnap = await getDocs(
-        query(collection(db, "ventas"), where("productoId", "==", id)),
-      );
-      for (const ventaDoc of ventasSnap.docs) {
-        const data = ventaDoc.data();
-        if (!data.eliminada) {
-          await updateDoc(doc(db, "ventas", ventaDoc.id), {
-            eliminada: true,
-            eliminadaEn: serverTimestamp(),
-            motivoEliminacion: "Lote regresado a disponible por admin",
-          });
+    if (eraVendido) {
+      try {
+        const ventasSnap = await getDocs(
+          query(collection(db, "ventas"), where("productoId", "==", id)),
+        );
+        for (const ventaDoc of ventasSnap.docs) {
+          const data = ventaDoc.data();
+          if (!data.eliminada) {
+            await updateDoc(doc(db, "ventas", ventaDoc.id), {
+              eliminada: true,
+              eliminadaEn: serverTimestamp(),
+              motivoEliminacion: "Lote regresado a disponible por admin",
+            });
+          }
         }
+      } catch (e) {
+        console.warn("No se pudo limpiar venta asociada:", e);
       }
-    } catch (e) {
-      console.warn("No se pudo limpiar venta del lote:", e);
     }
   };
 

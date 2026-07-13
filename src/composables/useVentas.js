@@ -3,9 +3,7 @@ import { db } from "../firebase";
 import {
   collection,
   onSnapshot,
-  addDoc,
   updateDoc,
-  deleteDoc,
   doc,
   serverTimestamp,
   query,
@@ -69,25 +67,6 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
   }
 
   onUnmounted(() => unsub());
-
-  const registrarVenta = async (datos) => {
-    return addDoc(collection(db, "ventas"), {
-      uid: datos.uid || null,
-      nombreCliente: datos.nombreCliente || "Desconocido",
-      emailCliente: datos.emailCliente || "",
-      productoId: datos.productoId,
-      nombreProducto: datos.nombreProducto,
-      grupo: datos.grupo || "",
-      categoria: datos.categoria || "",
-      imagenUrl: datos.imagenUrl || null,
-      esLote: datos.esLote || false,
-      itemsComprados: datos.itemsComprados || null,
-      precioFinal: Number(datos.precioFinal) || 0,
-      notas: datos.notas || "",
-      asignadoPorAdmin: datos.asignadoPorAdmin || false,
-      fechaVenta: serverTimestamp(),
-    });
-  };
 
   const editarVenta = async (id, cambios) => {
     const { fechaVenta, uid: _uid, productoId, ...camposPermitidos } = cambios;
