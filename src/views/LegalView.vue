@@ -153,9 +153,11 @@
           <div class="policy-item">
             <span>✅</span>
             <p>
-              El apartado queda confirmado <strong>únicamente</strong> cuando la
-              administradora lo confirma por WhatsApp oficial. Un apartado en la
-              plataforma no garantiza el producto sin esta confirmación.
+              El apartado en la plataforma reserva el producto a tu nombre
+              durante 24 horas. La venta queda
+              <strong>oficialmente confirmada</strong>
+              únicamente cuando se valida el pago a través del canal de WhatsApp
+              y la administradora lo registra en el sistema.
             </p>
           </div>
           <div class="policy-item">
@@ -376,6 +378,14 @@
               Esta plataforma no utiliza cookies de rastreo ni publicidad de
               terceros. Solo se usan cookies técnicas necesarias para el
               funcionamiento de la sesión.
+            </p>
+          </div>
+          <div class="policy-item">
+            <span>🧾</span>
+            <p>
+              El historial de compras registrado en la plataforma es de uso
+              exclusivo del cliente titular de la cuenta y del equipo de
+              FLWRSTORE. No es visible para otros usuarios.
             </p>
           </div>
           <div class="policy__highlight">
