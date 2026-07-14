@@ -239,7 +239,15 @@ export function useProductos() {
     }));
 
     const quedanVendidos = itemsLiberados.some((i) => i.estado === "vendido");
-    const estadoLote = quedanVendidos ? "parcial" : "disponible";
+    const quedanDisponibles = itemsLiberados.some(
+      (i) => i.estado === "disponible",
+    );
+    const estadoLote =
+      !quedanDisponibles && quedanVendidos
+        ? "vendido"
+        : quedanVendidos
+          ? "parcial"
+          : "disponible";
 
     const eraVendido = productoActual?.estado === "vendido";
 
@@ -339,7 +347,7 @@ export function useProductos() {
     });
 
     if (datosVenta) {
-      const itemsVendidos = productoActual.items.filter((i) =>
+      const itemsVendidos = itemsActualizados.filter((i) =>
         itemIds.includes(String(i.id)),
       );
       const precioTotal = itemsVendidos.reduce(
