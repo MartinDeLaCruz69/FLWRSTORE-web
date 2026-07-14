@@ -481,7 +481,7 @@
             <p>
               La versión vigente siempre estará disponible en esta página.
               <br />
-              La fecha de última actualización es: <strong>Junio 2026</strong>.
+              La fecha de última actualización es: <strong>Julio 2026</strong>.
             </p>
           </div>
           <div class="policy-item">

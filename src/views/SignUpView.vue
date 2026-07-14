@@ -309,14 +309,7 @@
             </svg>
             Continuar con Google
           </span>
-          <span
-            v-else
-            class="spinner"
-            style="
-              border-top-color: #e91e8c;
-              border-color: rgba(233, 30, 140, 0.2);
-            "
-          ></span>
+          <span v-else class="spinner spinner--pink"></span>
         </button>
 
         <p class="form-footer">
@@ -349,7 +342,6 @@ const handleGoogleLogin = async () => {
         "Tu navegador bloqueó el popup. Permite ventanas emergentes.",
     };
     globalError.value = mensajes[e.code] || "Error al continuar con Google.";
-    isLoadingGoogle.value = false;
   } finally {
     isLoadingGoogle.value = false;
   }
@@ -1023,6 +1015,10 @@ const petalStyle = (i) => ({
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
+}
+.spinner--pink {
+  border-top-color: #e91e8c;
+  border-color: rgba(233, 30, 140, 0.2);
 }
 
 .global-error {

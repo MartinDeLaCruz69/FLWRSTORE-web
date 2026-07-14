@@ -710,8 +710,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
-import { usuarioActual } from "../composables/useAuth";
-import { rolActual } from "../composables/useAuth";
+import { usuarioActual, rolActual } from "../composables/useAuth";
 import { useComentarios } from "../composables/useComentarios";
 import { useTestimonios } from "../composables/useTestimonios";
 

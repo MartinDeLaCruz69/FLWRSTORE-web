@@ -124,8 +124,12 @@
 
           <!-- Error global -->
           <Transition name="err">
-            <div v-if="globalError" class="global-error">
-              ⚠️ {{ globalError }}
+            <div
+              v-if="globalError"
+              class="global-error"
+              :class="{ 'global-error--success': globalError.startsWith('✅') }"
+            >
+              {{ globalError }}
             </div>
           </Transition>
 
@@ -178,14 +182,7 @@
             </svg>
             Continuar con Google
           </span>
-          <span
-            v-else
-            class="spinner"
-            style="
-              border-top-color: #e91e8c;
-              border-color: rgba(233, 30, 140, 0.2);
-            "
-          ></span>
+          <span v-else class="spinner spinner--pink"></span>
         </button>
 
         <!-- Footer -->
@@ -279,8 +276,8 @@ const forgotPassword = async () => {
   }
   try {
     await recuperarPassword(form.email);
-    globalError.value = "";
-    alert("✅ Te enviamos un correo para recuperar tu contraseña 🌸");
+    globalError.value =
+      "✅ Te enviamos un correo para recuperar tu contraseña 🌸";
   } catch (e) {
     globalError.value = "No encontramos una cuenta con ese correo.";
   }
@@ -692,6 +689,11 @@ const petalStyle = (i) => ({
   font-size: 0.85rem;
   line-height: 1.5;
 }
+.global-error--success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #15803d;
+}
 
 /* ── Botón submit ──────────────────────────────────────────── */
 .btn-submit {
@@ -732,6 +734,10 @@ const petalStyle = (i) => ({
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
+}
+.spinner--pink {
+  border-top-color: #e91e8c;
+  border-color: rgba(233, 30, 140, 0.2);
 }
 
 /* ── Divider ───────────────────────────────────────────────── */
