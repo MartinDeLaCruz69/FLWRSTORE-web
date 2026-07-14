@@ -143,34 +143,39 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 const steps = [
   {
-    icon: "📱",
-    title: "Únete al canal",
-    desc: "Entra al canal de WhatsApp oficial para ver el stock disponible en tiempo real.",
+    icon: "🔑",
+    title: "Crea tu cuenta",
+    desc: "Regístrate gratis en flwrstore.com.mx con tu nombre y correo. Solo toma un minuto.",
   },
   {
     icon: "🌸",
-    title: "Elige tu producto",
-    desc: "Escoge el álbum, photocard, peluche o artículo que quieras y dile a la administradora.",
+    title: "Explora el stock",
+    desc: "Navega el catálogo en tiempo real. Filtra por categoría, grupo o estado del producto.",
   },
   {
     icon: "📌",
-    title: "Aparta en el sitio",
-    desc: "El producto queda apartado a tu nombre. Tienes 24 horas para completar el pago.",
+    title: "Aparta tu producto",
+    desc: "Dale clic en 'Quiero apartar' y queda reservado a tu nombre. Tienes 24 horas para completar el pago.",
+  },
+  {
+    icon: "💬",
+    title: "Coordina por WhatsApp",
+    desc: "Escríbenos al canal oficial para confirmar tu apartado y recibir los datos de pago.",
   },
   {
     icon: "💳",
     title: "Realiza tu pago",
-    desc: "Transfiere por SPEI o deposita en OXXO con los datos que te enviaremos por WhatsApp.",
+    desc: "Transfiere por SPEI o deposita en OXXO con los datos que te enviamos. También aceptamos efectivo presencial.",
   },
   {
     icon: "📸",
     title: "Envía tu comprobante",
-    desc: "Manda el comprobante de pago al canal. Confirmamos tu pedido en menos de una hora (en horario de atención).",
+    desc: "Manda la captura de tu pago por WhatsApp. Confirmamos en menos de 2 horas hábiles.",
   },
   {
     icon: "📦",
-    title: "¡Listo! Tu pedido en camino",
-    desc: "Coordinamos la entrega o envío según tu ubicación. ¡Tu merch K-pop ya es tuyo! 🌸",
+    title: "¡Listo! Coordina tu entrega",
+    desc: "Acordamos entrega personal, envío local o nacional según tu ubicación. ¡Tu merch ya es tuyo! 🌸",
   },
 ];
 
