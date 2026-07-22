@@ -5,7 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
- 
+
 node_modules
 node_modules/.cache
 
@@ -33,5 +33,9 @@ ui-debug.log
 *.sw?
 
 .DS_Store
-Thumbs.db.agents/
+Thumbs.db
+
+.agents/
 skills-lock.json
+
+.vite/
