@@ -98,10 +98,25 @@
       <div class="stock-main__inner">
         <!-- Sin resultados -->
         <div v-if="productosFiltrados.length === 0" class="empty-state">
-          <span>🌸</span>
-          <h3>No encontramos productos</h3>
-          <p>Prueba con otra categoría o búsqueda</p>
-          <button class="btn-ghost-sm" @click="resetFiltros">
+          <span class="empty-state__icon">
+            {{ estadoFiltro === "vendido" ? "🔍" : "🌸" }}
+          </span>
+          <h3>
+            {{
+              estadoFiltro === "vendido"
+                ? "No hay productos vendidos aún"
+                : "No encontramos productos"
+            }}
+          </h3>
+          <p>
+            {{
+              estadoFiltro === "vendido"
+                ? "Cuando se confirme una venta aparecerá aquí."
+                : "Prueba con otra categoría o búsqueda"
+            }}
+          </p>
+          <br>
+          <button class="btn-limpiar" @click="resetFiltros">
             Limpiar filtros
           </button>
         </div>
@@ -1370,7 +1385,9 @@ const productosFiltrados = computed(() =>
       p.categoria === categoriaActiva.value;
 
     const matchEst =
-      estadoFiltro.value === "todos" || p.estado === estadoFiltro.value;
+      estadoFiltro.value === "todos"
+        ? p.estado !== "vendido"
+        : p.estado === estadoFiltro.value;
 
     const matchSearch =
       !busqueda.value ||
@@ -4050,5 +4067,19 @@ onUnmounted(() => {
 }
 .venta-form-body {
   padding: 20px 28px 8px;
+}
+
+.btn-limpiar {
+  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 4px 14px rgba(233, 30, 140, 0.28);
 }
 </style>
