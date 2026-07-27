@@ -200,9 +200,16 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect } from "vue";
-import { updateDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  updateDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { usuarioActual, authCargando } from "../composables/useAuth";
 
 const notificaciones = ref(false);
