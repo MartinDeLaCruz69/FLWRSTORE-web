@@ -53,6 +53,7 @@ export const registrar = async (nombre, email, password) => {
     nombre,
     email,
     rol: "cliente",
+    notificaciones: false,
     creadoEn: new Date(),
   });
   await user.reload();
@@ -86,6 +87,7 @@ export const loginConGoogle = async () => {
       nombre: user.displayName || "",
       email: user.email,
       rol: "cliente",
+      notificaciones: false,
       creadoEn: new Date(),
     });
   }

@@ -172,15 +172,51 @@
           <p>Métodos aceptados: Transferencia SPEI y depósito OXXO.</p>
         </div>
       </div>
+      <!-- Toggle notificaciones -->
+      <div class="notif-toggle-card">
+        <div class="notif-toggle__info">
+          <span>🔔</span>
+          <div>
+            <h4>Notificaciones de nuevo stock</h4>
+            <p>Recibe un email cuando se agregue un nuevo producto.</p>
+          </div>
+        </div>
+        <button
+          class="notif-toggle__btn"
+          :class="{ active: notificaciones }"
+          @click="toggleNotificaciones"
+        >
+          {{ notificaciones ? "Activadas ✅" : "Desactivadas" }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect } from "vue";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { usuarioActual, authCargando } from "../composables/useAuth";
+
+const notificaciones = ref(false);
+
+watchEffect(async () => {
+  if (!usuarioActual.value?.uid) return;
+  const snap = await getDoc(doc(db, "usuarios", usuarioActual.value.uid));
+  if (snap.exists()) {
+    notificaciones.value = snap.data().notificaciones || false;
+  }
+});
+
+const toggleNotificaciones = async () => {
+  if (!usuarioActual.value?.uid) return;
+  notificaciones.value = !notificaciones.value;
+  await updateDoc(doc(db, "usuarios", usuarioActual.value.uid), {
+    notificaciones: notificaciones.value,
+  });
+};
 
 const cargando = ref(true);
 const productosRaw = ref([]);
@@ -879,5 +915,56 @@ const generarMensajeWhatsApp = (prod) => {
   border-radius: 50px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+.notif-toggle-card {
+  max-width: 600px;
+  margin: 32px auto 0;
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1.5px solid rgba(233, 30, 140, 0.12);
+  box-shadow: 0 4px 16px rgba(233, 30, 140, 0.07);
+}
+.notif-toggle__info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.notif-toggle__info span {
+  font-size: 1.8rem;
+}
+.notif-toggle__info h4 {
+  font-family: "Playfair Display", serif;
+  font-size: 1rem;
+  color: #1a1a1a;
+  margin: 0 0 3px;
+}
+.notif-toggle__info p {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0;
+}
+.notif-toggle__btn {
+  white-space: nowrap;
+  background: rgba(233, 30, 140, 0.07);
+  border: 1.5px solid rgba(233, 30, 140, 0.2);
+  color: #c2185b;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.notif-toggle__btn.active {
+  background: linear-gradient(135deg, #f48fb1, #e91e8c);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(233, 30, 140, 0.3);
 }
 </style>
