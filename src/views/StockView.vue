@@ -2479,6 +2479,24 @@ onUnmounted(() => {
   color: var(--text-light);
   font-size: 0.9rem;
 }
+.btn-limpiar {
+  background: transparent;
+  border: 1.5px solid rgba(233, 30, 140, 0.35);
+  color: var(--pink-deep);
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-top: 4px;
+}
+.btn-limpiar:hover {
+  background: rgba(233, 30, 140, 0.07);
+  border-color: var(--pink-deep);
+  transform: translateY(-2px);
+}
 .btn-ghost-sm {
   background: transparent;
   border: 1.5px solid var(--pink-mid);
@@ -4069,17 +4087,5 @@ onUnmounted(() => {
   padding: 20px 28px 8px;
 }
 
-.btn-limpiar {
-  background: linear-gradient(135deg, var(--pink-mid), var(--pink-accent));
-  color: #ffffff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-family: "DM Sans", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s;
-  box-shadow: 0 4px 14px rgba(233, 30, 140, 0.28);
-}
+
 </style>
