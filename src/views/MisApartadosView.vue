@@ -179,6 +179,11 @@
           <div>
             <h4>Notificaciones de nuevo stock</h4>
             <p>Recibe un email cuando se agregue un nuevo producto.</p>
+            <p>
+              <strong>Nota:</strong> Recuerda que debes tener en el botón:
+              <strong>"Activadas ✅"</strong> a la vista para recibir los
+              emails.
+            </p>
           </div>
         </div>
         <button
@@ -186,7 +191,7 @@
           :class="{ active: notificaciones }"
           @click="toggleNotificaciones"
         >
-          {{ notificaciones ? "Activadas ✅" : "Desactivadas" }}
+          {{ notificaciones ? "Activadas ✅" : "Activar notificaciones 🔕" }}
         </button>
       </div>
     </div>
@@ -966,5 +971,39 @@ const generarMensajeWhatsApp = (prod) => {
   border-color: transparent;
   color: #fff;
   box-shadow: 0 4px 14px rgba(233, 30, 140, 0.3);
+}
+/* ── Responsive móviles ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .notif-toggle-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 18px;
+    margin: 24px 16px 0;
+    gap: 18px;
+  }
+
+  .notif-toggle__info {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .notif-toggle__info span {
+    font-size: 1.6rem;
+  }
+
+  .notif-toggle__info h4 {
+    font-size: 0.95rem;
+  }
+
+  .notif-toggle__info p {
+    font-size: 0.78rem;
+  }
+
+  .notif-toggle__btn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
 }
 </style>
