@@ -4,7 +4,7 @@
     <section class="stats-hero">
       <div class="stats-hero__bg"></div>
       <div class="stats-hero__content">
-        <span class="page-tag">🛠️ Admin · Solo tú ves esto</span>
+        <span class="page-tag">🛠️ ADMIN</span>
         <h1>Tu tienda,<br /><span class="text-pink">en números</span></h1>
         <p>Historial completo + últimos 30 días</p>
 
@@ -109,14 +109,26 @@
                   <span>{{ prod.grupo }} · {{ prod.categoria }}</span>
                 </div>
                 <div class="ranking-stats">
-                  <span class="ranking-count">{{ prod.ventas }} venta{{ prod.ventas !== 1 ? "s" : "" }}</span>
-                  <span class="ranking-monto">${{ prod.ingresos.toLocaleString("es-MX") }}</span>
+                  <span class="ranking-count"
+                    >{{ prod.ventas }} venta{{
+                      prod.ventas !== 1 ? "s" : ""
+                    }}</span
+                  >
+                  <span class="ranking-monto"
+                    >${{ prod.ingresos.toLocaleString("es-MX") }}</span
+                  >
                 </div>
                 <!-- Barra de progreso relativa -->
                 <div class="ranking-bar">
                   <div
                     class="ranking-bar__fill"
-                    :style="{ width: (prod.ventas / stats.productosMasVendidos[0].ventas) * 100 + '%' }"
+                    :style="{
+                      width: stats.productosMasVendidos[0]?.ventas
+                        ? (prod.ventas / stats.productosMasVendidos[0].ventas) *
+                            100 +
+                          '%'
+                        : '0%',
+                    }"
                   ></div>
                 </div>
               </div>
@@ -127,7 +139,9 @@
           <div class="stats-card">
             <div class="stats-card__header">
               <h2>💖 Clientes frecuentes</h2>
-              <span class="stats-card__sub">Por total de compras confirmadas</span>
+              <span class="stats-card__sub"
+                >Por total de compras confirmadas</span
+              >
             </div>
 
             <div
@@ -150,7 +164,11 @@
                 </div>
                 <div class="cliente-info">
                   <strong>{{ cliente.nombre }}</strong>
-                  <span>{{ cliente.compras }} compra{{ cliente.compras !== 1 ? "s" : "" }}</span>
+                  <span
+                    >{{ cliente.compras }} compra{{
+                      cliente.compras !== 1 ? "s" : ""
+                    }}</span
+                  >
                 </div>
                 <div class="cliente-monto">
                   ${{ cliente.total.toLocaleString("es-MX") }}
@@ -168,10 +186,7 @@
             <span class="stats-card__sub">Distribución de ingresos</span>
           </div>
 
-          <div
-            v-if="stats.porCategoria.length === 0"
-            class="stats-empty"
-          >
+          <div v-if="stats.porCategoria.length === 0" class="stats-empty">
             <span>📂</span>
             <p>Sin datos en este período</p>
           </div>
@@ -183,10 +198,16 @@
               class="categoria-item"
             >
               <div class="categoria-header">
-                <span class="categoria-emoji">{{ catEmoji[cat.categoria] || "🎵" }}</span>
+                <span class="categoria-emoji">{{
+                  catEmoji[cat.categoria] || "🎵"
+                }}</span>
                 <div>
                   <strong>{{ cat.categoria }}</strong>
-                  <span>{{ cat.ventas }} venta{{ cat.ventas !== 1 ? "s" : "" }}</span>
+                  <span
+                    >{{ cat.ventas }} venta{{
+                      cat.ventas !== 1 ? "s" : ""
+                    }}</span
+                  >
                 </div>
                 <strong class="categoria-monto">
                   ${{ cat.ingresos.toLocaleString("es-MX") }}
@@ -197,7 +218,10 @@
                 <div
                   class="categoria-bar__fill"
                   :style="{
-                    width: (cat.ingresos / stats.porCategoria[0].ingresos) * 100 + '%',
+                    width: stats.porCategoria[0]?.ingresos
+                      ? (cat.ingresos / stats.porCategoria[0].ingresos) * 100 +
+                        '%'
+                      : '0%',
                   }"
                 ></div>
               </div>
@@ -209,7 +233,9 @@
         <div class="stats-card stats-card--full">
           <div class="stats-card__header">
             <h2>🕐 Últimas ventas</h2>
-            <span class="stats-card__sub">Las 10 más recientes del período</span>
+            <span class="stats-card__sub"
+              >Las 10 más recientes del período</span
+            >
           </div>
 
           <div v-if="stats.ventasRecientes.length === 0" class="stats-empty">
@@ -234,7 +260,10 @@
               </div>
               <div class="venta-reciente__info">
                 <strong>{{ venta.nombreProducto }}</strong>
-                <span>{{ venta.grupo }} · {{ formatearFecha(venta.fechaVenta) }}</span>
+                <span
+                  >{{ venta.grupo }} ·
+                  {{ formatearFecha(venta.fechaVenta) }}</span
+                >
               </div>
               <div class="venta-reciente__cliente">
                 <span>👤</span>
@@ -254,15 +283,22 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useVentas } from "../composables/useVentas";
-import { rolActual } from "../composables/useAuth";
+import { rolActual, authCargando } from "../composables/useAuth";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Solo admin puede ver esto
-if (rolActual.value && rolActual.value !== "admin" && rolActual.value !== "subadmin") {
-  router.replace("/home");
-}
+// Proteger ruta
+watch(
+  [rolActual, authCargando],
+  ([rol, cargando]) => {
+    if (cargando) return;
+    if (rol !== null && rol !== "admin" && rol !== "subadmin") {
+      router.replace("/home");
+    }
+  },
+  { immediate: true },
+);
 
 const periodo = ref("30dias");
 
@@ -277,7 +313,8 @@ const catEmoji = {
 };
 
 // ── Traer todas las ventas ────────────────────────────────────
-const { ventas, cargando } = useVentas({ soloMias: false });
+const { ventas, cargando: cargandoVentas } = useVentas({ soloMias: false });
+const cargando = computed(() => authCargando.value || cargandoVentas.value);
 
 // ── Filtrar por período ───────────────────────────────────────
 const ventasFiltradas = computed(() => {
@@ -301,7 +338,10 @@ const stats = computed(() => {
 
   // KPIs básicos
   const totalVentas = lista.length;
-  const totalIngresos = lista.reduce((a, v) => a + Number(v.precioFinal || 0), 0);
+  const totalIngresos = lista.reduce(
+    (a, v) => a + Number(v.precioFinal || 0),
+    0,
+  );
   const nombresClientes = new Set(
     lista.map((v) => v.nombreCliente).filter((n) => n && n !== "Sin asignar"),
   );
@@ -510,7 +550,9 @@ const formatearFecha = (fecha) => {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ══ KPI GRID ═══════════════════════════════════════════════ */
@@ -529,7 +571,9 @@ const formatearFecha = (fecha) => {
   gap: 14px;
   border: 1.5px solid rgba(233, 30, 140, 0.1);
   box-shadow: 0 4px 16px rgba(233, 30, 140, 0.07);
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
 }
 .kpi-card:hover {
   box-shadow: 0 8px 28px rgba(233, 30, 140, 0.13);
@@ -587,6 +631,9 @@ const formatearFecha = (fecha) => {
 .stats-card--full {
   margin-bottom: 20px;
 }
+.stats-card--full:last-child {
+  margin-bottom: 0;
+}
 .stats-card__header {
   display: flex;
   flex-direction: column;
@@ -614,8 +661,12 @@ const formatearFecha = (fecha) => {
   align-items: center;
   gap: 8px;
 }
-.stats-empty span { font-size: 2.5rem; }
-.stats-empty p { font-size: 0.88rem; }
+.stats-empty span {
+  font-size: 2.5rem;
+}
+.stats-empty p {
+  font-size: 0.88rem;
+}
 
 /* ── Ranking ─────────────────────────────────────────────── */
 .ranking-list {
