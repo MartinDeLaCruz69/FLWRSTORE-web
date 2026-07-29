@@ -714,7 +714,9 @@ import { usuarioActual, rolActual } from "../composables/useAuth";
 import { useComentarios } from "../composables/useComentarios";
 import { useTestimonios } from "../composables/useTestimonios";
 
-const windowWidth = ref(window.innerWidth);
+const windowWidth = ref(
+  typeof window !== "undefined" ? window.innerWidth : 1024,
+);
 const handleWindowResize = () => {
   windowWidth.value = window.innerWidth;
 };

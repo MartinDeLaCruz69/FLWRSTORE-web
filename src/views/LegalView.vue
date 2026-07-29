@@ -388,6 +388,15 @@
               FLWRSTORE. No es visible para otros usuarios.
             </p>
           </div>
+          <div class="policy-item">
+            <span>🔔</span>
+            <p>
+              Las notificaciones de nuevo stock por email son
+              <strong>opcionales</strong> y se activan únicamente si el cliente
+              las habilita desde su cuenta. Puedes desactivarlas en cualquier
+              momento desde la sección "Mis Apartados".
+            </p>
+          </div>
           <div class="policy__highlight">
             🚩 Este aviso de privacidad se rige conforme a la
             <strong
@@ -497,7 +506,7 @@
       <div class="legal-block fade-up" :class="{ visible: vis[9] }" ref="el9">
         <div class="legal-block__header">
           <span class="legal-block__icon">🔜</span>
-          <h2>Próxima Versión: v1.1.2</h2>
+          <h2>Próxima Versión: v1.1.3</h2>
         </div>
       </div>
 
