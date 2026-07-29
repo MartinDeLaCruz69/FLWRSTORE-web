@@ -37,6 +37,9 @@
                 <router-link to="/ventas" @click="dropdownOpen = false">
                   🛠️ Historial admin
                 </router-link>
+                <router-link to="/estadisticas" @click="dropdownOpen = false">
+                  📊 Estadísticas
+                </router-link>
               </template>
             </div>
           </div>
@@ -108,6 +111,14 @@
             @click="menuOpen = false"
           >
             🛠️ Historial admin
+          </router-link>
+          <router-link
+            v-if="rolActual === 'admin' || rolActual === 'subadmin'"
+            to="/estadisticas"
+            class="navbar__mobile-apartados"
+            @click="menuOpen = false"
+          >
+            📊 Estadísticas
           </router-link>
           <button class="navbar__mobile-logout" @click="cerrarSesionMobile">
             🚪 Cerrar sesión
