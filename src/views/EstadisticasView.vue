@@ -447,7 +447,7 @@ const formatearFecha = (fecha) => {
 /* ══ HERO ══════════════════════════════════════════════════ */
 .stats-hero {
   position: relative;
-  padding: 120px 5vw 60px;
+  padding: 84px 5vw 40px;
   text-align: center;
   overflow: hidden;
 }
@@ -480,7 +480,7 @@ const formatearFecha = (fecha) => {
 }
 .stats-hero h1 {
   font-family: "Playfair Display", serif;
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 1.15;
   color: #1a1a1a;
   margin: 0;
@@ -942,7 +942,7 @@ const formatearFecha = (fecha) => {
 
 @media (max-width: 640px) {
   .stats-hero {
-    padding: 80px 16px 40px;
+    padding: 74px 16px 28px;
   }
   .stats-hero h1 {
     font-size: clamp(1.8rem, 7vw, 2.5rem);
