@@ -160,7 +160,7 @@
                 :class="{ 'cliente-item--top': i === 0 }"
               >
                 <div class="cliente-avatar">
-                  {{ cliente.nombre.charAt(0).toUpperCase() }}
+                  {{ cliente.nombre?.charAt(0)?.toUpperCase() || "?" }}
                 </div>
                 <div class="cliente-info">
                   <strong>{{ cliente.nombre }}</strong>
@@ -352,10 +352,10 @@ const stats = computed(() => {
   // Productos más vendidos
   const prodMap = {};
   for (const v of lista) {
-    const key = v.nombreProducto || "Sin nombre";
+    const key = v.productoId || v.nombreProducto || "Sin nombre";
     if (!prodMap[key]) {
       prodMap[key] = {
-        nombre: key,
+        nombre: v.nombreProducto || "Sin nombre",
         grupo: v.grupo || "",
         categoria: v.categoria || "",
         ventas: 0,
