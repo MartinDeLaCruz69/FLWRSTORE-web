@@ -36,7 +36,9 @@ export function useVentas({ soloMias = false, uid = null } = {}) {
         cargando.value = false;
       },
       (err) => {
-        console.error("useVentas error:", err);
+        if (err.code !== "permission-denied") {
+          console.error("useVentas error:", err);
+        }
         cargando.value = false;
       },
     );
