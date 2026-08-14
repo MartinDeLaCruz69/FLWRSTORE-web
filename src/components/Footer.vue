@@ -81,7 +81,7 @@
     <div class="footer__bottom">
       <p>© {{ currentYear }} FLWRSTORE · Todos los derechos reservados.</p>
       <div class="footer__bottom-right">
-        <span class="footer__version">v1.1.1</span>
+        <span class="footer__version">v1.1.3</span>
         <p>
           Diseño y Desarrollo completo por
           <strong>Ing. Juan Martín Esparza de la Cruz</strong>
