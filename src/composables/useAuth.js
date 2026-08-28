@@ -47,21 +47,47 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 const DOMINIOS_BLOQUEADOS = [
-  "bltiwd.com", "mailinator.com", "guerrillamail.com", "tempmail.com",
-  "throwaway.email", "yopmail.com", "trashmail.com", "fakeinbox.com",
-  "sharklasers.com", "guerrillamailblock.com", "grr.la", "spam4.me",
-  "maildrop.cc", "dispostable.com", "spamgourmet.com", "mytemp.email",
-  "tempr.email", "discard.email", "tempinbox.com", "emailondeck.com",
-  "temp-mail.org", "getairmail.com", "mailnull.com", "spamspot.com",
-  "trashmail.me", "wegwerfmail.de", "spambog.com", "notmailinator.com",
-  "mailnesia.com", "10minutemail.com", "10minemail.com", "anonbox.net",
+  "bltiwd.com",
+  "mailinator.com",
+  "guerrillamail.com",
+  "tempmail.com",
+  "throwaway.email",
+  "yopmail.com",
+  "trashmail.com",
+  "fakeinbox.com",
+  "sharklasers.com",
+  "guerrillamailblock.com",
+  "grr.la",
+  "spam4.me",
+  "maildrop.cc",
+  "dispostable.com",
+  "spamgourmet.com",
+  "mytemp.email",
+  "tempr.email",
+  "discard.email",
+  "tempinbox.com",
+  "emailondeck.com",
+  "temp-mail.org",
+  "getairmail.com",
+  "mailnull.com",
+  "spamspot.com",
+  "trashmail.me",
+  "wegwerfmail.de",
+  "spambog.com",
+  "notmailinator.com",
+  "mailnesia.com",
+  "10minutemail.com",
+  "10minemail.com",
+  "anonbox.net",
 ];
 
 const validarEmail = (email) => {
   const dominio = email.split("@")[1]?.toLowerCase();
   if (!dominio) throw new Error("Correo electrónico inválido.");
   if (DOMINIOS_BLOQUEADOS.includes(dominio)) {
-    throw new Error("No se permiten correos temporales o desechables. Usa tu correo personal.");
+    throw new Error(
+      "No se permiten correos temporales o desechables. Usa tu correo personal.",
+    );
   }
   if (!dominio.includes(".") || dominio.split(".").pop().length < 2) {
     throw new Error("Correo electrónico inválido.");

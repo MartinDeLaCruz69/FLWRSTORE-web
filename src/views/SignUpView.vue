@@ -388,17 +388,58 @@ const validateNombre = () => {
   }
   fieldOk.nombre = true;
 };
+const DOMINIOS_BLOQUEADOS_UI = [
+  "bltiwd.com",
+  "mailinator.com",
+  "guerrillamail.com",
+  "tempmail.com",
+  "throwaway.email",
+  "yopmail.com",
+  "trashmail.com",
+  "fakeinbox.com",
+  "sharklasers.com",
+  "maildrop.cc",
+  "dispostable.com",
+  "mytemp.email",
+  "tempr.email",
+  "discard.email",
+  "tempinbox.com",
+  "emailondeck.com",
+  "temp-mail.org",
+  "getairmail.com",
+  "mailnesia.com",
+  "10minutemail.com",
+  "spam4.me",
+  "trashmail.me",
+  "wegwerfmail.de",
+  "spambog.com",
+];
+
+const emailEsValido = (email) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!regex.test(email)) return false;
+
+  const dominio = email.split("@")[1]?.toLowerCase();
+
+  return !DOMINIOS_BLOQUEADOS_UI.includes(dominio);
+};
+
 const validateEmail = () => {
   errors.email = "";
   fieldOk.email = false;
+
   if (!form.email) {
     errors.email = "El correo es obligatorio.";
     return;
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = "Correo inválido.";
+
+  if (!emailEsValido(form.email)) {
+    errors.email =
+      "Usa un correo personal válido. No se permiten correos temporales.";
     return;
   }
+
   fieldOk.email = true;
 };
 const validatePassword = () => {
